@@ -10,8 +10,64 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <!-- Inline SVG Icons -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-github" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+            <path d="M9 18c-4.51 2-5-2-7-2"/>
+        </symbol>
+        <symbol id="icon-linkedin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect width="4" height="12" x="2" y="9"/>
+            <circle cx="4" cy="4" r="2"/>
+        </symbol>
+        <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2"/>
+            <path d="M12 20v2"/>
+            <path d="m4.93 4.93 1.41 1.41"/>
+            <path d="m17.66 17.66 1.41 1.41"/>
+            <path d="M2 12h2"/>
+            <path d="M20 12h2"/>
+            <path d="m6.34 17.66-1.41 1.41"/>
+            <path d="m19.07 4.93-1.41 1.41"/>
+        </symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" x2="20" y1="12" y2="12"/>
+            <line x1="4" x2="20" y1="6" y2="6"/>
+            <line x1="4" x2="20" y1="18" y2="18"/>
+        </symbol>
+        <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/>
+            <path d="m6 6 12 12"/>
+        </symbol>
+        <symbol id="icon-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14"/>
+            <path d="m19 12-7 7-7-7"/>
+        </symbol>
+        <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+        </symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+        </symbol>
+        <symbol id="icon-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" x2="21" y1="14" y2="3"/>
+        </symbol>
+    </svg>
     
     <style>
         :root {
@@ -1241,6 +1297,308 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* ========== SCROLL ANIMATIONS ========== */
+        
+        /* Fade in from bottom */
+        .animate-on-scroll {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .js-enabled .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Fade in from left */
+        .animate-left {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .js-enabled .animate-left {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        .animate-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Fade in from right */
+        .animate-right {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .js-enabled .animate-right {
+            opacity: 0;
+            transform: translateX(60px);
+        }
+
+        .animate-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Scale in */
+        .animate-scale {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .js-enabled .animate-scale {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .animate-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Staggered children animations */
+        .stagger-children > * {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .js-enabled .stagger-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stagger-children.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(3) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(4) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(5) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(6) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
+
+        /* ========== TYPING ANIMATION ========== */
+        .typing-container {
+            display: inline-block;
+        }
+
+        .typing-text {
+            border-right: 3px solid var(--accent-primary);
+            animation: blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--accent-primary); }
+        }
+
+        /* ========== COUNTER ANIMATION ========== */
+        .counter {
+            display: inline-block;
+        }
+
+        /* ========== HOVER EFFECTS ========== */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .hover-glow {
+            transition: box-shadow 0.3s ease;
+        }
+
+        .hover-glow:hover {
+            box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(139, 92, 246, 0.1);
+        }
+
+        /* Magnetic button effect */
+        .magnetic-btn {
+            transition: transform 0.2s ease;
+        }
+
+        /* Text reveal animation */
+        .text-reveal {
+            overflow: hidden;
+        }
+
+        .text-reveal span {
+            display: inline-block;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .text-reveal.visible span {
+            transform: translateY(0);
+        }
+
+        /* Underline animation for links */
+        .animated-underline {
+            position: relative;
+        }
+
+        .animated-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        .animated-underline:hover::after {
+            width: 100%;
+        }
+
+        /* Card tilt effect */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        /* Pulse animation for live badge */
+        .live-badge {
+            position: relative;
+        }
+
+        .live-badge::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Gradient text animation */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s linear infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Smooth reveal for sections */
+        section {
+            overflow: hidden;
+        }
+
+        /* Hero animations - content visible by default, enhanced with JS */
+        .hero-main > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-animate .hero-main > * {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-loaded .hero-main > *:nth-child(1) { animation: fadeInUp 0.8s ease forwards 0.1s; }
+        .hero-loaded .hero-main > *:nth-child(2) { animation: fadeInUp 0.8s ease forwards 0.2s; }
+        .hero-loaded .hero-main > *:nth-child(3) { animation: fadeInUp 0.8s ease forwards 0.3s; }
+        .hero-loaded .hero-main > *:nth-child(4) { animation: fadeInUp 0.8s ease forwards 0.4s; }
+        .hero-loaded .hero-main > *:nth-child(5) { animation: fadeInUp 0.8s ease forwards 0.5s; }
+
+        .hero-side {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .hero-animate .hero-side {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        .hero-loaded .hero-side {
+            animation: fadeInRight 0.8s ease forwards 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Number counter glow effect */
+        .stat-value {
+            transition: text-shadow 0.3s ease;
+        }
+
+        .stat:hover .stat-value {
+            text-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        /* Progress bar animation */
+        .progress-bar {
+            height: 4px;
+            background: var(--bg-elevated);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+            transform: translateX(-100%);
+            transition: transform 1s ease;
+        }
+
+        .progress-bar.visible .progress-bar-fill {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body>
@@ -1262,11 +1620,11 @@
             </ul>
             <div class="nav-actions">
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                    <i data-lucide="sun" class="sun-icon" style="display: none;"></i>
-                    <i data-lucide="moon" class="moon-icon"></i>
+                    <svg class="sun-icon" width="20" height="20" style="display: none;"><use href="#icon-sun"></use></svg>
+                    <svg class="moon-icon" width="20" height="20"><use href="#icon-moon"></use></svg>
                 </button>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                    <i data-lucide="menu"></i>
+                    <svg width="24" height="24"><use href="#icon-menu"></use></svg>
                 </button>
             </div>
         </div>
@@ -1287,26 +1645,26 @@
                 <div class="hero-main">
                     <p class="hero-label">Design Director</p>
                     <h1 class="hero-title">
-                        SHAWN<br>
-                        <span class="accent">BAKKER</span>
+                        <span class="typing-container"><span class="typing-text" id="heroTyping">Shawn</span></span><br>
+                        <span class="accent" id="heroName2">Bakker</span>
                     </h1>
                     <div class="hero-tagline">
                         C++ PERFORMANCE ENGINEER<br>
                         QUANTITATIVE SYSTEMS<br>
-                        TRADING INFRASTRUCTURE
+                        SOFTWARE DEVELOPMENT
                     </div>
                     <p class="hero-description">
-                        As a passionate systems engineer, I am committed to creating performance-first solutions 
-                        that engage and inspire at the intersection of markets and engineering.
+                        I build performance-first systems at the intersection of markets, engineering, and cybersecurity. 
+                        Fast, reliable, and precise design is the pinnacle of my expertise.
                     </p>
                     <div class="hero-buttons">
-                        <a href="#demo" class="btn btn-primary">View Quant-Engine Demo</a>
-                        <a href="#contact" class="btn btn-secondary">Download Resume</a>
+                        <a href="#demo" class="btn btn-primary magnetic-btn hover-glow">View Quant-Engine Demo</a>
+                        <a href="#contact" class="btn btn-secondary magnetic-btn">Download Resume</a>
                     </div>
                 </div>
                 <div class="hero-side">
-                    <div class="hero-card">
-                        <ul class="tech-list">
+                    <div class="hero-card hover-lift">
+                        <ul class="tech-list stagger-children" id="techList">
                             <li><span class="arrow">→</span> C++20 / STL / Boost</li>
                             <li><span class="arrow">→</span> Docker / Postgres</li>
                             <li><span class="arrow">→</span> CMake / Catch2</li>
@@ -1322,7 +1680,7 @@
         </div>
         <div class="scroll-indicator">
             <button onclick="scrollToSection('about')">
-                <i data-lucide="arrow-down" style="width: 32px; height: 32px;"></i>
+                <svg width="32" height="32"><use href="#icon-arrow-down"></use></svg>
             </button>
         </div>
     </section>
@@ -1330,36 +1688,34 @@
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
-            <p class="section-label">About</p>
-            <h2 class="section-title">
+            <p class="section-label animate-on-scroll">About</p>
+            <h2 class="section-title animate-on-scroll">
                 PERFORMANCE-FIRST<br>
                 <span class="accent">SYSTEMS ENGINEERING</span>
             </h2>
             <div class="about-grid">
-                <div class="about-text">
+                <div class="about-text animate-left">
                     <p>
-                        I'm Shawn Bakker — a software & systems engineer who likes working close to the metal: 
-                        performance, correctness, reproducibility, and clean boundaries. I'm especially interested 
-                        in quantitative systems and trading infrastructure because they force you to care about 
-                        speed, reliability, and precision.
+                        I'm Shawn — a software & systems engineer who recently graduate from the University of Oregon with a B.S. in Computer Science, and a minor in Business (finance focused). 
+                        Performance-based and well-tested programs are exactly what I strive to implement, and I try to improve by at least 1% everytime I code.
                     </p>
                     <p>
-                        Outside of building, I'm always learning: markets (technical + behavioral), system design, 
-                        and security-minded engineering.
+                        Quantitative systems and trading infrastructure are my sweet spot because they force you 
+                        to care about speed, reliability, and precision all at once. Outside of building, I'm 
+                        always learning — markets, system design, security-minded engineering, and the latest software developments.
                     </p>
                 </div>
-                <div class="about-cards">
-                    <div class="info-card">
-                        <h3>Eugene, OR</h3>
+                <div class="about-cards stagger-children">
+                    <div class="info-card hover-lift">
                         <p>Based in the Pacific Northwest</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card hover-lift">
                         <h3>University of Oregon</h3>
-                        <p>B.S. Computer Science, Minor in Business Administration</p>
+                        <p>B.S. Computer Science, Minor in Business</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card hover-lift">
                         <h3>Multi-Disciplinary</h3>
-                        <p>Software, networking, and cybersecurity experience</p>
+                        <p>Software, networking, financial, and cybersecurity experience</p>
                     </div>
                 </div>
             </div>
@@ -1369,18 +1725,18 @@
     <!-- Featured Project -->
     <section class="featured">
         <div class="container">
-            <div style="text-align: center; margin-bottom: 3rem;">
+            <div style="text-align: center; margin-bottom: 3rem;" class="animate-on-scroll">
                 <p class="section-label">Featured Project</p>
                 <h2 class="section-title" style="font-size: 3.5rem;">QUANT-ENGINE</h2>
                 <p style="color: var(--text-secondary); font-size: 1.25rem;">C++20 Quantitative Backtesting + Research System</p>
             </div>
-            <div class="featured-card">
+            <div class="featured-card animate-scale hover-glow">
                 <div class="featured-grid">
                     <div class="featured-content">
                         <p>
-                            Quant-Engine is a C++20 quantitative research engine built with a focus on determinism, 
-                            performance, and clean system boundaries. It includes a reusable C++ core, a CLI for fast 
-                            experimentation, and a Docker-backed API + Postgres database for persisting runs and metrics.
+                            Quant-Engine is a C++20 research engine I built with a focus on determinism, 
+                            performance, and clean system boundaries. It's got a reusable C++ core, a CLI for 
+                            fast experimentation, and a Docker-backed API + Postgres database for persisting runs and metrics.
                         </p>
                         <ul class="feature-list">
                             <li><span class="bullet">▸</span> C++20 core using STL + Boost (explicit costs, minimal abstraction)</li>
@@ -1390,20 +1746,20 @@
                             <li><span class="bullet">▸</span> Catch2 unit tests + reproducible CMake builds</li>
                         </ul>
                         <div class="project-buttons">
-                            <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-                                <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+                            <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary magnetic-btn hover-glow">
+                                <svg width="18" height="18"><use href="#icon-github"></use></svg>
                                 GitHub Repo
                             </a>
-                            <a href="#demo" class="btn btn-secondary">Demo Walkthrough</a>
+                            <a href="#demo" class="btn btn-secondary magnetic-btn">Demo Walkthrough</a>
                         </div>
                     </div>
                     <div class="featured-stats">
                         <div class="stat">
-                            <div class="stat-value">2</div>
+                            <div class="stat-value counter" data-target="2">2</div>
                             <div class="stat-label">Week Build Sprint</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">100%</div>
+                            <div class="stat-value"><span class="counter" data-target="100">100</span>%</div>
                             <div class="stat-label">Test Coverage</div>
                         </div>
                         <div class="stat">
@@ -1430,7 +1786,7 @@
                 <div class="step-card" onclick="toggleStep(this)">
                     <div class="step-header">
                         <h3>Step 1 — Build + Test (Windows)</h3>
-                        <i data-lucide="chevron-down" class="chevron"></i>
+                        <svg class="chevron" width="24" height="24"><use href="#icon-chevron-down"></use></svg>
                     </div>
                     <div class="step-content">
                         <p class="step-description">Compiles the C++20 engine with CMake and runs the Catch2 test suite.</p>
@@ -1439,7 +1795,7 @@
 cmake --build build_x64 --config Release
 ctest --test-dir build_x64 -C Release --output-on-failure</code>
                             <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
-                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                                <svg width="16" height="16"><use href="#icon-copy"></use></svg>
                             </button>
                         </div>
                     </div>
@@ -1449,7 +1805,7 @@ ctest --test-dir build_x64 -C Release --output-on-failure</code>
                 <div class="step-card" onclick="toggleStep(this)">
                     <div class="step-header">
                         <h3>Step 2 — Start API + Postgres (Docker)</h3>
-                        <i data-lucide="chevron-down" class="chevron"></i>
+                        <svg class="chevron" width="24" height="24"><use href="#icon-chevron-down"></use></svg>
                     </div>
                     <div class="step-content">
                         <p class="step-description">Spins up the Dockerized API and Postgres database, verifies health endpoint.</p>
@@ -1457,7 +1813,7 @@ ctest --test-dir build_x64 -C Release --output-on-failure</code>
                             <code>docker compose up -d --build
 curl.exe http://127.0.0.1:8787/health</code>
                             <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
-                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                                <svg width="16" height="16"><use href="#icon-copy"></use></svg>
                             </button>
                         </div>
                         <div class="expected-output">
@@ -1473,14 +1829,14 @@ curl.exe http://127.0.0.1:8787/health</code>
                 <div class="step-card" onclick="toggleStep(this)">
                     <div class="step-header">
                         <h3>Step 3 — Run a Backtest (Records to API)</h3>
-                        <i data-lucide="chevron-down" class="chevron"></i>
+                        <svg class="chevron" width="24" height="24"><use href="#icon-chevron-down"></use></svg>
                     </div>
                     <div class="step-content">
                         <p class="step-description">Executes backtest using sample data. CLI records run metadata and metrics to API.</p>
                         <div class="code-block">
                             <code>.\build_x64\Release\qe_cli.exe backtest --data .\data\sample.csv --out .\out</code>
                             <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
-                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                                <svg width="16" height="16"><use href="#icon-copy"></use></svg>
                             </button>
                         </div>
                     </div>
@@ -1490,14 +1846,14 @@ curl.exe http://127.0.0.1:8787/health</code>
                 <div class="step-card" onclick="toggleStep(this)">
                     <div class="step-header">
                         <h3>Step 4 — Query Stored Runs</h3>
-                        <i data-lucide="chevron-down" class="chevron"></i>
+                        <svg class="chevron" width="24" height="24"><use href="#icon-chevron-down"></use></svg>
                     </div>
                     <div class="step-content">
                         <p class="step-description">Retrieves all stored backtest runs from Postgres with full metadata.</p>
                         <div class="code-block">
                             <code>curl.exe http://127.0.0.1:8787/runs</code>
                             <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
-                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                                <svg width="16" height="16"><use href="#icon-copy"></use></svg>
                             </button>
                         </div>
                     </div>
@@ -1506,7 +1862,7 @@ curl.exe http://127.0.0.1:8787/health</code>
 
             <div class="view-source-container">
                 <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-                    <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+                    <svg width="18" height="18"><use href="#icon-github"></use></svg>
                     View Full Source
                 </a>
             </div>
@@ -1514,8 +1870,8 @@ curl.exe http://127.0.0.1:8787/health</code>
             <!-- Interactive Demo -->
             <div class="interactive-demo">
                 <div class="demo-header">
-                    <h3><span class="live-badge">LIVE</span> BACKTEST SIMULATOR</h3>
-                    <p>Run a simulated backtest with randomly generated market data. See how the engine processes trades and calculates metrics.</p>
+                    <h3><span class="live-badge">Live</span> Backtest Simulator</h3>
+                    <p>Run a simulated backtest with randomly generated market data. Pick a strategy, hit run, and see how the engine crunches the numbers.</p>
                 </div>
 
                 <div class="demo-controls">
@@ -1576,7 +1932,7 @@ curl.exe http://127.0.0.1:8787/health</code>
                     <!-- Generated Data Section -->
                     <div class="generated-data-section">
                         <div class="data-toggle" onclick="toggleDataView(this)">
-                            <i data-lucide="chevron-down" class="chevron"></i>
+                            <svg class="chevron" width="24" height="24"><use href="#icon-chevron-down"></use></svg>
                             <h4 class="results-title" style="margin-bottom: 0;">View Generated Market Data</h4>
                         </div>
                         <div class="generated-data-content" id="generatedDataContent">
@@ -1605,9 +1961,9 @@ curl.exe http://127.0.0.1:8787/health</code>
 
                     <div class="demo-note">
                         <p>
-                            <strong>Note:</strong> This is a simulated backtest using randomly generated market data. 
-                            The actual Quant-Engine CLI runs on real historical data with full transaction cost modeling, 
-                            slippage simulation, and deterministic execution. Results are persisted to Postgres for reproducibility.
+                            <strong>Note:</strong> This is a simulated backtest with randomly generated data. 
+                            The real Quant-Engine CLI runs on actual historical data with transaction cost modeling, 
+                            slippage simulation, and deterministic execution. Results get persisted to Postgres for reproducibility.
                         </p>
                     </div>
                 </div>
@@ -1618,36 +1974,36 @@ curl.exe http://127.0.0.1:8787/health</code>
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
-            <div style="text-align: center;">
+            <div style="text-align: center;" class="animate-on-scroll">
                 <p class="section-label">Portfolio</p>
                 <h2 class="section-title" style="font-size: 3.5rem;">PROJECTS</h2>
             </div>
             <div class="projects-grid">
-                <div class="project-card">
+                <div class="project-card hover-lift tilt-card animate-left">
                     <p class="project-number">01</p>
-                    <h3>QUANT-ENGINE</h3>
+                    <h3>Quant-Engine</h3>
                     <p>
-                        C++20 quantitative research engine with deterministic backtesting, Black–Scholes pricing, 
-                        and full Docker + Postgres persistence.
+                        C++20 research engine with deterministic backtesting, Black–Scholes pricing, 
+                        and full Docker + Postgres persistence. Built it in about two weeks.
                     </p>
                     <div class="project-buttons">
-                        <a href="#demo" class="btn btn-primary">Demo</a>
-                        <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-                            <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+                        <a href="#demo" class="btn btn-primary magnetic-btn">Demo</a>
+                        <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-secondary magnetic-btn">
+                            <svg width="16" height="16"><use href="#icon-github"></use></svg>
                             GitHub
                         </a>
                     </div>
                 </div>
-                <div class="project-card">
+                <div class="project-card hover-lift tilt-card animate-right">
                     <p class="project-number">02</p>
-                    <h3>ACTIVE READING ASSISTANT</h3>
+                    <h3>Active Reading Assistant</h3>
                     <p>
-                        AI-powered tool for improving comprehension through active reading workflows: 
+                        AI-powered tool for better comprehension through active reading — 
                         prompting, structured extraction, and guided note-taking.
                     </p>
                     <div class="project-buttons">
-                        <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-                            <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+                        <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer" class="btn btn-primary magnetic-btn">
+                            <svg width="16" height="16"><use href="#icon-github"></use></svg>
                             GitHub
                         </a>
                     </div>
@@ -1659,49 +2015,42 @@ curl.exe http://127.0.0.1:8787/health</code>
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
-            <div style="text-align: center;">
+            <div style="text-align: center;" class="animate-on-scroll">
                 <p class="section-label">Get In Touch</p>
                 <h2 class="section-title" style="font-size: 3.5rem;">CONTACT</h2>
                 <p style="color: var(--text-secondary); font-size: 1.125rem; max-width: 600px; margin: 0 auto;">
-                    Hiring for performance-critical C++ roles, trading systems, quant infrastructure, 
-                    or backend systems engineering? Let's connect.
+                    Hiring for C++ roles, trading systems, quant infrastructure, or backend engineering? 
+                    Let's chat.
                 </p>
             </div>
             <div class="contact-grid">
-                <div class="contact-card">
+                <div class="contact-card hover-lift animate-left">
                     <h3>Direct Contact</h3>
-                    <a href="mailto:shawn@misclick.com" class="contact-item">
-                        <div class="icon"><i data-lucide="mail"></i></div>
+                    <a href="mailto:shawn@misclick.com" class="contact-item animated-underline">
+                        <div class="icon"><svg width="24" height="24"><use href="#icon-mail"></use></svg></div>
                         <div class="info">
                             <div class="label">Email</div>
                             <div class="value">shawn@misclick.com</div>
                         </div>
                     </a>
-                    <a href="tel:541-505-2421" class="contact-item">
-                        <div class="icon"><i data-lucide="phone"></i></div>
-                        <div class="info">
-                            <div class="label">Phone</div>
-                            <div class="value">541-505-2421</div>
-                        </div>
-                    </a>
                 </div>
-                <div class="contact-card">
+                <div class="contact-card hover-lift animate-right">
                     <h3>Online Presence</h3>
-                    <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer" class="contact-item">
-                        <div class="icon"><i data-lucide="github"></i></div>
+                    <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer" class="contact-item animated-underline">
+                        <div class="icon"><svg width="24" height="24"><use href="#icon-github"></use></svg></div>
                         <div class="info">
                             <div class="label">GitHub</div>
                             <div class="value">@ShawnBakker</div>
                         </div>
-                        <div class="external"><i data-lucide="external-link" style="width: 18px; height: 18px;"></i></div>
+                        <div class="external"><svg width="18" height="18"><use href="#icon-external-link"></use></svg></div>
                     </a>
-                    <a href="https://www.linkedin.com/in/shawn-bakker-56a408218/" target="_blank" rel="noopener noreferrer" class="contact-item">
-                        <div class="icon"><i data-lucide="linkedin"></i></div>
+                    <a href="https://www.linkedin.com/in/shawn-bakker-56a408218/" target="_blank" rel="noopener noreferrer" class="contact-item animated-underline">
+                        <div class="icon"><svg width="24" height="24"><use href="#icon-linkedin"></use></svg></div>
                         <div class="info">
                             <div class="label">LinkedIn</div>
                             <div class="value">Shawn Bakker</div>
                         </div>
-                        <div class="external"><i data-lucide="external-link" style="width: 18px; height: 18px;"></i></div>
+                        <div class="external"><svg width="18" height="18"><use href="#icon-external-link"></use></svg></div>
                     </a>
                 </div>
             </div>
@@ -1713,18 +2062,18 @@ curl.exe http://127.0.0.1:8787/health</code>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <h4>SHAWN BAKKER<span>®</span></h4>
-                    <p>Let's talk C++, systems engineering, and markets.</p>
+                    <h4>Shawn Bakker<span>®</span></h4>
+                    <p>Let's talk C++, systems, and markets.</p>
                 </div>
                 <div class="footer-social">
                     <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="github" style="width: 24px; height: 24px;"></i>
+                        <svg width="24" height="24"><use href="#icon-github"></use></svg>
                     </a>
                     <a href="https://www.linkedin.com/in/shawn-bakker-56a408218/" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="linkedin" style="width: 24px; height: 24px;"></i>
+                        <svg width="24" height="24"><use href="#icon-linkedin"></use></svg>
                     </a>
                     <a href="mailto:shawn@misclick.com">
-                        <i data-lucide="mail" style="width: 24px; height: 24px;"></i>
+                        <svg width="24" height="24"><use href="#icon-mail"></use></svg>
                     </a>
                 </div>
             </div>
@@ -1735,8 +2084,10 @@ curl.exe http://127.0.0.1:8787/health</code>
     </footer>
 
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        // Enable JS-dependent animations on DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('js-enabled');
+        });
 
         // State
         let isDarkTheme = true;
@@ -1768,7 +2119,6 @@ curl.exe http://127.0.0.1:8787/health</code>
         // Step Card Toggle
         function toggleStep(card) {
             card.classList.toggle('expanded');
-            lucide.createIcons();
         }
 
         // Data Toggle
@@ -1776,7 +2126,6 @@ curl.exe http://127.0.0.1:8787/health</code>
             toggle.classList.toggle('expanded');
             const content = document.getElementById('generatedDataContent');
             content.classList.toggle('visible');
-            lucide.createIcons();
         }
 
         // Copy Code
@@ -1785,12 +2134,10 @@ curl.exe http://127.0.0.1:8787/health</code>
             const code = codeBlock.querySelector('code').innerText;
             navigator.clipboard.writeText(code);
             
-            btn.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i>';
-            lucide.createIcons();
+            btn.innerHTML = '<svg width="16" height="16"><use href="#icon-check"></use></svg>';
             
             setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="copy" style="width: 16px; height: 16px;"></i>';
-                lucide.createIcons();
+                btn.innerHTML = '<svg width="16" height="16"><use href="#icon-copy"></use></svg>';
             }, 2000);
         }
 
@@ -2118,123 +2465,137 @@ curl.exe http://127.0.0.1:8787/health</code>
             
             // Simulate processing time
             setTimeout(() => {
-                // Generate random market data
-                generatedMarketData = generateMarketData(numDays);
-                
-                // Run strategy
-                const trades = runStrategy(generatedMarketData, strategy);
-                
-                // Calculate metrics
-                const metrics = calculateMetrics(trades, generatedMarketData);
-                
-                // Update UI
-                document.getElementById('strategyName').textContent = `Performance Metrics - ${strategyNames[strategy]}`;
-                
-                // Populate metrics grid
-                const metricsGrid = document.getElementById('metricsGrid');
-                metricsGrid.innerHTML = `
-                    <div class="metric-card">
-                        <div class="metric-label">Total Return</div>
-                        <div class="metric-value ${parseFloat(metrics.totalReturn) >= 0 ? 'positive' : 'negative'}">${parseFloat(metrics.totalReturn) >= 0 ? '+' : ''}${metrics.totalReturn}%</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Total P&L</div>
-                        <div class="metric-value ${parseFloat(metrics.totalPnL) >= 0 ? 'positive' : 'negative'}">$${metrics.totalPnL}</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Win Rate</div>
-                        <div class="metric-value neutral">${metrics.winRate}%</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Sharpe Ratio</div>
-                        <div class="metric-value neutral">${metrics.sharpeRatio}</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Max Drawdown</div>
-                        <div class="metric-value negative">${metrics.maxDrawdown}%</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">Trades</div>
-                        <div class="metric-value neutral">${metrics.numTrades}</div>
-                    </div>
-                    <div class="metric-card wide">
-                        <div class="metric-label">Avg Holding Period</div>
-                        <div class="metric-value neutral">${metrics.avgHoldingPeriod} days</div>
-                    </div>
-                `;
-                
-                // Populate trade table (show all trades, with scroll)
-                const tradeTableBody = document.getElementById('tradeTableBody');
-                const maxDisplayTrades = 100;
-                const displayTrades = trades.slice(0, maxDisplayTrades);
-                
-                tradeTableBody.innerHTML = displayTrades.map(trade => `
-                    <tr>
-                        <td>${trade.date}</td>
-                        <td><span class="trade-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
-                        <td class="text-right">$${trade.price.toFixed(2)}</td>
-                        <td class="text-right">${trade.shares}</td>
-                        <td class="text-right" style="color: ${trade.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">$${trade.pnl.toFixed(2)}</td>
-                    </tr>
-                `).join('');
-                
-                // Add note if trades are truncated
-                if (trades.length > maxDisplayTrades) {
-                    tradeTableBody.innerHTML += `
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 1rem;">
-                                ... showing ${maxDisplayTrades} of ${trades.length} trades
-                            </td>
-                        </tr>
+                try {
+                    // Generate random market data
+                    generatedMarketData = generateMarketData(numDays);
+                    
+                    // Run strategy
+                    const trades = runStrategy(generatedMarketData, strategy);
+                    
+                    // Calculate metrics
+                    const metrics = calculateMetrics(trades, generatedMarketData);
+                    
+                    // Update UI
+                    document.getElementById('strategyName').textContent = `Performance Metrics - ${strategyNames[strategy]}`;
+                    
+                    // Populate metrics grid
+                    const metricsGrid = document.getElementById('metricsGrid');
+                    metricsGrid.innerHTML = `
+                        <div class="metric-card">
+                            <div class="metric-label">Total Return</div>
+                            <div class="metric-value ${parseFloat(metrics.totalReturn) >= 0 ? 'positive' : 'negative'}">${parseFloat(metrics.totalReturn) >= 0 ? '+' : ''}${metrics.totalReturn}%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total P&L</div>
+                            <div class="metric-value ${parseFloat(metrics.totalPnL) >= 0 ? 'positive' : 'negative'}">$${metrics.totalPnL}</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Win Rate</div>
+                            <div class="metric-value neutral">${metrics.winRate}%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Sharpe Ratio</div>
+                            <div class="metric-value neutral">${metrics.sharpeRatio}</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Max Drawdown</div>
+                            <div class="metric-value negative">${metrics.maxDrawdown}%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Trades</div>
+                            <div class="metric-value neutral">${metrics.numTrades}</div>
+                        </div>
+                        <div class="metric-card wide">
+                            <div class="metric-label">Avg Holding Period</div>
+                            <div class="metric-value neutral">${metrics.avgHoldingPeriod} days</div>
+                        </div>
                     `;
-                }
-                
-                // Populate data info
-                const dataInfo = document.getElementById('dataInfo');
-                const startDate = generatedMarketData[0].date;
-                const endDate = generatedMarketData[generatedMarketData.length - 1].date;
-                const startPrice = generatedMarketData[0].close;
-                const endPrice = generatedMarketData[generatedMarketData.length - 1].close;
-                
-                dataInfo.innerHTML = `
-                    <div class="data-info-item">Data Points: <span>${generatedMarketData.length}</span></div>
-                    <div class="data-info-item">Period: <span>${startDate}</span> to <span>${endDate}</span></div>
-                    <div class="data-info-item">Price Range: <span>$${parseFloat(startPrice).toFixed(2)}</span> → <span>$${parseFloat(endPrice).toFixed(2)}</span></div>
-                `;
-                
-                // Populate market data table (show first 200 rows)
-                const marketDataBody = document.getElementById('marketDataBody');
-                marketDataBody.innerHTML = generatedMarketData.slice(0, 200).map(d => `
-                    <tr>
-                        <td>${d.date}</td>
-                        <td class="text-right">$${d.open}</td>
-                        <td class="text-right">$${d.high}</td>
-                        <td class="text-right">$${d.low}</td>
-                        <td class="text-right">$${d.close}</td>
-                        <td class="text-right">${d.volume}</td>
-                    </tr>
-                `).join('');
-                
-                // Add note if data is truncated
-                if (generatedMarketData.length > 200) {
-                    marketDataBody.innerHTML += `
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 1rem;">
-                                ... showing 200 of ${generatedMarketData.length.toLocaleString()} rows
-                            </td>
-                        </tr>
+                    
+                    // Populate trade table (show all trades, with scroll)
+                    const tradeTableBody = document.getElementById('tradeTableBody');
+                    const maxDisplayTrades = 100;
+                    const displayTrades = trades.slice(0, maxDisplayTrades);
+                    
+                    if (trades.length > 0) {
+                        tradeTableBody.innerHTML = displayTrades.map(trade => `
+                            <tr>
+                                <td>${trade.date}</td>
+                                <td><span class="trade-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
+                                <td class="text-right">$${trade.price.toFixed(2)}</td>
+                                <td class="text-right">${trade.shares}</td>
+                                <td class="text-right" style="color: ${trade.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">$${trade.pnl.toFixed(2)}</td>
+                            </tr>
+                        `).join('');
+                        
+                        // Add note if trades are truncated
+                        if (trades.length > maxDisplayTrades) {
+                            tradeTableBody.innerHTML += `
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 1rem;">
+                                        ... showing ${maxDisplayTrades} of ${trades.length} trades
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    } else {
+                        tradeTableBody.innerHTML = `
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                    No trades generated for this strategy and time period.
+                                </td>
+                            </tr>
+                        `;
+                    }
+                    
+                    // Populate data info
+                    const dataInfo = document.getElementById('dataInfo');
+                    const startDate = generatedMarketData[0].date;
+                    const endDate = generatedMarketData[generatedMarketData.length - 1].date;
+                    const startPrice = generatedMarketData[0].close;
+                    const endPrice = generatedMarketData[generatedMarketData.length - 1].close;
+                    
+                    dataInfo.innerHTML = `
+                        <div class="data-info-item">Data Points: <span>${generatedMarketData.length}</span></div>
+                        <div class="data-info-item">Period: <span>${startDate}</span> to <span>${endDate}</span></div>
+                        <div class="data-info-item">Price Range: <span>$${parseFloat(startPrice).toFixed(2)}</span> → <span>$${parseFloat(endPrice).toFixed(2)}</span></div>
                     `;
+                    
+                    // Populate market data table (show first 200 rows)
+                    const marketDataBody = document.getElementById('marketDataBody');
+                    marketDataBody.innerHTML = generatedMarketData.slice(0, 200).map(d => `
+                        <tr>
+                            <td>${d.date}</td>
+                            <td class="text-right">$${d.open}</td>
+                            <td class="text-right">$${d.high}</td>
+                            <td class="text-right">$${d.low}</td>
+                            <td class="text-right">$${d.close}</td>
+                            <td class="text-right">${d.volume}</td>
+                        </tr>
+                    `).join('');
+                    
+                    // Add note if data is truncated
+                    if (generatedMarketData.length > 200) {
+                        marketDataBody.innerHTML += `
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 1rem;">
+                                    ... showing 200 of ${generatedMarketData.length.toLocaleString()} rows
+                                </td>
+                            </tr>
+                        `;
+                    }
+                    
+                    // Show results
+                    results.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Backtest error:', error);
+                    alert('An error occurred while running the backtest. Please try again.');
                 }
-                
-                // Show results
-                results.style.display = 'block';
                 
                 // Reset button
                 btn.disabled = false;
                 btn.innerHTML = 'RUN BACKTEST';
                 
-                // Refresh icons
-                lucide.createIcons();
             }, 1500);
         }
 
@@ -2266,6 +2627,170 @@ curl.exe http://127.0.0.1:8787/health</code>
                     link.classList.add('active');
                 }
             });
+        });
+
+        // ========== TYPING ANIMATION ==========
+        const heroText1 = "Shawn";
+        const heroText2 = "Bakker";
+        let charIndex1 = 0;
+        let charIndex2 = 0;
+        let isFirstLine = true;
+        let typingStarted = false;
+
+        function typeWriter() {
+            const typingElement = document.getElementById('heroTyping');
+            const name2Element = document.getElementById('heroName2');
+            
+            if (!typingElement || !name2Element) return;
+            
+            // Clear text and enable animations on first run
+            if (!typingStarted) {
+                typingElement.textContent = '';
+                name2Element.textContent = '';
+                document.querySelector('.hero').classList.add('hero-animate');
+                typingStarted = true;
+            }
+            
+            if (isFirstLine) {
+                if (charIndex1 <= heroText1.length) {
+                    typingElement.textContent = heroText1.substring(0, charIndex1);
+                    charIndex1++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    isFirstLine = false;
+                    setTimeout(typeWriter, 200);
+                }
+            } else {
+                if (charIndex2 <= heroText2.length) {
+                    name2Element.textContent = heroText2.substring(0, charIndex2);
+                    charIndex2++;
+                    setTimeout(typeWriter, 100);
+                } else {
+                    // Remove cursor after typing is complete
+                    typingElement.classList.remove('typing-text');
+                    // Trigger hero animations after typing
+                    document.querySelector('.hero').classList.add('hero-loaded');
+                    // Trigger tech list stagger
+                    const techList = document.getElementById('techList');
+                    if (techList) techList.classList.add('visible');
+                }
+            }
+        }
+
+        // Start typing animation on page load
+        window.addEventListener('load', () => {
+            setTimeout(typeWriter, 300);
+        });
+
+        // ========== SCROLL ANIMATIONS (Intersection Observer) ==========
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Trigger counter animation if element has counters
+                    const counters = entry.target.querySelectorAll('.counter[data-target]');
+                    counters.forEach(counter => animateCounter(counter));
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.animate-on-scroll, .animate-left, .animate-right, .animate-scale, .stagger-children, .featured-stats').forEach(el => {
+            animationObserver.observe(el);
+        });
+
+        // ========== COUNTER ANIMATION ==========
+        function animateCounter(element) {
+            if (element.dataset.animated) return; // Prevent re-animation
+            element.dataset.animated = 'true';
+            
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 1500;
+            const startTime = performance.now();
+            
+            // Reset to 0 first
+            element.textContent = '0';
+
+            const updateCounter = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(easeOut * target);
+                
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target;
+                }
+            };
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        // ========== MAGNETIC BUTTON EFFECT ==========
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // ========== TILT CARD EFFECT ==========
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+
+        // ========== SMOOTH SCROLL PROGRESS INDICATOR ==========
+        const progressBar = document.createElement('div');
+        progressBar.style.cssText = `
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            z-index: 9999;
+            transition: width 0.1s ease;
+        `;
+        document.body.appendChild(progressBar);
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            progressBar.style.width = scrollPercent + '%';
         });
     </script>
 </body>
