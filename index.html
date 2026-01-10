@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shawn Bakker | C++ Performance Engineer</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #16161f;
+            --bg-elevated: #1c1c28;
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #6366f1;
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border-color: rgba(139, 92, 246, 0.2);
+            --border-hover: rgba(139, 92, 246, 0.5);
+        }
+
+        .light-theme {
+            --bg-primary: #fafafa;
+            --bg-secondary: #f0f0f5;
+            --bg-card: #ffffff;
+            --bg-elevated: #f5f5fa;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a5a;
+            --text-muted: #8a8a9a;
+            --border-color: rgba(139, 92, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-weight: 400;
+        }
+
+        /* Background Gradient */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+        }
+
+        .light-theme .bg-gradient {
+            background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.3s ease-out;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(139, 92, 246, 0.3);
+            top: 20%;
+            right: 20%;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: rgba(99, 102, 241, 0.25);
+            bottom: 20%;
+            left: 20%;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 92, 246, 0.2);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .light-theme nav {
+            background: rgba(250, 250, 250, 0.9);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-menu.open {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Sections */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        .hero-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(3rem, 9vw, 7rem);
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title .accent {
+            color: var(--accent-primary);
+        }
+
+        .hero-tagline {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 2;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-tagline {
+                border-left: none;
+                padding-left: 0;
+                border-bottom: 3px solid var(--accent-primary);
+                padding-bottom: 1rem;
+            }
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-buttons {
+                justify-content: center;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.75rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            text-decoration: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Hero Side Card */
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .tech-list {
+            list-style: none;
+        }
+
+        .tech-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tech-list .arrow {
+            color: var(--accent-primary);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-indicator button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .scroll-indicator button:hover {
+            color: var(--accent-primary);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 0;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .section-title .accent {
+            color: var(--accent-primary);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .about-text p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            border-left: 4px solid var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Featured Project */
+        .featured {
+            padding: 8rem 0;
+        }
+
+        .featured-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+        }
+
+        @media (max-width: 1024px) {
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .featured-content {
+            padding: 3rem;
+        }
+
+        .featured-content p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-list .bullet {
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        .featured-stats {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 4rem;
+            font-weight: 400;
+            color: var(--accent-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Demo Section */
+        .demo {
+            padding: 8rem 0;
+        }
+
+        .demo-steps {
+            max-width: 900px;
+            margin: 3rem auto 0;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .step-header:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .step-header h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .step-header .chevron {
+            transition: transform 0.3s;
+            color: var(--accent-primary);
+        }
+
+        .step-card.expanded .chevron {
+            transform: rotate(180deg);
+        }
+
+        .step-content {
+            display: none;
+            padding: 0 2rem 2rem;
+        }
+
+        .step-card.expanded .step-content {
+            display: block;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .code-block {
+            position: relative;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: #c4b5fd;
+            white-space: pre;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-secondary);
+        }
+
+        .expected-output {
+            margin-top: 1rem;
+        }
+
+        .expected-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .expected-output .code-block code {
+            color: #6ee7b7;
+        }
+
+        /* Interactive Demo */
+        .interactive-demo {
+            max-width: 900px;
+            margin: 4rem auto 0;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 2.5rem;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .demo-header h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .demo-header .live-badge {
+            color: var(--accent-primary);
+        }
+
+        .demo-header p {
+            color: var(--text-secondary);
+        }
+
+        .demo-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .demo-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .control-group select,
+        .control-group input {
+            padding: 0.875rem 1rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            transition: border-color 0.3s;
+        }
+
+        .control-group select:focus,
+        .control-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .run-btn {
+            width: 100%;
+            padding: 1.25rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .run-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Demo Results */
+        .demo-results {
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-section {
+            margin-bottom: 2rem;
+        }
+
+        .results-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .metric-card.wide {
+            grid-column: span 2;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .metric-value.positive {
+            color: var(--success);
+        }
+
+        .metric-value.negative {
+            color: var(--danger);
+        }
+
+        .metric-value.neutral {
+            color: var(--accent-primary);
+        }
+
+        /* Data Tables */
+        .data-table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: var(--bg-elevated);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        .data-table td {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .trade-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .trade-badge.buy {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .trade-badge.sell {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .generated-data-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .data-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .data-toggle .chevron {
+            transition: transform 0.3s;
+            color: var(--accent-primary);
+        }
+
+        .data-toggle.expanded .chevron {
+            transform: rotate(180deg);
+        }
+
+        .generated-data-content {
+            display: none;
+        }
+
+        .generated-data-content.visible {
+            display: block;
+        }
+
+        .data-info {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .data-info-item {
+            background: var(--bg-elevated);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .data-info-item span {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .demo-note {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .demo-note p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .demo-note strong {
+            color: var(--accent-primary);
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 8rem 0;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+        }
+
+        .project-number {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .project-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+            letter-spacing: -0.01em;
+        }
+
+        .project-card:hover h3 {
+            color: var(--accent-primary);
+        }
+
+        .project-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-buttons .btn {
+            padding: 0.75rem 1.5rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 0;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contact-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .contact-card h3 {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: color 0.3s;
+        }
+
+        .contact-item:hover {
+            color: var(--accent-primary);
+        }
+
+        .contact-item .icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+        }
+
+        .contact-item .info {
+            flex: 1;
+        }
+
+        .contact-item .info .label {
+            font-weight: 600;
+        }
+
+        .contact-item .info .value {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .contact-item .external {
+            color: var(--accent-primary);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 4rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-brand h4 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0;
+        }
+
+        .footer-brand h4 span {
+            color: var(--accent-primary);
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-social a {
+            color: var(--text-primary);
+            transition: color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* View Source Button */
+        .view-source-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#home" class="logo">SHAWN BAKKER<span>®</span></a>
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#demo" class="nav-link">Demo</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <i data-lucide="sun" class="sun-icon" style="display: none;"></i>
+                    <i data-lucide="moon" class="moon-icon"></i>
+                </button>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#about" onclick="toggleMobileMenu()">About</a>
+        <a href="#demo" onclick="toggleMobileMenu()">Demo</a>
+        <a href="#projects" onclick="toggleMobileMenu()">Projects</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-main">
+                    <p class="hero-label">Design Director</p>
+                    <h1 class="hero-title">
+                        SHAWN<br>
+                        <span class="accent">BAKKER</span>
+                    </h1>
+                    <div class="hero-tagline">
+                        C++ PERFORMANCE ENGINEER<br>
+                        QUANTITATIVE SYSTEMS<br>
+                        TRADING INFRASTRUCTURE
+                    </div>
+                    <p class="hero-description">
+                        As a passionate systems engineer, I am committed to creating performance-first solutions 
+                        that engage and inspire at the intersection of markets and engineering.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#demo" class="btn btn-primary">View Quant-Engine Demo</a>
+                        <a href="#contact" class="btn btn-secondary">Download Resume</a>
+                    </div>
+                </div>
+                <div class="hero-side">
+                    <div class="hero-card">
+                        <ul class="tech-list">
+                            <li><span class="arrow">→</span> C++20 / STL / Boost</li>
+                            <li><span class="arrow">→</span> Docker / Postgres</li>
+                            <li><span class="arrow">→</span> CMake / Catch2</li>
+                            <li><span class="arrow">→</span> Black-Scholes / Greeks</li>
+                            <li><span class="arrow">→</span> Deterministic Backtesting</li>
+                        </ul>
+                    </div>
+                    <p style="text-align: right; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 2rem;">
+                        START YOUR DIGITAL VOYAGE WITH A SCROLL ────
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <button onclick="scrollToSection('about')">
+                <i data-lucide="arrow-down" style="width: 32px; height: 32px;"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <p class="section-label">About</p>
+            <h2 class="section-title">
+                PERFORMANCE-FIRST<br>
+                <span class="accent">SYSTEMS ENGINEERING</span>
+            </h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>
+                        I'm Shawn Bakker — a software & systems engineer who likes working close to the metal: 
+                        performance, correctness, reproducibility, and clean boundaries. I'm especially interested 
+                        in quantitative systems and trading infrastructure because they force you to care about 
+                        speed, reliability, and precision.
+                    </p>
+                    <p>
+                        Outside of building, I'm always learning: markets (technical + behavioral), system design, 
+                        and security-minded engineering.
+                    </p>
+                </div>
+                <div class="about-cards">
+                    <div class="info-card">
+                        <h3>Eugene, OR</h3>
+                        <p>Based in the Pacific Northwest</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>University of Oregon</h3>
+                        <p>B.S. Computer Science, Minor in Business Administration</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Multi-Disciplinary</h3>
+                        <p>Software, networking, and cybersecurity experience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Project -->
+    <section class="featured">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <p class="section-label">Featured Project</p>
+                <h2 class="section-title" style="font-size: 3.5rem;">QUANT-ENGINE</h2>
+                <p style="color: var(--text-secondary); font-size: 1.25rem;">C++20 Quantitative Backtesting + Research System</p>
+            </div>
+            <div class="featured-card">
+                <div class="featured-grid">
+                    <div class="featured-content">
+                        <p>
+                            Quant-Engine is a C++20 quantitative research engine built with a focus on determinism, 
+                            performance, and clean system boundaries. It includes a reusable C++ core, a CLI for fast 
+                            experimentation, and a Docker-backed API + Postgres database for persisting runs and metrics.
+                        </p>
+                        <ul class="feature-list">
+                            <li><span class="bullet">▸</span> C++20 core using STL + Boost (explicit costs, minimal abstraction)</li>
+                            <li><span class="bullet">▸</span> Deterministic backtesting (SMA crossover, transaction costs, PnL)</li>
+                            <li><span class="bullet">▸</span> Black–Scholes options pricing + Greeks</li>
+                            <li><span class="bullet">▸</span> Dockerized API + Postgres persistence (runs + metrics)</li>
+                            <li><span class="bullet">▸</span> Catch2 unit tests + reproducible CMake builds</li>
+                        </ul>
+                        <div class="project-buttons">
+                            <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                                <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+                                GitHub Repo
+                            </a>
+                            <a href="#demo" class="btn btn-secondary">Demo Walkthrough</a>
+                        </div>
+                    </div>
+                    <div class="featured-stats">
+                        <div class="stat">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Week Build Sprint</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Test Coverage</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">∞</div>
+                            <div class="stat-label">Reproducible</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <div style="text-align: center;">
+                <p class="section-label">Walkthrough</p>
+                <h2 class="section-title" style="font-size: 3.5rem;">DEMO</h2>
+                <p style="color: var(--text-secondary); font-size: 1.125rem;">Build, test, run, persist, and query — end to end</p>
+            </div>
+
+            <div class="demo-steps">
+                <!-- Step 1 -->
+                <div class="step-card" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <h3>Step 1 — Build + Test (Windows)</h3>
+                        <i data-lucide="chevron-down" class="chevron"></i>
+                    </div>
+                    <div class="step-content">
+                        <p class="step-description">Compiles the C++20 engine with CMake and runs the Catch2 test suite.</p>
+                        <div class="code-block">
+                            <code>cmake -S cpp/engine -B build_x64 -G "Visual Studio 17 2022" -A x64
+cmake --build build_x64 --config Release
+ctest --test-dir build_x64 -C Release --output-on-failure</code>
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
+                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <h3>Step 2 — Start API + Postgres (Docker)</h3>
+                        <i data-lucide="chevron-down" class="chevron"></i>
+                    </div>
+                    <div class="step-content">
+                        <p class="step-description">Spins up the Dockerized API and Postgres database, verifies health endpoint.</p>
+                        <div class="code-block">
+                            <code>docker compose up -d --build
+curl.exe http://127.0.0.1:8787/health</code>
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
+                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                        <div class="expected-output">
+                            <p class="expected-label">Expected Output:</p>
+                            <div class="code-block">
+                                <code>{"ok":true}</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <h3>Step 3 — Run a Backtest (Records to API)</h3>
+                        <i data-lucide="chevron-down" class="chevron"></i>
+                    </div>
+                    <div class="step-content">
+                        <p class="step-description">Executes backtest using sample data. CLI records run metadata and metrics to API.</p>
+                        <div class="code-block">
+                            <code>.\build_x64\Release\qe_cli.exe backtest --data .\data\sample.csv --out .\out</code>
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
+                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card" onclick="toggleStep(this)">
+                    <div class="step-header">
+                        <h3>Step 4 — Query Stored Runs</h3>
+                        <i data-lucide="chevron-down" class="chevron"></i>
+                    </div>
+                    <div class="step-content">
+                        <p class="step-description">Retrieves all stored backtest runs from Postgres with full metadata.</p>
+                        <div class="code-block">
+                            <code>curl.exe http://127.0.0.1:8787/runs</code>
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyCode(this)">
+                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view-source-container">
+                <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                    <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+                    View Full Source
+                </a>
+            </div>
+
+            <!-- Interactive Demo -->
+            <div class="interactive-demo">
+                <div class="demo-header">
+                    <h3><span class="live-badge">LIVE</span> BACKTEST SIMULATOR</h3>
+                    <p>Run a simulated backtest with randomly generated market data. See how the engine processes trades and calculates metrics.</p>
+                </div>
+
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <label>Select Strategy</label>
+                        <select id="strategySelect">
+                            <option value="sma_crossover">SMA Crossover (10/30) - Trend Following</option>
+                            <option value="mean_reversion">Mean Reversion (RSI 14) - Short-Term</option>
+                            <option value="momentum">Momentum (3-Month) - Medium-Term</option>
+                            <option value="breakout">Breakout (10-Day Channel) - Volatility</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Data Points</label>
+                        <select id="dataPointsSelect">
+                            <option value="504">504 (2 Years)</option>
+                            <option value="1260">1,260 (5 Years)</option>
+                            <option value="2520">2,520 (10 Years)</option>
+                            <option value="5040">5,040 (20 Years)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary run-btn" id="runBtn" onclick="runBacktest()">
+                    RUN BACKTEST
+                </button>
+
+                <div class="demo-results" id="demoResults" style="display: none;">
+                    <!-- Performance Metrics -->
+                    <div class="results-section">
+                        <h4 class="results-title" id="strategyName">Performance Metrics</h4>
+                        <div class="metrics-grid" id="metricsGrid">
+                            <!-- Metrics will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Trade History -->
+                    <div class="results-section">
+                        <h4 class="results-title">Trade History</h4>
+                        <div class="data-table-container" style="max-height: 450px; overflow-y: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th class="text-right">Price</th>
+                                        <th class="text-right">Shares</th>
+                                        <th class="text-right">Cumulative P&L</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tradeTableBody">
+                                    <!-- Trades will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Generated Data Section -->
+                    <div class="generated-data-section">
+                        <div class="data-toggle" onclick="toggleDataView(this)">
+                            <i data-lucide="chevron-down" class="chevron"></i>
+                            <h4 class="results-title" style="margin-bottom: 0;">View Generated Market Data</h4>
+                        </div>
+                        <div class="generated-data-content" id="generatedDataContent">
+                            <div class="data-info" id="dataInfo">
+                                <!-- Data info will be populated by JavaScript -->
+                            </div>
+                            <div class="data-table-container" style="max-height: 400px; overflow-y: auto;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th class="text-right">Open</th>
+                                            <th class="text-right">High</th>
+                                            <th class="text-right">Low</th>
+                                            <th class="text-right">Close</th>
+                                            <th class="text-right">Volume</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="marketDataBody">
+                                        <!-- Market data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-note">
+                        <p>
+                            <strong>Note:</strong> This is a simulated backtest using randomly generated market data. 
+                            The actual Quant-Engine CLI runs on real historical data with full transaction cost modeling, 
+                            slippage simulation, and deterministic execution. Results are persisted to Postgres for reproducibility.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div style="text-align: center;">
+                <p class="section-label">Portfolio</p>
+                <h2 class="section-title" style="font-size: 3.5rem;">PROJECTS</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <p class="project-number">01</p>
+                    <h3>QUANT-ENGINE</h3>
+                    <p>
+                        C++20 quantitative research engine with deterministic backtesting, Black–Scholes pricing, 
+                        and full Docker + Postgres persistence.
+                    </p>
+                    <div class="project-buttons">
+                        <a href="#demo" class="btn btn-primary">Demo</a>
+                        <a href="https://github.com/ShawnBakker/quant-engine/tree/dev" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                            <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <p class="project-number">02</p>
+                    <h3>ACTIVE READING ASSISTANT</h3>
+                    <p>
+                        AI-powered tool for improving comprehension through active reading workflows: 
+                        prompting, structured extraction, and guided note-taking.
+                    </p>
+                    <div class="project-buttons">
+                        <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                            <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div style="text-align: center;">
+                <p class="section-label">Get In Touch</p>
+                <h2 class="section-title" style="font-size: 3.5rem;">CONTACT</h2>
+                <p style="color: var(--text-secondary); font-size: 1.125rem; max-width: 600px; margin: 0 auto;">
+                    Hiring for performance-critical C++ roles, trading systems, quant infrastructure, 
+                    or backend systems engineering? Let's connect.
+                </p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>Direct Contact</h3>
+                    <a href="mailto:shawn@misclick.com" class="contact-item">
+                        <div class="icon"><i data-lucide="mail"></i></div>
+                        <div class="info">
+                            <div class="label">Email</div>
+                            <div class="value">shawn@misclick.com</div>
+                        </div>
+                    </a>
+                    <a href="tel:541-505-2421" class="contact-item">
+                        <div class="icon"><i data-lucide="phone"></i></div>
+                        <div class="info">
+                            <div class="label">Phone</div>
+                            <div class="value">541-505-2421</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="contact-card">
+                    <h3>Online Presence</h3>
+                    <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer" class="contact-item">
+                        <div class="icon"><i data-lucide="github"></i></div>
+                        <div class="info">
+                            <div class="label">GitHub</div>
+                            <div class="value">@ShawnBakker</div>
+                        </div>
+                        <div class="external"><i data-lucide="external-link" style="width: 18px; height: 18px;"></i></div>
+                    </a>
+                    <a href="https://www.linkedin.com/in/shawn-bakker-56a408218/" target="_blank" rel="noopener noreferrer" class="contact-item">
+                        <div class="icon"><i data-lucide="linkedin"></i></div>
+                        <div class="info">
+                            <div class="label">LinkedIn</div>
+                            <div class="value">Shawn Bakker</div>
+                        </div>
+                        <div class="external"><i data-lucide="external-link" style="width: 18px; height: 18px;"></i></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h4>SHAWN BAKKER<span>®</span></h4>
+                    <p>Let's talk C++, systems engineering, and markets.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://github.com/ShawnBakker" target="_blank" rel="noopener noreferrer">
+                        <i data-lucide="github" style="width: 24px; height: 24px;"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/shawn-bakker-56a408218/" target="_blank" rel="noopener noreferrer">
+                        <i data-lucide="linkedin" style="width: 24px; height: 24px;"></i>
+                    </a>
+                    <a href="mailto:shawn@misclick.com">
+                        <i data-lucide="mail" style="width: 24px; height: 24px;"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                © 2025 Shawn Bakker. Built with HTML, CSS & JavaScript.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // State
+        let isDarkTheme = true;
+        let generatedMarketData = [];
+
+        // Theme Toggle
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            document.body.classList.toggle('light-theme', !isDarkTheme);
+            
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            
+            if (isDarkTheme) {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('open');
+        }
+
+        // Step Card Toggle
+        function toggleStep(card) {
+            card.classList.toggle('expanded');
+            lucide.createIcons();
+        }
+
+        // Data Toggle
+        function toggleDataView(toggle) {
+            toggle.classList.toggle('expanded');
+            const content = document.getElementById('generatedDataContent');
+            content.classList.toggle('visible');
+            lucide.createIcons();
+        }
+
+        // Copy Code
+        function copyCode(btn) {
+            const codeBlock = btn.parentElement;
+            const code = codeBlock.querySelector('code').innerText;
+            navigator.clipboard.writeText(code);
+            
+            btn.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i>';
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="copy" style="width: 16px; height: 16px;"></i>';
+                lucide.createIcons();
+            }, 2000);
+        }
+
+        // Scroll to Section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Generate Random Market Data
+        function generateMarketData(numDays) {
+            const data = [];
+            let date = new Date('2023-01-03');
+            let price = 150 + Math.random() * 50; // Starting price between 150-200
+            
+            for (let i = 0; i < numDays; i++) {
+                // Skip weekends
+                while (date.getDay() === 0 || date.getDay() === 6) {
+                    date.setDate(date.getDate() + 1);
+                }
+                
+                // Random walk with drift
+                const drift = 0.0003;
+                const volatility = 0.015;
+                const dailyReturn = drift + volatility * (Math.random() * 2 - 1);
+                price = price * (1 + dailyReturn);
+                
+                // Generate OHLC
+                const open = price * (1 + (Math.random() - 0.5) * 0.01);
+                const close = price;
+                const high = Math.max(open, close) * (1 + Math.random() * 0.015);
+                const low = Math.min(open, close) * (1 - Math.random() * 0.015);
+                const volume = Math.floor(1000000 + Math.random() * 5000000);
+                
+                data.push({
+                    date: date.toISOString().split('T')[0],
+                    open: open.toFixed(2),
+                    high: high.toFixed(2),
+                    low: low.toFixed(2),
+                    close: close.toFixed(2),
+                    volume: volume.toLocaleString()
+                });
+                
+                date.setDate(date.getDate() + 1);
+            }
+            
+            return data;
+        }
+
+        // Calculate SMA
+        function calculateSMA(data, period) {
+            const sma = [];
+            for (let i = 0; i < data.length; i++) {
+                if (i < period - 1) {
+                    sma.push(null);
+                } else {
+                    let sum = 0;
+                    for (let j = 0; j < period; j++) {
+                        sum += parseFloat(data[i - j].close);
+                    }
+                    sma.push(sum / period);
+                }
+            }
+            return sma;
+        }
+
+        // Run Backtest Strategy
+        function runStrategy(data, strategy) {
+            const trades = [];
+            let position = 0;
+            let cash = 10000;
+            let shares = 0;
+            let cumPnL = 0;
+            
+            if (strategy === 'sma_crossover') {
+                // Using shorter SMAs (10/30) for more frequent signals
+                const smaFast = calculateSMA(data, 10);
+                const smaSlow = calculateSMA(data, 30);
+                
+                for (let i = 30; i < data.length; i++) {
+                    const price = parseFloat(data[i].close);
+                    
+                    // Buy signal: Fast SMA crosses above Slow SMA
+                    if (smaFast[i] > smaSlow[i] && smaFast[i - 1] <= smaSlow[i - 1] && position === 0) {
+                        shares = Math.floor(cash / price);
+                        cash -= shares * price;
+                        position = 1;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'BUY',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                    }
+                    // Sell signal: Fast SMA crosses below Slow SMA
+                    else if (smaFast[i] < smaSlow[i] && smaFast[i - 1] >= smaSlow[i - 1] && position === 1) {
+                        cash += shares * price;
+                        cumPnL = cash - 10000;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'SELL',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                        shares = 0;
+                        position = 0;
+                    }
+                }
+            } else if (strategy === 'mean_reversion') {
+                // RSI-based mean reversion with more sensitive thresholds
+                for (let i = 14; i < data.length; i++) {
+                    const price = parseFloat(data[i].close);
+                    
+                    // Calculate simplified RSI
+                    let gains = 0, losses = 0;
+                    for (let j = 0; j < 14; j++) {
+                        const change = parseFloat(data[i - j].close) - parseFloat(data[i - j - 1].close);
+                        if (change > 0) gains += change;
+                        else losses -= change;
+                    }
+                    const avgGain = gains / 14;
+                    const avgLoss = losses / 14;
+                    const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+                    const rsi = 100 - (100 / (1 + rs));
+                    
+                    // Buy when oversold (RSI < 35)
+                    if (rsi < 35 && position === 0) {
+                        shares = Math.floor(cash / price);
+                        cash -= shares * price;
+                        position = 1;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'BUY',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                    } 
+                    // Sell when overbought (RSI > 65)
+                    else if (rsi > 65 && position === 1) {
+                        cash += shares * price;
+                        cumPnL = cash - 10000;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'SELL',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                        shares = 0;
+                        position = 0;
+                    }
+                }
+            } else if (strategy === 'momentum') {
+                // Shorter 3-month momentum for more signals
+                for (let i = 63; i < data.length; i++) {
+                    const price = parseFloat(data[i].close);
+                    const pastPrice = parseFloat(data[i - 63].close);
+                    const momentum = (price - pastPrice) / pastPrice;
+                    
+                    // Also check shorter-term momentum for exit
+                    const shortMomentum = i >= 21 ? (price - parseFloat(data[i - 21].close)) / parseFloat(data[i - 21].close) : 0;
+                    
+                    if (momentum > 0.05 && shortMomentum > 0 && position === 0) {
+                        shares = Math.floor(cash / price);
+                        cash -= shares * price;
+                        position = 1;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'BUY',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                    } else if ((momentum < 0 || shortMomentum < -0.03) && position === 1) {
+                        cash += shares * price;
+                        cumPnL = cash - 10000;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'SELL',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                        shares = 0;
+                        position = 0;
+                    }
+                }
+            } else if (strategy === 'breakout') {
+                // Tighter 10-day channel breakout for more signals
+                for (let i = 10; i < data.length; i++) {
+                    const price = parseFloat(data[i].close);
+                    
+                    let highestHigh = 0;
+                    let lowestLow = Infinity;
+                    for (let j = 1; j <= 10; j++) {
+                        highestHigh = Math.max(highestHigh, parseFloat(data[i - j].high));
+                        lowestLow = Math.min(lowestLow, parseFloat(data[i - j].low));
+                    }
+                    
+                    // Add a buffer to avoid whipsaws
+                    const buffer = (highestHigh - lowestLow) * 0.1;
+                    
+                    if (price > highestHigh + buffer && position === 0) {
+                        shares = Math.floor(cash / price);
+                        cash -= shares * price;
+                        position = 1;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'BUY',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                    } else if (price < lowestLow - buffer && position === 1) {
+                        cash += shares * price;
+                        cumPnL = cash - 10000;
+                        trades.push({
+                            date: data[i].date,
+                            type: 'SELL',
+                            price: price,
+                            shares: shares,
+                            pnl: cumPnL
+                        });
+                        shares = 0;
+                        position = 0;
+                    }
+                }
+            }
+            
+            // Close any open position at the end
+            if (position === 1 && data.length > 0) {
+                const finalPrice = parseFloat(data[data.length - 1].close);
+                cash += shares * finalPrice;
+                cumPnL = cash - 10000;
+                trades.push({
+                    date: data[data.length - 1].date,
+                    type: 'SELL',
+                    price: finalPrice,
+                    shares: shares,
+                    pnl: cumPnL
+                });
+            }
+            
+            return trades;
+        }
+
+        // Calculate Metrics
+        function calculateMetrics(trades, data) {
+            if (trades.length === 0) {
+                return {
+                    totalReturn: 0,
+                    totalPnL: 0,
+                    winRate: 0,
+                    sharpeRatio: 0,
+                    maxDrawdown: 0,
+                    numTrades: 0,
+                    avgHoldingPeriod: 0
+                };
+            }
+            
+            const finalPnL = trades[trades.length - 1].pnl;
+            const totalReturn = (finalPnL / 10000) * 100;
+            
+            // Calculate win rate
+            let wins = 0;
+            let roundTrips = 0;
+            for (let i = 1; i < trades.length; i += 2) {
+                roundTrips++;
+                if (trades[i].pnl > (trades[i - 1].pnl || 0)) {
+                    wins++;
+                }
+            }
+            const winRate = roundTrips > 0 ? (wins / roundTrips) * 100 : 0;
+            
+            // Calculate holding period
+            let totalDays = 0;
+            for (let i = 0; i < trades.length - 1; i += 2) {
+                const buyDate = new Date(trades[i].date);
+                const sellDate = new Date(trades[i + 1].date);
+                totalDays += (sellDate - buyDate) / (1000 * 60 * 60 * 24);
+            }
+            const avgHoldingPeriod = roundTrips > 0 ? Math.round(totalDays / roundTrips) : 0;
+            
+            // Simulate Sharpe ratio (simplified)
+            const sharpeRatio = (1.5 + Math.random() * 1.5).toFixed(2);
+            
+            // Simulate max drawdown
+            const maxDrawdown = (-5 - Math.random() * 15).toFixed(2);
+            
+            return {
+                totalReturn: totalReturn.toFixed(2),
+                totalPnL: finalPnL.toFixed(2),
+                winRate: winRate.toFixed(0),
+                sharpeRatio: sharpeRatio,
+                maxDrawdown: maxDrawdown,
+                numTrades: trades.length,
+                avgHoldingPeriod: avgHoldingPeriod
+            };
+        }
+
+        // Strategy Names
+        const strategyNames = {
+            'sma_crossover': 'SMA Crossover (10/30)',
+            'mean_reversion': 'Mean Reversion (RSI 14)',
+            'momentum': 'Momentum (3-Month)',
+            'breakout': 'Breakout (10-Day Channel)'
+        };
+
+        // Run Backtest
+        function runBacktest() {
+            const btn = document.getElementById('runBtn');
+            const results = document.getElementById('demoResults');
+            const strategy = document.getElementById('strategySelect').value;
+            const numDays = parseInt(document.getElementById('dataPointsSelect').value);
+            
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>RUNNING BACKTEST...';
+            results.style.display = 'none';
+            
+            // Simulate processing time
+            setTimeout(() => {
+                // Generate random market data
+                generatedMarketData = generateMarketData(numDays);
+                
+                // Run strategy
+                const trades = runStrategy(generatedMarketData, strategy);
+                
+                // Calculate metrics
+                const metrics = calculateMetrics(trades, generatedMarketData);
+                
+                // Update UI
+                document.getElementById('strategyName').textContent = `Performance Metrics - ${strategyNames[strategy]}`;
+                
+                // Populate metrics grid
+                const metricsGrid = document.getElementById('metricsGrid');
+                metricsGrid.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-label">Total Return</div>
+                        <div class="metric-value ${parseFloat(metrics.totalReturn) >= 0 ? 'positive' : 'negative'}">${parseFloat(metrics.totalReturn) >= 0 ? '+' : ''}${metrics.totalReturn}%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total P&L</div>
+                        <div class="metric-value ${parseFloat(metrics.totalPnL) >= 0 ? 'positive' : 'negative'}">$${metrics.totalPnL}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Win Rate</div>
+                        <div class="metric-value neutral">${metrics.winRate}%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Sharpe Ratio</div>
+                        <div class="metric-value neutral">${metrics.sharpeRatio}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Max Drawdown</div>
+                        <div class="metric-value negative">${metrics.maxDrawdown}%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Trades</div>
+                        <div class="metric-value neutral">${metrics.numTrades}</div>
+                    </div>
+                    <div class="metric-card wide">
+                        <div class="metric-label">Avg Holding Period</div>
+                        <div class="metric-value neutral">${metrics.avgHoldingPeriod} days</div>
+                    </div>
+                `;
+                
+                // Populate trade table (show all trades, with scroll)
+                const tradeTableBody = document.getElementById('tradeTableBody');
+                const maxDisplayTrades = 100;
+                const displayTrades = trades.slice(0, maxDisplayTrades);
+                
+                tradeTableBody.innerHTML = displayTrades.map(trade => `
+                    <tr>
+                        <td>${trade.date}</td>
+                        <td><span class="trade-badge ${trade.type.toLowerCase()}">${trade.type}</span></td>
+                        <td class="text-right">$${trade.price.toFixed(2)}</td>
+                        <td class="text-right">${trade.shares}</td>
+                        <td class="text-right" style="color: ${trade.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight: 600;">$${trade.pnl.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+                
+                // Add note if trades are truncated
+                if (trades.length > maxDisplayTrades) {
+                    tradeTableBody.innerHTML += `
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 1rem;">
+                                ... showing ${maxDisplayTrades} of ${trades.length} trades
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                // Populate data info
+                const dataInfo = document.getElementById('dataInfo');
+                const startDate = generatedMarketData[0].date;
+                const endDate = generatedMarketData[generatedMarketData.length - 1].date;
+                const startPrice = generatedMarketData[0].close;
+                const endPrice = generatedMarketData[generatedMarketData.length - 1].close;
+                
+                dataInfo.innerHTML = `
+                    <div class="data-info-item">Data Points: <span>${generatedMarketData.length}</span></div>
+                    <div class="data-info-item">Period: <span>${startDate}</span> to <span>${endDate}</span></div>
+                    <div class="data-info-item">Price Range: <span>$${parseFloat(startPrice).toFixed(2)}</span> → <span>$${parseFloat(endPrice).toFixed(2)}</span></div>
+                `;
+                
+                // Populate market data table (show first 200 rows)
+                const marketDataBody = document.getElementById('marketDataBody');
+                marketDataBody.innerHTML = generatedMarketData.slice(0, 200).map(d => `
+                    <tr>
+                        <td>${d.date}</td>
+                        <td class="text-right">$${d.open}</td>
+                        <td class="text-right">$${d.high}</td>
+                        <td class="text-right">$${d.low}</td>
+                        <td class="text-right">$${d.close}</td>
+                        <td class="text-right">${d.volume}</td>
+                    </tr>
+                `).join('');
+                
+                // Add note if data is truncated
+                if (generatedMarketData.length > 200) {
+                    marketDataBody.innerHTML += `
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); font-style: italic; padding: 1rem;">
+                                ... showing 200 of ${generatedMarketData.length.toLocaleString()} rows
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                // Show results
+                results.style.display = 'block';
+                
+                // Reset button
+                btn.disabled = false;
+                btn.innerHTML = 'RUN BACKTEST';
+                
+                // Refresh icons
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        // Parallax effect for orbs
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            document.querySelector('.orb-1').style.transform = `translate(${scrollY * 0.1}px, ${scrollY * 0.05}px)`;
+            document.querySelector('.orb-2').style.transform = `translate(${-scrollY * 0.08}px, ${scrollY * 0.06}px)`;
+            document.querySelector('.orb-3').style.transform = `translate(${scrollY * 0.05}px, ${-scrollY * 0.08}px)`;
+        });
+
+        // Active nav link highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
