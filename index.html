@@ -446,6 +446,8 @@
             cursor: pointer;
             transition: all 0.3s;
             border: none;
+            position: relative;
+            z-index: 10;
         }
 
         .btn-primary {
@@ -960,24 +962,90 @@
         .chart-value.negative { color: var(--danger); }
         .chart-value.warning { color: var(--warning); }
 
-        .mini-chart {
+        /* Line chart styles - Recharts inspired */
+        .line-chart {
             height: 80px;
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-            padding-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.02) 100%);
+            border-radius: 4px;
         }
 
-        .chart-bar {
-            flex: 1;
-            background: var(--accent-primary);
-            border-radius: 2px 2px 0 0;
-            min-height: 2px;
-            transition: height 0.3s;
+        .line-chart svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
         }
 
-        .chart-bar.negative {
-            background: var(--danger);
+        .chart-line {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+
+        .chart-line.positive {
+            stroke: var(--success);
+        }
+
+        .chart-line.negative {
+            stroke: var(--danger);
+        }
+
+        .chart-line.neutral {
+            stroke: var(--accent-primary);
+        }
+
+        .chart-line.warning {
+            stroke: var(--warning);
+        }
+
+        .chart-area {
+            opacity: 0.25;
+        }
+
+        .chart-area.positive {
+            fill: url(#gradientPositive);
+        }
+
+        .chart-area.negative {
+            fill: url(#gradientNegative);
+        }
+
+        .chart-area.neutral {
+            fill: url(#gradientNeutral);
+        }
+
+        .chart-area.warning {
+            fill: url(#gradientWarning);
+        }
+
+        .chart-dot {
+            filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.5));
+        }
+
+        .chart-dot.positive {
+            fill: var(--success);
+        }
+
+        .chart-dot.negative {
+            fill: var(--danger);
+        }
+
+        .chart-dot.neutral {
+            fill: var(--accent-primary);
+        }
+
+        .chart-dot.warning {
+            fill: var(--warning);
+        }
+
+        .chart-grid-line {
+            stroke: var(--border-color);
+            stroke-width: 0.5;
+            stroke-dasharray: 3 3;
+            opacity: 0.4;
         }
 
         .order-book-section {
@@ -1397,6 +1465,8 @@
             border-radius: 12px;
             padding: 2rem;
             transition: border-color 0.3s, transform 0.3s;
+            position: relative;
+            z-index: 1;
         }
 
         .project-card:hover {
@@ -1433,10 +1503,14 @@
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 20;
         }
 
         .project-buttons .btn {
             padding: 0.75rem 1.5rem;
+            position: relative;
+            z-index: 20;
         }
 
         .contact {
@@ -1739,8 +1813,8 @@
             width: 100%;
         }
 
+        /* Fixed tilt-card - removed transform-style that was blocking clicks */
         .tilt-card {
-            transform-style: preserve-3d;
             transition: transform 0.3s ease;
         }
 
@@ -1907,7 +1981,6 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-main">
-                    <p class="hero-label">Design Director</p>
                     <h1 class="hero-title">
                         <span class="typing-container"><span class="typing-text" id="heroTyping">Shawn</span></span><br>
                         <span class="accent" id="heroName2">Bakker</span>
@@ -2100,21 +2173,21 @@
                                     <span class="chart-title">Market Maker P&L</span>
                                     <span class="chart-value" id="pnlValue">$0.00</span>
                                 </div>
-                                <div class="mini-chart" id="pnlChart"></div>
+                                <div class="line-chart" id="pnlChart"></div>
                             </div>
                             <div class="chart-card">
                                 <div class="chart-header">
                                     <span class="chart-title">Quoted Spread (Adaptive)</span>
                                     <span class="chart-value warning" id="spreadValue">$0.12</span>
                                 </div>
-                                <div class="mini-chart" id="spreadChart"></div>
+                                <div class="line-chart" id="spreadChart"></div>
                             </div>
                             <div class="chart-card">
                                 <div class="chart-header">
                                     <span class="chart-title">Price</span>
                                     <span class="chart-value" id="priceValue" style="color: var(--text-primary);">$100.00</span>
                                 </div>
-                                <div class="mini-chart" id="priceChart"></div>
+                                <div class="line-chart" id="priceChart"></div>
                             </div>
                         </div>
 
@@ -2317,7 +2390,7 @@ curl.exe http://127.0.0.1:8787/health</code>
                 <h2 class="section-title" style="font-size: 3.5rem;">PROJECTS</h2>
             </div>
             <div class="projects-grid">
-                <div class="project-card hover-lift tilt-card animate-left">
+                <div class="project-card tilt-card animate-left">
                     <p class="project-number">01</p>
                     <h3>Market Microstructure Simulator</h3>
                     <p>
@@ -2331,7 +2404,7 @@ curl.exe http://127.0.0.1:8787/health</code>
                         </a>
                     </div>
                 </div>
-                <div class="project-card hover-lift tilt-card animate-right">
+                <div class="project-card tilt-card animate-right">
                     <p class="project-number">02</p>
                     <h3>Quant-Engine</h3>
                     <p>
@@ -2664,28 +2737,127 @@ curl.exe http://127.0.0.1:8787/health</code>
 
             document.getElementById('bookSpread').textContent = 'Spread: $' + s.mm.spread.toFixed(3);
 
-            // Charts
-            renderMiniChart('pnlChart', s.pnlHistory, true);
-            renderMiniChart('spreadChart', s.spreadHistory, false);
-            renderMiniChart('priceChart', s.priceHistory, false);
+            // Line Charts
+            const lastPnl = s.pnlHistory.length > 0 ? s.pnlHistory[s.pnlHistory.length - 1] : 0;
+            renderLineChart('pnlChart', s.pnlHistory, lastPnl >= 0 ? 'positive' : 'negative');
+            renderLineChart('spreadChart', s.spreadHistory, 'warning');
+            renderLineChart('priceChart', s.priceHistory, 'neutral');
         }
 
-        function renderMiniChart(id, data, allowNegative) {
+        function renderLineChart(id, data, colorClass) {
             const container = document.getElementById(id);
-            if (!data.length) {
-                container.innerHTML = '';
+            if (!data.length || data.length < 2) {
+                container.innerHTML = `<svg viewBox="0 0 100 80" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradientPositive" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#10b981" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                        </linearGradient>
+                        <linearGradient id="gradientNegative" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ef4444" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+                        </linearGradient>
+                        <linearGradient id="gradientNeutral" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+                        </linearGradient>
+                        <linearGradient id="gradientWarning" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+                    <line x1="0" y1="40" x2="100" y2="40" class="chart-grid-line"/>
+                </svg>`;
                 return;
             }
 
+            const width = 100;
+            const height = 80;
+            const paddingX = 2;
+            const paddingY = 8;
+            
             const min = Math.min(...data);
             const max = Math.max(...data);
             const range = max - min || 1;
 
-            container.innerHTML = data.map(v => {
-                const height = ((v - min) / range) * 100;
-                const isNeg = allowNegative && v < 0;
-                return `<div class="chart-bar ${isNeg ? 'negative' : ''}" style="height: ${Math.max(2, height)}%"></div>`;
-            }).join('');
+            // Generate data points
+            const points = data.map((v, i) => {
+                const x = paddingX + (i / (data.length - 1)) * (width - paddingX * 2);
+                const y = paddingY + (1 - (v - min) / range) * (height - paddingY * 2);
+                return { x, y };
+            });
+
+            // Create smooth monotone curve using Catmull-Rom to Bezier conversion
+            function monotoneCurve(pts) {
+                if (pts.length < 2) return '';
+                if (pts.length === 2) return `M ${pts[0].x},${pts[0].y} L ${pts[1].x},${pts[1].y}`;
+                
+                let path = `M ${pts[0].x},${pts[0].y}`;
+                
+                for (let i = 0; i < pts.length - 1; i++) {
+                    const p0 = pts[Math.max(0, i - 1)];
+                    const p1 = pts[i];
+                    const p2 = pts[i + 1];
+                    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+                    
+                    // Catmull-Rom to Bezier conversion
+                    const cp1x = p1.x + (p2.x - p0.x) / 6;
+                    const cp1y = p1.y + (p2.y - p0.y) / 6;
+                    const cp2x = p2.x - (p3.x - p1.x) / 6;
+                    const cp2y = p2.y - (p3.y - p1.y) / 6;
+                    
+                    path += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+                }
+                
+                return path;
+            }
+
+            const linePath = monotoneCurve(points);
+            const lastPoint = points[points.length - 1];
+            const firstPoint = points[0];
+            
+            // Area path (closed shape)
+            const areaPath = `${linePath} L ${lastPoint.x},${height - paddingY} L ${firstPoint.x},${height - paddingY} Z`;
+
+            container.innerHTML = `
+                <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradientPositive" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#10b981" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#10b981" stop-opacity="0.05"/>
+                        </linearGradient>
+                        <linearGradient id="gradientNegative" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ef4444" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#ef4444" stop-opacity="0.05"/>
+                        </linearGradient>
+                        <linearGradient id="gradientNeutral" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.05"/>
+                        </linearGradient>
+                        <linearGradient id="gradientWarning" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.05"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Grid lines -->
+                    <line x1="${paddingX}" y1="${height * 0.25}" x2="${width - paddingX}" y2="${height * 0.25}" class="chart-grid-line"/>
+                    <line x1="${paddingX}" y1="${height * 0.5}" x2="${width - paddingX}" y2="${height * 0.5}" class="chart-grid-line"/>
+                    <line x1="${paddingX}" y1="${height * 0.75}" x2="${width - paddingX}" y2="${height * 0.75}" class="chart-grid-line"/>
+                    
+                    <!-- Area fill with gradient -->
+                    <path d="${areaPath}" class="chart-area ${colorClass}"/>
+                    
+                    <!-- Main line -->
+                    <path d="${linePath}" class="chart-line ${colorClass}"/>
+                    
+                    <!-- Animated end dot with glow -->
+                    <circle cx="${lastPoint.x}" cy="${lastPoint.y}" r="4" class="chart-dot ${colorClass}">
+                        <animate attributeName="r" values="4;5;4" dur="1.5s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="1;0.7;1" dur="1.5s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            `;
         }
 
         function updateControlValue(id, value) {
@@ -2986,18 +3158,7 @@ curl.exe http://127.0.0.1:8787/health</code>
             btn.addEventListener('mouseleave', () => btn.style.transform = 'translate(0, 0)');
         });
 
-
-        document.querySelectorAll('.tilt-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const rotateX = (e.clientY - rect.top - rect.height / 2) / 20;
-                const rotateY = (rect.width / 2 - (e.clientX - rect.left)) / 20;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-            });
-            card.addEventListener('mouseleave', () => card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)');
-        });
-
- 
+        // Progress bar at top
         const progressBar = document.createElement('div');
         progressBar.style.cssText = 'position:fixed;top:80px;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--accent-primary),var(--accent-secondary));z-index:9999;transition:width 0.1s ease;';
         document.body.appendChild(progressBar);
