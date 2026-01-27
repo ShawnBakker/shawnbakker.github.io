@@ -7,18 +7,16 @@
     <meta name="description" content="Interactive demos for market microstructure simulation and quantitative finance tools.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8f7fc;
-            --bg-card: #ffffff;
             --text-primary: #1a1a2e;
             --text-secondary: #4a4a68;
             --text-muted: #7c7c9a;
             --accent: #6b21a8;
             --accent-light: #7c3aed;
-            --accent-bg: #f3e8ff;
             --border: #e5e5ef;
             --success: #16a34a;
             --danger: #dc2626;
@@ -31,10 +29,11 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.7;
+            font-size: 16px;
         }
 
         a {
@@ -46,15 +45,9 @@
             text-decoration: underline;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
         /* Navigation */
         nav {
-            padding: 16px 0;
+            padding: 16px 48px;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
@@ -62,7 +55,9 @@
             z-index: 100;
         }
 
-        nav .container {
+        nav .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -71,7 +66,8 @@
         nav .logo {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 16px;
+            letter-spacing: 0.5px;
         }
 
         nav .logo:hover {
@@ -87,8 +83,7 @@
 
         nav ul a {
             color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 15px;
         }
 
         nav ul a:hover {
@@ -100,123 +95,144 @@
             color: var(--accent);
         }
 
-        /* Header */
-        header {
-            padding: 48px 0 32px;
-            border-bottom: 1px solid var(--border);
+        /* Main Layout */
+        .page-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 64px;
         }
 
-        .profile {
-            display: flex;
-            gap: 32px;
-            align-items: flex-start;
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
         }
 
         .profile-image {
-            width: 120px;
-            height: 120px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 3px solid var(--border);
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sidebar h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .sidebar .title {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .sidebar-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: 700;
-            color: white;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .sidebar-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .sidebar-item svg {
+            width: 15px;
+            height: 15px;
             flex-shrink: 0;
-        }
-
-        .profile-info h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .profile-title {
-            color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 16px;
-        }
-
-        .profile-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 16px;
         }
 
-        .profile-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .profile-links a {
-            font-size: 13px;
+        .sidebar-item a {
             color: var(--text-secondary);
         }
 
-        .profile-links a:hover {
+        .sidebar-item a:hover {
             color: var(--accent);
         }
 
         /* Main Content */
         main {
-            padding: 48px 0;
+            min-width: 0;
         }
 
         h2 {
             font-size: 20px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
             color: var(--text-primary);
+            letter-spacing: 0.3px;
         }
 
         h3 {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         p {
             color: var(--text-secondary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-size: 15px;
         }
 
         hr {
             border: none;
             border-top: 1px solid var(--border);
-            margin: 32px 0;
+            margin: 36px 0;
         }
 
         /* Demo Section */
         .demo-section {
-            margin-bottom: 48px;
-        }
-
-        .demo-section h3 {
-            color: var(--text-primary);
+            margin-bottom: 40px;
         }
 
         .demo-tech {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .demo-description {
             color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.7;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .demo-links {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             font-size: 13px;
         }
 
@@ -230,14 +246,14 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .demo-card h4 {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-size: 15px;
             font-weight: 600;
         }
@@ -257,15 +273,15 @@
 
         .demo-controls {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
         }
 
         .control-group label {
@@ -298,6 +314,7 @@
             background: var(--bg-primary);
             font-size: 13px;
             color: var(--text-primary);
+            font-family: inherit;
         }
 
         .control-value {
@@ -309,7 +326,7 @@
         .demo-buttons {
             display: flex;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .btn {
@@ -320,6 +337,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: inherit;
         }
 
         .btn-primary {
@@ -384,22 +402,14 @@
 
         .code-block pre {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            line-height: 1.5;
+            font-size: 12px;
+            line-height: 1.6;
             color: #e4e4e7;
             margin: 0;
         }
 
         .code-block .comment {
             color: #7c7c9a;
-        }
-
-        .code-block .keyword {
-            color: var(--accent-light);
-        }
-
-        .code-block .string {
-            color: #22c55e;
         }
 
         /* Results Table */
@@ -412,7 +422,7 @@
 
         .results-table th,
         .results-table td {
-            padding: 10px 12px;
+            padding: 10px 14px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -430,35 +440,55 @@
 
         /* Footer */
         footer {
-            padding: 32px 0;
+            padding: 24px 0;
             border-top: 1px solid var(--border);
             text-align: center;
             color: var(--text-muted);
             font-size: 13px;
+            margin-top: 20px;
         }
 
         /* Responsive */
-        @media (max-width: 640px) {
-            .profile {
-                flex-direction: column;
-                align-items: center;
+        @media (max-width: 900px) {
+            .page-wrapper {
+                grid-template-columns: 1fr;
+                padding: 32px 24px;
+                gap: 40px;
+            }
+
+            .sidebar {
+                position: static;
                 text-align: center;
             }
 
-            .profile-meta {
+            .profile-image {
+                margin: 0 auto 20px;
+            }
+
+            .sidebar-item {
                 justify-content: center;
             }
 
-            .profile-links {
-                justify-content: center;
-            }
-
-            nav ul {
-                gap: 20px;
+            .demo-controls {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .demo-stats {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            nav {
+                padding: 16px 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav ul {
+                gap: 20px;
+            }
+
+            .demo-controls {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -466,7 +496,7 @@
 <body>
     <!-- Navigation -->
     <nav>
-        <div class="container">
+        <div class="nav-inner">
             <a href="../index.html" class="logo">Shawn Bakker</a>
             <ul>
                 <li><a href="../index.html">About</a></li>
@@ -475,41 +505,66 @@
         </div>
     </nav>
 
-    <div class="container">
-        <!-- Header / Profile -->
-        <header>
-            <div class="profile">
-                <div class="profile-image">
-                    <img src="../assets/shawncropheadshot.jpg" alt="Profile picture of me" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+    <div class="page-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="profile-image">
+                <img src="../assets/headshot.jpg" alt="Shawn Bakker">
+            </div>
+            <h1>Shawn Bakker</h1>
+            <div class="title">C++ Software Engineer<br>Quantitative Systems</div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Pacific Northwest, USA
                 </div>
-                <div class="profile-info">
-                    <h1>Shawn Bakker</h1>
-                    <div class="profile-title">Software Engineer</div>
-                    <div class="profile-meta">
-                        <span>Pacific Northwest, USA</span>
-                        <span>University of Oregon</span>
-                    </div>
-                    <div class="profile-links">
-                        <a href="mailto:shawn@misclick.com">Email</a>
-                        <a href="https://github.com/ShawnBakker">GitHub</a>
-                        <a href="https://linkedin.com/in/shawn-bakker-56a408218/">LinkedIn</a>
-                    </div>
+                <div class="sidebar-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    University of Oregon
                 </div>
             </div>
-        </header>
 
+            <div class="sidebar-section">
+                <div class="sidebar-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <a href="mailto:shawn@misclick.com">shawn@misclick.com</a>
+                </div>
+                <div class="sidebar-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <a href="https://github.com/ShawnBakker">GitHub</a>
+                </div>
+                <div class="sidebar-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    <a href="https://linkedin.com/in/shawn-bakker-56a408218/">LinkedIn</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
         <main>
             <h2>Interactive Demos</h2>
 
-            <!-- Demo 1: Adverse Selection Simulator -->
+            <!-- Demo 1: Exchange Simulator -->
             <section class="demo-section" id="exchange-simulator">
                 <h3>Adverse Selection Simulator</h3>
                 <div class="demo-tech">TypeScript, React, Seeded RNG</div>
                 <div class="demo-description">
-                    This simulator demonstrates why bid-ask spreads exist in financial markets. Market makers provide liquidity by quoting both buy and sell prices, earning the spread on each trade. However, some traders have private information about the true value of the asset (informed traders), while others trade for non-informational reasons (noise traders).
+                    This simulator demonstrates why bid-ask spreads exist in financial markets. Market makers provide liquidity by quoting both buy and sell prices, earning the spread on each trade. However, some traders have private information about the true value (informed traders), while others trade for non-informational reasons (noise traders).
                 </div>
                 <div class="demo-description">
-                    When informed traders dominate order flow, they systematically trade against the market maker's quotes, causing losses. The market maker detects this "toxic flow" and widens spreads defensively to survive. This is the Glosten-Milgrom model in action.
+                    When informed traders dominate, they systematically trade against the market maker's quotes, causing losses. The MM detects this "toxic flow" and widens spreads defensively. This is the Glosten-Milgrom model in action.
                 </div>
                 <div class="demo-links">
                     <a href="https://github.com/ShawnBakker/exchange-simulator">GitHub Repository</a>
@@ -520,7 +575,7 @@
                         <span class="live-dot"></span>
                         Live Simulation
                     </h4>
-                    <p style="font-size: 13px; margin-bottom: 16px; color: var(--text-muted);">
+                    <p style="font-size: 13px; margin-bottom: 14px; color: var(--text-muted);">
                         Try: Set informed flow to 0% (MM profits) vs 60%+ (MM loses, spreads widen)
                     </p>
 
@@ -580,7 +635,7 @@
                 <h3>Quant Engine CLI</h3>
                 <div class="demo-tech">C++20, CMake, Docker, PostgreSQL</div>
                 <div class="demo-description">
-                    The Quant Engine is a C++20 research tool for backtesting trading strategies. It reads historical OHLCV data, applies strategy logic, and outputs performance metrics. Results are persisted to PostgreSQL for later analysis.
+                    The Quant Engine is a C++20 research tool for backtesting trading strategies. It reads historical OHLCV data, applies strategy logic, and outputs performance metrics. Results are persisted to PostgreSQL. Features Black-Scholes pricing with full Greeks.
                 </div>
                 <div class="demo-links">
                     <a href="https://github.com/ShawnBakker/quant-engine">GitHub Repository</a>
@@ -614,7 +669,7 @@ curl http://127.0.0.1:8787/runs</pre>
                 <h3>Backtest Simulator</h3>
                 <div class="demo-tech">Python, FastAPI, pandas, numpy</div>
                 <div class="demo-description">
-                    The Quant Toolkit provides backtesting capabilities via both a Python library and REST API. This demo simulates running a backtest with different strategies on randomly generated price data.
+                    The Quant Toolkit provides backtesting via Python library and REST API. This demo simulates running a backtest with different strategies on randomly generated price data.
                 </div>
                 <div class="demo-links">
                     <a href="https://github.com/ShawnBakker/quant-toolkit">GitHub Repository</a>
@@ -651,13 +706,14 @@ curl http://127.0.0.1:8787/runs</pre>
                                 <option value="1000000">$1,000,000</option>
                             </select>
                         </div>
+                        <div class="control-group"></div>
                     </div>
 
                     <div class="demo-buttons">
                         <button class="btn btn-primary" id="run-backtest">Run Backtest</button>
                     </div>
 
-                    <table class="results-table" id="backtest-results">
+                    <table class="results-table">
                         <thead>
                             <tr>
                                 <th>Metric</th>
@@ -674,17 +730,16 @@ curl http://127.0.0.1:8787/runs</pre>
                         </tbody>
                     </table>
 
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">
-                        Note: This demo uses randomly generated data. The real Quant Toolkit runs on historical data with transaction costs.
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px; margin-bottom: 0;">
+                        Note: Uses randomly generated data. The real Quant Toolkit runs on historical data with transaction costs.
                     </p>
                 </div>
             </section>
 
+            <footer>
+                2026 Shawn Bakker
+            </footer>
         </main>
-
-        <footer>
-            2025 Shawn Bakker
-        </footer>
     </div>
 
     <script>
@@ -788,23 +843,23 @@ curl http://127.0.0.1:8787/runs</pre>
         function generatePrices(n) {
             const prices = [100];
             for (let i = 1; i < n; i++) {
-                const ret = (Math.random() - 0.48) * 0.03; // Slight upward drift
+                const ret = (Math.random() - 0.48) * 0.03;
                 prices.push(prices[i-1] * (1 + ret));
             }
             return prices;
         }
 
-        function smaStrategy(prices, fast=20, slow=50) {
+        function smaStrategy(prices, fast = 20, slow = 50) {
             const signals = [];
             for (let i = 0; i < prices.length; i++) {
                 if (i < slow) {
                     signals.push(0);
                     continue;
                 }
-                const fastMA = prices.slice(i - fast, i).reduce((a,b) => a+b) / fast;
-                const slowMA = prices.slice(i - slow, i).reduce((a,b) => a+b) / slow;
-                const prevFast = prices.slice(i - fast - 1, i - 1).reduce((a,b) => a+b) / fast;
-                const prevSlow = prices.slice(i - slow - 1, i - 1).reduce((a,b) => a+b) / slow;
+                const fastMA = prices.slice(i - fast, i).reduce((a, b) => a + b, 0) / fast;
+                const slowMA = prices.slice(i - slow, i).reduce((a, b) => a + b, 0) / slow;
+                const prevFast = prices.slice(i - fast - 1, i - 1).reduce((a, b) => a + b, 0) / fast;
+                const prevSlow = prices.slice(i - slow - 1, i - 1).reduce((a, b) => a + b, 0) / slow;
                 
                 if (fastMA > slowMA && prevFast <= prevSlow) signals.push(1);
                 else if (fastMA < slowMA && prevFast >= prevSlow) signals.push(-1);
@@ -813,7 +868,7 @@ curl http://127.0.0.1:8787/runs</pre>
             return signals;
         }
 
-        function momentumStrategy(prices, lookback=20) {
+        function momentumStrategy(prices, lookback = 20) {
             const signals = [];
             for (let i = 0; i < prices.length; i++) {
                 if (i < lookback) {
@@ -828,7 +883,7 @@ curl http://127.0.0.1:8787/runs</pre>
             return signals;
         }
 
-        function rsiStrategy(prices, period=14) {
+        function rsiStrategy(prices, period = 14) {
             const signals = [];
             for (let i = 0; i < prices.length; i++) {
                 if (i < period + 1) {
@@ -857,42 +912,44 @@ curl http://127.0.0.1:8787/runs</pre>
             const equity = [capital];
             let trades = 0;
             let wins = 0;
+            let entryValue = 0;
             
             for (let i = 1; i < prices.length; i++) {
                 if (signals[i] === 1 && position === 0) {
                     position = cash / prices[i];
+                    entryValue = cash;
                     cash = 0;
                     trades++;
                 } else if (signals[i] === -1 && position > 0) {
-                    const value = position * prices[i];
-                    if (value > equity[equity.length - 1]) wins++;
-                    cash = value;
+                    const exitValue = position * prices[i];
+                    if (exitValue > entryValue) wins++;
+                    cash = exitValue;
                     position = 0;
                 }
                 equity.push(cash + position * prices[i]);
             }
             
-            // Close final position
             if (position > 0) {
-                cash = position * prices[prices.length - 1];
+                const exitValue = position * prices[prices.length - 1];
+                if (exitValue > entryValue) wins++;
+                cash = exitValue;
                 position = 0;
             }
             
             const finalEquity = equity[equity.length - 1];
             const totalReturn = (finalEquity - capital) / capital;
             const years = prices.length / 252;
-            const cagr = Math.pow(finalEquity / capital, 1 / years) - 1;
+            const cagr = Math.pow(Math.max(finalEquity / capital, 0.001), 1 / years) - 1;
             
-            // Sharpe (simplified)
             const returns = [];
             for (let i = 1; i < equity.length; i++) {
                 returns.push((equity[i] - equity[i-1]) / equity[i-1]);
             }
-            const avgReturn = returns.reduce((a,b) => a+b, 0) / returns.length;
-            const stdReturn = Math.sqrt(returns.map(r => Math.pow(r - avgReturn, 2)).reduce((a,b) => a+b, 0) / returns.length);
-            const sharpe = (avgReturn * 252) / (stdReturn * Math.sqrt(252));
+            const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length;
+            const variance = returns.map(r => Math.pow(r - avgReturn, 2)).reduce((a, b) => a + b, 0) / returns.length;
+            const stdReturn = Math.sqrt(variance);
+            const sharpe = stdReturn > 0 ? (avgReturn * 252) / (stdReturn * Math.sqrt(252)) : 0;
             
-            // Max drawdown
             let maxDD = 0;
             let peak = equity[0];
             for (const e of equity) {
@@ -904,7 +961,7 @@ curl http://127.0.0.1:8787/runs</pre>
             return {
                 totalReturn,
                 cagr,
-                sharpe,
+                sharpe: isFinite(sharpe) ? sharpe : 0,
                 maxDrawdown: maxDD,
                 winRate: trades > 0 ? wins / trades : 0,
                 trades
@@ -920,9 +977,17 @@ curl http://127.0.0.1:8787/runs</pre>
             let signals;
             
             switch (strategyType) {
-                case 'sma': signals = smaStrategy(prices); break;
-                case 'momentum': signals = momentumStrategy(prices); break;
-                case 'rsi': signals = rsiStrategy(prices); break;
+                case 'sma': 
+                    signals = smaStrategy(prices); 
+                    break;
+                case 'momentum': 
+                    signals = momentumStrategy(prices); 
+                    break;
+                case 'rsi': 
+                    signals = rsiStrategy(prices); 
+                    break;
+                default:
+                    signals = smaStrategy(prices);
             }
             
             const results = runBacktest(prices, signals, capital);
