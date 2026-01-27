@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demos | Shawn Bakker</title>
+    <meta name="description" content="Interactive demos for market microstructure simulation and quantitative finance tools.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f7fc;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a68;
+            --text-muted: #7c7c9a;
+            --accent: #6b21a8;
+            --accent-light: #7c3aed;
+            --accent-bg: #f3e8ff;
+            --border: #e5e5ef;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 100;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+
+        nav .logo:hover {
+            text-decoration: none;
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        nav ul a {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        nav ul a:hover {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        nav ul a.active {
+            color: var(--accent);
+        }
+
+        /* Header */
+        header {
+            padding: 48px 0 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .profile-info h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-title {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .profile-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .profile-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .profile-links a {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .profile-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        main {
+            padding: 48px 0;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            margin-bottom: 48px;
+        }
+
+        .demo-section h3 {
+            color: var(--text-primary);
+        }
+
+        .demo-tech {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 16px;
+        }
+
+        .demo-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .demo-links {
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+
+        .demo-links a {
+            margin-right: 16px;
+        }
+
+        /* Interactive Demo Card */
+        .demo-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .demo-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .demo-card h4 .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .control-group select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .control-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+        }
+
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .stat-value.positive { color: var(--success); }
+        .stat-value.negative { color: var(--danger); }
+
+        /* Code Block */
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #e4e4e7;
+            margin: 0;
+        }
+
+        .code-block .comment {
+            color: #7c7c9a;
+        }
+
+        .code-block .keyword {
+            color: var(--accent-light);
+        }
+
+        .code-block .string {
+            color: #22c55e;
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .results-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .results-table td {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .profile {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-meta {
+                justify-content: center;
+            }
+
+            .profile-links {
+                justify-content: center;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+
+            .demo-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="../index.html" class="logo">Shawn Bakker</a>
+            <ul>
+                <li><a href="../index.html">About</a></li>
+                <li><a href="index.html" class="active">Demos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header / Profile -->
+        <header>
+            <div class="profile">
+                <div class="profile-image">
+                    <img src="../assets/shawncropheadshot.jpg" alt="Profile picture of me" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                </div>
+                <div class="profile-info">
+                    <h1>Shawn Bakker</h1>
+                    <div class="profile-title">Software Engineer</div>
+                    <div class="profile-meta">
+                        <span>Pacific Northwest, USA</span>
+                        <span>University of Oregon</span>
+                    </div>
+                    <div class="profile-links">
+                        <a href="mailto:shawn@misclick.com">Email</a>
+                        <a href="https://github.com/ShawnBakker">GitHub</a>
+                        <a href="https://linkedin.com/in/shawn-bakker-56a408218/">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <h2>Interactive Demos</h2>
+
+            <!-- Demo 1: Adverse Selection Simulator -->
+            <section class="demo-section" id="exchange-simulator">
+                <h3>Adverse Selection Simulator</h3>
+                <div class="demo-tech">TypeScript, React, Seeded RNG</div>
+                <div class="demo-description">
+                    This simulator demonstrates why bid-ask spreads exist in financial markets. Market makers provide liquidity by quoting both buy and sell prices, earning the spread on each trade. However, some traders have private information about the true value of the asset (informed traders), while others trade for non-informational reasons (noise traders).
+                </div>
+                <div class="demo-description">
+                    When informed traders dominate order flow, they systematically trade against the market maker's quotes, causing losses. The market maker detects this "toxic flow" and widens spreads defensively to survive. This is the Glosten-Milgrom model in action.
+                </div>
+                <div class="demo-links">
+                    <a href="https://github.com/ShawnBakker/exchange-simulator">GitHub Repository</a>
+                </div>
+
+                <div class="demo-card">
+                    <h4>
+                        <span class="live-dot"></span>
+                        Live Simulation
+                    </h4>
+                    <p style="font-size: 13px; margin-bottom: 16px; color: var(--text-muted);">
+                        Try: Set informed flow to 0% (MM profits) vs 60%+ (MM loses, spreads widen)
+                    </p>
+
+                    <div class="demo-controls">
+                        <div class="control-group">
+                            <label>Informed Flow %</label>
+                            <input type="range" id="informed" min="0" max="100" value="25">
+                            <span class="control-value" id="informed-val">25%</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Order Arrival Rate</label>
+                            <input type="range" id="arrival" min="10" max="100" value="40">
+                            <span class="control-value" id="arrival-val">0.40</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Volatility</label>
+                            <input type="range" id="volatility" min="5" max="50" value="15">
+                            <span class="control-value" id="volatility-val">0.15%</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Base Spread</label>
+                            <input type="range" id="spread" min="4" max="30" value="12">
+                            <span class="control-value" id="spread-val">$0.12</span>
+                        </div>
+                    </div>
+
+                    <div class="demo-buttons">
+                        <button class="btn btn-primary" id="run-btn">Run Simulation</button>
+                        <button class="btn btn-secondary" id="reset-btn">Reset</button>
+                    </div>
+
+                    <div class="demo-stats">
+                        <div class="stat">
+                            <div class="stat-label">MM P&L</div>
+                            <div class="stat-value" id="pnl">$0.00</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Spread</div>
+                            <div class="stat-value" id="current-spread">$0.12</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Trades</div>
+                            <div class="stat-value" id="trades">0</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Adverse %</div>
+                            <div class="stat-value" id="adverse">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- Demo 2: Quant Engine -->
+            <section class="demo-section" id="quant-engine">
+                <h3>Quant Engine CLI</h3>
+                <div class="demo-tech">C++20, CMake, Docker, PostgreSQL</div>
+                <div class="demo-description">
+                    The Quant Engine is a C++20 research tool for backtesting trading strategies. It reads historical OHLCV data, applies strategy logic, and outputs performance metrics. Results are persisted to PostgreSQL for later analysis.
+                </div>
+                <div class="demo-links">
+                    <a href="https://github.com/ShawnBakker/quant-engine">GitHub Repository</a>
+                </div>
+
+                <div class="code-block">
+                    <pre><span class="comment"># Step 1: Build the C++ engine</span>
+cmake -S cpp/engine -B build_x64 -G "Visual Studio 17 2022" -A x64
+cmake --build build_x64 --config Release
+
+<span class="comment"># Step 2: Run tests</span>
+ctest --test-dir build_x64 -C Release --output-on-failure
+
+<span class="comment"># Step 3: Start API + Postgres</span>
+docker compose up -d --build
+curl http://127.0.0.1:8787/health
+<span class="comment"># {"ok":true}</span>
+
+<span class="comment"># Step 4: Run a backtest</span>
+.\build_x64\Release\qe_cli.exe backtest --data .\data\sample.csv --out .\out
+
+<span class="comment"># Step 5: Query stored runs</span>
+curl http://127.0.0.1:8787/runs</pre>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- Demo 3: Backtest Simulator -->
+            <section class="demo-section" id="backtest">
+                <h3>Backtest Simulator</h3>
+                <div class="demo-tech">Python, FastAPI, pandas, numpy</div>
+                <div class="demo-description">
+                    The Quant Toolkit provides backtesting capabilities via both a Python library and REST API. This demo simulates running a backtest with different strategies on randomly generated price data.
+                </div>
+                <div class="demo-links">
+                    <a href="https://github.com/ShawnBakker/quant-toolkit">GitHub Repository</a>
+                </div>
+
+                <div class="demo-card">
+                    <h4>
+                        <span class="live-dot"></span>
+                        Strategy Backtest
+                    </h4>
+
+                    <div class="demo-controls">
+                        <div class="control-group">
+                            <label>Strategy</label>
+                            <select id="strategy">
+                                <option value="sma">SMA Crossover (20/50)</option>
+                                <option value="momentum">Momentum (20-day)</option>
+                                <option value="rsi">RSI Mean Reversion</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Data Points</label>
+                            <select id="datapoints">
+                                <option value="252">252 (1 Year)</option>
+                                <option value="504" selected>504 (2 Years)</option>
+                                <option value="1260">1260 (5 Years)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Initial Capital</label>
+                            <select id="capital">
+                                <option value="10000">$10,000</option>
+                                <option value="100000" selected>$100,000</option>
+                                <option value="1000000">$1,000,000</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="demo-buttons">
+                        <button class="btn btn-primary" id="run-backtest">Run Backtest</button>
+                    </div>
+
+                    <table class="results-table" id="backtest-results">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Total Return</td><td id="bt-return">-</td></tr>
+                            <tr><td>CAGR</td><td id="bt-cagr">-</td></tr>
+                            <tr><td>Sharpe Ratio</td><td id="bt-sharpe">-</td></tr>
+                            <tr><td>Max Drawdown</td><td id="bt-drawdown">-</td></tr>
+                            <tr><td>Win Rate</td><td id="bt-winrate">-</td></tr>
+                            <tr><td>Total Trades</td><td id="bt-trades">-</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">
+                        Note: This demo uses randomly generated data. The real Quant Toolkit runs on historical data with transaction costs.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            2025 Shawn Bakker
+        </footer>
+    </div>
+
+    <script>
+        // =====================================================================
+        // Adverse Selection Simulator
+        // =====================================================================
+        const state = {
+            running: false,
+            interval: null,
+            pnl: 0,
+            trades: 0,
+            adverseTrades: 0,
+            spread: 0.12,
+            baseSpread: 0.12,
+            informed: 0.25,
+            arrival: 0.4,
+            volatility: 0.0015
+        };
+
+        document.getElementById('informed').addEventListener('input', (e) => {
+            state.informed = e.target.value / 100;
+            document.getElementById('informed-val').textContent = e.target.value + '%';
+        });
+
+        document.getElementById('arrival').addEventListener('input', (e) => {
+            state.arrival = e.target.value / 100;
+            document.getElementById('arrival-val').textContent = (e.target.value / 100).toFixed(2);
+        });
+
+        document.getElementById('volatility').addEventListener('input', (e) => {
+            state.volatility = e.target.value / 10000;
+            document.getElementById('volatility-val').textContent = (e.target.value / 100).toFixed(2) + '%';
+        });
+
+        document.getElementById('spread').addEventListener('input', (e) => {
+            state.baseSpread = e.target.value / 100;
+            state.spread = state.baseSpread;
+            document.getElementById('spread-val').textContent = '$' + (e.target.value / 100).toFixed(2);
+            document.getElementById('current-spread').textContent = '$' + state.spread.toFixed(2);
+        });
+
+        function tick() {
+            if (Math.random() > state.arrival) return;
+
+            const isInformed = Math.random() < state.informed;
+            const priceMove = (Math.random() - 0.5) * state.volatility * 100;
+            
+            if (isInformed) {
+                state.adverseTrades++;
+                state.pnl -= Math.abs(priceMove) + state.spread / 4;
+                state.spread = Math.min(state.spread * 1.02, state.baseSpread * 3);
+            } else {
+                state.pnl += state.spread / 2 - Math.abs(priceMove) * 0.3;
+                state.spread = Math.max(state.spread * 0.995, state.baseSpread);
+            }
+            
+            state.trades++;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const pnlEl = document.getElementById('pnl');
+            pnlEl.textContent = '$' + state.pnl.toFixed(2);
+            pnlEl.className = 'stat-value ' + (state.pnl >= 0 ? 'positive' : 'negative');
+            
+            document.getElementById('current-spread').textContent = '$' + state.spread.toFixed(2);
+            document.getElementById('trades').textContent = state.trades;
+            
+            const adversePct = state.trades > 0 ? Math.round(state.adverseTrades / state.trades * 100) : 0;
+            document.getElementById('adverse').textContent = adversePct + '%';
+        }
+
+        document.getElementById('run-btn').addEventListener('click', () => {
+            if (state.running) {
+                clearInterval(state.interval);
+                state.running = false;
+                document.getElementById('run-btn').textContent = 'Run Simulation';
+            } else {
+                state.running = true;
+                document.getElementById('run-btn').textContent = 'Pause';
+                state.interval = setInterval(tick, 50);
+            }
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            clearInterval(state.interval);
+            state.running = false;
+            state.pnl = 0;
+            state.trades = 0;
+            state.adverseTrades = 0;
+            state.spread = state.baseSpread;
+            document.getElementById('run-btn').textContent = 'Run Simulation';
+            updateDisplay();
+        });
+
+        updateDisplay();
+
+        // =====================================================================
+        // Backtest Simulator
+        // =====================================================================
+        function generatePrices(n) {
+            const prices = [100];
+            for (let i = 1; i < n; i++) {
+                const ret = (Math.random() - 0.48) * 0.03; // Slight upward drift
+                prices.push(prices[i-1] * (1 + ret));
+            }
+            return prices;
+        }
+
+        function smaStrategy(prices, fast=20, slow=50) {
+            const signals = [];
+            for (let i = 0; i < prices.length; i++) {
+                if (i < slow) {
+                    signals.push(0);
+                    continue;
+                }
+                const fastMA = prices.slice(i - fast, i).reduce((a,b) => a+b) / fast;
+                const slowMA = prices.slice(i - slow, i).reduce((a,b) => a+b) / slow;
+                const prevFast = prices.slice(i - fast - 1, i - 1).reduce((a,b) => a+b) / fast;
+                const prevSlow = prices.slice(i - slow - 1, i - 1).reduce((a,b) => a+b) / slow;
+                
+                if (fastMA > slowMA && prevFast <= prevSlow) signals.push(1);
+                else if (fastMA < slowMA && prevFast >= prevSlow) signals.push(-1);
+                else signals.push(0);
+            }
+            return signals;
+        }
+
+        function momentumStrategy(prices, lookback=20) {
+            const signals = [];
+            for (let i = 0; i < prices.length; i++) {
+                if (i < lookback) {
+                    signals.push(0);
+                    continue;
+                }
+                const mom = (prices[i] - prices[i - lookback]) / prices[i - lookback];
+                if (mom > 0.02) signals.push(1);
+                else if (mom < -0.02) signals.push(-1);
+                else signals.push(0);
+            }
+            return signals;
+        }
+
+        function rsiStrategy(prices, period=14) {
+            const signals = [];
+            for (let i = 0; i < prices.length; i++) {
+                if (i < period + 1) {
+                    signals.push(0);
+                    continue;
+                }
+                let gains = 0, losses = 0;
+                for (let j = i - period; j < i; j++) {
+                    const change = prices[j + 1] - prices[j];
+                    if (change > 0) gains += change;
+                    else losses -= change;
+                }
+                const rs = gains / (losses || 0.001);
+                const rsi = 100 - (100 / (1 + rs));
+                
+                if (rsi < 30) signals.push(1);
+                else if (rsi > 70) signals.push(-1);
+                else signals.push(0);
+            }
+            return signals;
+        }
+
+        function runBacktest(prices, signals, capital) {
+            let cash = capital;
+            let position = 0;
+            const equity = [capital];
+            let trades = 0;
+            let wins = 0;
+            
+            for (let i = 1; i < prices.length; i++) {
+                if (signals[i] === 1 && position === 0) {
+                    position = cash / prices[i];
+                    cash = 0;
+                    trades++;
+                } else if (signals[i] === -1 && position > 0) {
+                    const value = position * prices[i];
+                    if (value > equity[equity.length - 1]) wins++;
+                    cash = value;
+                    position = 0;
+                }
+                equity.push(cash + position * prices[i]);
+            }
+            
+            // Close final position
+            if (position > 0) {
+                cash = position * prices[prices.length - 1];
+                position = 0;
+            }
+            
+            const finalEquity = equity[equity.length - 1];
+            const totalReturn = (finalEquity - capital) / capital;
+            const years = prices.length / 252;
+            const cagr = Math.pow(finalEquity / capital, 1 / years) - 1;
+            
+            // Sharpe (simplified)
+            const returns = [];
+            for (let i = 1; i < equity.length; i++) {
+                returns.push((equity[i] - equity[i-1]) / equity[i-1]);
+            }
+            const avgReturn = returns.reduce((a,b) => a+b, 0) / returns.length;
+            const stdReturn = Math.sqrt(returns.map(r => Math.pow(r - avgReturn, 2)).reduce((a,b) => a+b, 0) / returns.length);
+            const sharpe = (avgReturn * 252) / (stdReturn * Math.sqrt(252));
+            
+            // Max drawdown
+            let maxDD = 0;
+            let peak = equity[0];
+            for (const e of equity) {
+                if (e > peak) peak = e;
+                const dd = (peak - e) / peak;
+                if (dd > maxDD) maxDD = dd;
+            }
+            
+            return {
+                totalReturn,
+                cagr,
+                sharpe,
+                maxDrawdown: maxDD,
+                winRate: trades > 0 ? wins / trades : 0,
+                trades
+            };
+        }
+
+        document.getElementById('run-backtest').addEventListener('click', () => {
+            const strategyType = document.getElementById('strategy').value;
+            const n = parseInt(document.getElementById('datapoints').value);
+            const capital = parseInt(document.getElementById('capital').value);
+            
+            const prices = generatePrices(n);
+            let signals;
+            
+            switch (strategyType) {
+                case 'sma': signals = smaStrategy(prices); break;
+                case 'momentum': signals = momentumStrategy(prices); break;
+                case 'rsi': signals = rsiStrategy(prices); break;
+            }
+            
+            const results = runBacktest(prices, signals, capital);
+            
+            document.getElementById('bt-return').textContent = (results.totalReturn * 100).toFixed(2) + '%';
+            document.getElementById('bt-cagr').textContent = (results.cagr * 100).toFixed(2) + '%';
+            document.getElementById('bt-sharpe').textContent = results.sharpe.toFixed(2);
+            document.getElementById('bt-drawdown').textContent = (results.maxDrawdown * 100).toFixed(2) + '%';
+            document.getElementById('bt-winrate').textContent = (results.winRate * 100).toFixed(1) + '%';
+            document.getElementById('bt-trades').textContent = results.trades;
+        });
+    </script>
+</body>
+</html>
