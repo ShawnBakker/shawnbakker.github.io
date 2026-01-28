@@ -47,7 +47,7 @@
 
         /* Navigation */
         nav {
-            padding: 16px 48px;
+            padding: 14px 40px;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
@@ -56,7 +56,7 @@
         }
 
         nav .nav-inner {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -66,7 +66,7 @@
         nav .logo {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 16px;
+            font-size: 15px;
             letter-spacing: 0.5px;
         }
 
@@ -77,13 +77,13 @@
 
         nav ul {
             display: flex;
-            gap: 32px;
+            gap: 28px;
             list-style: none;
         }
 
         nav ul a {
             color: var(--text-secondary);
-            font-size: 15px;
+            font-size: 14px;
         }
 
         nav ul a:hover {
@@ -97,53 +97,53 @@
 
         /* Main Layout */
         .page-wrapper {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 48px;
+            padding: 40px;
             display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 64px;
+            grid-template-columns: 240px 1fr;
+            gap: 56px;
         }
 
         /* Sidebar */
         .sidebar {
             position: sticky;
-            top: 100px;
+            top: 90px;
             height: fit-content;
         }
 
         .profile-image {
-            width: 160px;
-            height: 160px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             border: 3px solid var(--border);
         }
 
-        .profile-image  {
+        .profile-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
         .sidebar h1 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             letter-spacing: 0.3px;
         }
 
         .sidebar .title {
             color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 18px;
             line-height: 1.5;
         }
 
         .sidebar-section {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -156,10 +156,10 @@
         .sidebar-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 13px;
+            gap: 9px;
+            font-size: 12px;
             color: var(--text-secondary);
-            margin-bottom: 10px;
+            margin-bottom: 9px;
         }
 
         .sidebar-item:last-child {
@@ -167,8 +167,8 @@
         }
 
         .sidebar-item svg {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             flex-shrink: 0;
             color: var(--text-muted);
         }
@@ -187,57 +187,57 @@
         }
 
         h2 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             color: var(--text-primary);
             letter-spacing: 0.3px;
         }
 
         h3 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         p {
             color: var(--text-secondary);
-            margin-bottom: 14px;
-            font-size: 15px;
+            margin-bottom: 12px;
+            font-size: 14px;
         }
 
         hr {
             border: none;
             border-top: 1px solid var(--border);
-            margin: 36px 0;
+            margin: 32px 0;
         }
 
         /* Demo Section */
         .demo-section {
-            margin-bottom: 40px;
+            margin-bottom: 36px;
         }
 
         .demo-tech {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .demo-description {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.7;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .demo-links {
-            margin-bottom: 20px;
-            font-size: 13px;
+            margin-bottom: 18px;
+            font-size: 12px;
         }
 
         .demo-links a {
-            margin-right: 16px;
+            margin-right: 14px;
         }
 
         /* Interactive Demo Card */
@@ -245,22 +245,22 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 20px;
+            padding: 20px;
+            margin-bottom: 18px;
         }
 
         .demo-card h4 {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            font-size: 15px;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
             font-weight: 600;
         }
 
         .demo-card h4 .live-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
@@ -274,18 +274,18 @@
         .demo-controls {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 18px;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
         .control-group label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             color: var(--text-muted);
         }
@@ -300,40 +300,40 @@
 
         .control-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: var(--accent);
             border-radius: 50%;
             cursor: pointer;
         }
 
         .control-group select {
-            padding: 8px 12px;
+            padding: 7px 10px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 5px;
             background: var(--bg-primary);
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-primary);
             font-family: inherit;
         }
 
         .control-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-primary);
         }
 
         .demo-buttons {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 18px;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 8px 18px;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 5px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -362,29 +362,29 @@
         .demo-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .stat {
             text-align: center;
-            padding: 14px;
+            padding: 12px;
             background: var(--bg-primary);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 5px;
         }
 
         .stat-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .stat-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -394,15 +394,15 @@
         /* Code Block */
         .code-block {
             background: #1a1a2e;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
+            border-radius: 6px;
+            padding: 18px;
+            margin: 18px 0;
             overflow-x: auto;
         }
 
         .code-block pre {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-size: 11px;
             line-height: 1.6;
             color: #e4e4e7;
             margin: 0;
@@ -416,13 +416,13 @@
         .results-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 13px;
+            margin: 18px 0;
+            font-size: 12px;
         }
 
         .results-table th,
         .results-table td {
-            padding: 10px 14px;
+            padding: 9px 12px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -440,20 +440,20 @@
 
         /* Footer */
         footer {
-            padding: 24px 0;
+            padding: 22px 0;
             border-top: 1px solid var(--border);
             text-align: center;
             color: var(--text-muted);
-            font-size: 13px;
-            margin-top: 20px;
+            font-size: 12px;
+            margin-top: 18px;
         }
 
         /* Responsive */
         @media (max-width: 900px) {
             .page-wrapper {
                 grid-template-columns: 1fr;
-                padding: 32px 24px;
-                gap: 40px;
+                padding: 28px 20px;
+                gap: 36px;
             }
 
             .sidebar {
@@ -462,7 +462,7 @@
             }
 
             .profile-image {
-                margin: 0 auto 20px;
+                margin: 0 auto 18px;
             }
 
             .sidebar-item {
@@ -478,13 +478,13 @@
             }
 
             nav {
-                padding: 16px 24px;
+                padding: 14px 20px;
             }
         }
 
         @media (max-width: 640px) {
             nav ul {
-                gap: 20px;
+                gap: 18px;
             }
 
             .demo-controls {
@@ -509,7 +509,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="profile-image">
-                <img src="../assets/shawncropheadshot.jpg" alt="Profile picture of me" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                <img src="../assets/shawncropheadshot.jpg" alt="Shawn Bakker">
             </div>
             <h1>Shawn Bakker</h1>
             <div class="title">Software Engineer<br>Quantitative Systems</div>
@@ -567,7 +567,8 @@
                     When informed traders dominate, they systematically trade against the market maker's quotes, causing losses. The MM detects this "toxic flow" and widens spreads defensively. This is the Glosten-Milgrom model in action.
                 </div>
                 <div class="demo-links">
-                    <a href="https://github.com/ShawnBakker/exchange-simulator">GitHub Repository</a>
+                    <a href="https://github.com/ShawnBakker/exchange-simulator">GitHub</a>
+                    <a href="https://shawnbakker.github.io/exchange-simulator/">Live Demo (GitHub Pages)</a>
                 </div>
 
                 <div class="demo-card">
@@ -575,7 +576,7 @@
                         <span class="live-dot"></span>
                         Live Simulation
                     </h4>
-                    <p style="font-size: 13px; margin-bottom: 14px; color: var(--text-muted);">
+                    <p style="font-size: 12px; margin-bottom: 12px; color: var(--text-muted);">
                         Try: Set informed flow to 0% (MM profits) vs 60%+ (MM loses, spreads widen)
                     </p>
 
@@ -638,7 +639,7 @@
                     The Quant Engine is a C++20 research tool for backtesting trading strategies. It reads historical OHLCV data, applies strategy logic, and outputs performance metrics. Results are persisted to PostgreSQL. Features Black-Scholes pricing with full Greeks.
                 </div>
                 <div class="demo-links">
-                    <a href="https://github.com/ShawnBakker/quant-engine">GitHub Repository</a>
+                    <a href="https://github.com/ShawnBakker/quant-engine">GitHub</a>
                 </div>
 
                 <div class="code-block">
@@ -672,7 +673,7 @@ curl http://127.0.0.1:8787/runs</pre>
                     The Quant Toolkit provides backtesting via Python library and REST API. This demo simulates running a backtest with different strategies on randomly generated price data.
                 </div>
                 <div class="demo-links">
-                    <a href="https://github.com/ShawnBakker/quant-toolkit">GitHub Repository</a>
+                    <a href="https://github.com/ShawnBakker/quant-toolkit">GitHub</a>
                 </div>
 
                 <div class="demo-card">
@@ -730,7 +731,7 @@ curl http://127.0.0.1:8787/runs</pre>
                         </tbody>
                     </table>
 
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px; margin-bottom: 0;">
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 12px; margin-bottom: 0;">
                         Note: Uses randomly generated data. The real Quant Toolkit runs on historical data with transaction costs.
                     </p>
                 </div>
@@ -1000,5 +1001,7 @@ curl http://127.0.0.1:8787/runs</pre>
             document.getElementById('bt-trades').textContent = results.trades;
         });
     </script>
+</body>
+</html>
 </body>
 </html>
