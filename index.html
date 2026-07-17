@@ -231,6 +231,26 @@
         .card-links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
         .card-links a::after { content: " ↗"; color: var(--muted); }
         .card-links .nolink { color: var(--muted); }
+        .linkbtn {
+            font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--accent);
+            background: none; border: none; padding: 0; cursor: pointer; letter-spacing: 0;
+        }
+        .linkbtn:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+        /* interactive parcel map (parcelscope card) */
+        .parcelmap { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
+        .pm-readout { font-size: 12px; color: var(--ink); margin-bottom: 9px; min-height: 1em; font-variant-numeric: tabular-nums; }
+        #parcelCanvas { width: 100%; height: 240px; display: block; border-radius: 8px; }
+        .pm-foot {
+            display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px;
+            margin-top: 10px; font-size: 10.5px; color: var(--muted); line-height: 1.5;
+        }
+        .pm-legend { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+        .pm-legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: -1px; margin-right: 3px; }
+        .sw-flood { background: rgba(74,116,178,.7); }
+        .sw-wet { background: rgba(96,150,96,.7); }
+        .sw-build { background: var(--accent); }
+        .sw-sub { background: rgba(186,72,50,.75); }
 
         .more-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
         .card--sm { padding: 20px; }
@@ -393,10 +413,10 @@
                     </div>
                 </article>
 
-                <!-- Featured 2 — ParcelScope -->
+                <!-- Featured 2 — parcelscope -->
                 <article class="card card--feat">
                     <div class="card-top">
-                        <h3>ParcelScope</h3>
+                        <h3>parcelscope</h3>
                         <span class="chip">full-stack · geospatial</span>
                     </div>
                     <p class="card-lead">
@@ -411,6 +431,20 @@
                     </ul>
                     <div class="card-links mono">
                         <a href="https://parcelscope-six.vercel.app">Live demo</a>
+                        <button type="button" class="linkbtn" id="mapToggle" aria-expanded="false" aria-controls="mapWrap">explore buildable area →</button>
+                    </div>
+                    <div class="parcelmap" id="mapWrap" hidden>
+                        <div class="pm-readout mono" id="mapReadout">hover or tap a lot to net out its buildable area</div>
+                        <canvas id="parcelCanvas" role="img" aria-label="Interactive sample parcel map: buildable area after subtracting flood and wetland constraints"></canvas>
+                        <div class="pm-foot">
+                            <span class="pm-legend">
+                                <i class="sw sw-flood"></i>flood
+                                <i class="sw sw-wet"></i>wetland
+                                <i class="sw sw-build"></i>buildable
+                                <i class="sw sw-sub"></i>subtracted
+                            </span>
+                            <span class="pm-note">Illustrative sample — the live demo runs real Marion County parcels.</span>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -723,6 +757,175 @@
                     { threshold: 0.05 }).observe(canvas);
             }
             evaluate();
+        })();
+    </script>
+
+    <script>
+        // Interactive sample parcel map (parcelscope card). Same self-contained
+        // canvas idea as the histogram — no map tiles, no network. Hover/click a
+        // lot to net buildable = lot − (flood ∪ wetland), the real ParcelScope
+        // computation, on illustrative sample geometry.
+        (function () {
+            var btn = document.getElementById("mapToggle");
+            var wrap = document.getElementById("mapWrap");
+            var canvas = document.getElementById("parcelCanvas");
+            var readout = document.getElementById("mapReadout");
+            if (!btn || !wrap || !canvas || !canvas.getContext) return;
+            var ctx = canvas.getContext("2d");
+
+            var VW = 166, VH = 56, PAD = 8;
+            // flood ribbon (diagonal band) + wetland blob — virtual coords.
+            var flood = [[0,42],[50,34],[100,25],[166,13],[166,26],[100,40],[50,48],[0,54]];
+            var wet = (function () {
+                var pts = [], cx = 128, cy = 36, rx = 15, ry = 11, n = 16;
+                for (var i = 0; i < n; i++) {
+                    var a = i / n * 6.283185;
+                    pts.push([cx + Math.cos(a) * rx * (0.85 + 0.15 * Math.sin(a * 3)),
+                              cy + Math.sin(a) * ry * (0.85 + 0.15 * Math.cos(a * 2))]);
+                }
+                return pts;
+            })();
+
+            function pin(poly, x, y) {
+                var inside = false, j = poly.length - 1;
+                for (var i = 0; i < poly.length; i++) {
+                    var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+                    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+                    j = i;
+                }
+                return inside;
+            }
+
+            var parcels = [];
+            (function build() {
+                var idx = 0;
+                for (var r = 0; r < 2; r++) for (var c = 0; c < 7; c++) {
+                    idx++;
+                    var p = { id: idx, label: ("0" + idx).slice(-2), x: 8 + c * 22, y: 8 + r * 22, w: 18, h: 18 };
+                    var inB = 0, tot = 0, hF = false, hW = false;
+                    for (var sx = 0; sx < 10; sx++) for (var sy = 0; sy < 9; sy++) {
+                        var px = p.x + (sx + 0.5) / 10 * p.w, py = p.y + (sy + 0.5) / 9 * p.h; tot++;
+                        var f = pin(flood, px, py), w2 = pin(wet, px, py);
+                        if (f) hF = true; if (w2) hW = true;
+                        if (!f && !w2) inB++;
+                    }
+                    p.buildable = Math.round(inB / tot * 100);
+                    p.hitF = hF; p.hitW = hW;
+                    p.acres = +(p.w * p.h * 0.001543).toFixed(2);
+                    parcels.push(p);
+                }
+            })();
+
+            var pal = {};
+            function refreshPalette() {
+                var cs = getComputedStyle(document.documentElement);
+                function g(n) { return cs.getPropertyValue(n).trim() || "#888"; }
+                pal = { accent: g("--accent"), ink: g("--ink"), muted: g("--muted"),
+                        line: g("--line"), surface: g("--surface"), surface2: g("--surface-2") };
+            }
+            refreshPalette();
+
+            var cssW = 0, cssH = 0, s = 1, ox = 0, oy = 0, hov = null, sel = null;
+            function resize() {
+                var r = canvas.getBoundingClientRect();
+                if (!r.width) return;
+                cssW = r.width; cssH = r.height;
+                var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(cssH * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                s = Math.min((cssW - 2 * PAD) / VW, (cssH - 2 * PAD) / VH);
+                ox = PAD + (cssW - 2 * PAD - VW * s) / 2;
+                oy = PAD + (cssH - 2 * PAD - VH * s) / 2;
+            }
+            function TX(x) { return ox + x * s; }
+            function TY(y) { return oy + y * s; }
+            function poly(pts) {
+                ctx.beginPath();
+                for (var i = 0; i < pts.length; i++) {
+                    var X = TX(pts[i][0]), Y = TY(pts[i][1]);
+                    if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+                }
+                ctx.closePath();
+            }
+            function lotRect(p) { return [TX(p.x), TY(p.y), p.w * s, p.h * s]; }
+
+            function draw() {
+                if (!cssW) { resize(); if (!cssW) return; }
+                ctx.clearRect(0, 0, cssW, cssH);
+                // parcel fabric
+                parcels.forEach(function (p) {
+                    var R = lotRect(p);
+                    ctx.fillStyle = pal.surface2; ctx.fillRect(R[0], R[1], R[2], R[3]);
+                    ctx.strokeStyle = pal.line; ctx.lineWidth = 1; ctx.strokeRect(R[0] + .5, R[1] + .5, R[2] - 1, R[3] - 1);
+                });
+                // constraints (translucent overlay)
+                poly(flood); ctx.fillStyle = "rgba(74,116,178,.32)"; ctx.fill();
+                ctx.strokeStyle = "rgba(74,116,178,.55)"; ctx.lineWidth = 1; ctx.stroke();
+                poly(wet); ctx.fillStyle = "rgba(96,150,96,.34)"; ctx.fill();
+                ctx.strokeStyle = "rgba(96,150,96,.6)"; ctx.stroke();
+                // selected lot: buildable (accent) vs subtracted (red) within the lot
+                if (sel) {
+                    var R = lotRect(sel);
+                    ctx.save();
+                    ctx.beginPath(); ctx.rect(R[0], R[1], R[2], R[3]); ctx.clip();
+                    ctx.fillStyle = pal.surface; ctx.fillRect(R[0], R[1], R[2], R[3]);
+                    ctx.globalAlpha = .32; ctx.fillStyle = pal.accent; ctx.fillRect(R[0], R[1], R[2], R[3]);
+                    ctx.globalAlpha = .62; ctx.fillStyle = "rgba(186,72,50,1)";
+                    poly(flood); ctx.fill(); poly(wet); ctx.fill();
+                    ctx.globalAlpha = 1; ctx.restore();
+                    ctx.strokeStyle = pal.accent; ctx.lineWidth = 1.8; ctx.strokeRect(R[0] + .5, R[1] + .5, R[2] - 1, R[3] - 1);
+                }
+                // hover outline
+                if (hov && hov !== sel) {
+                    var H = lotRect(hov);
+                    ctx.globalAlpha = .1; ctx.fillStyle = pal.accent; ctx.fillRect(H[0], H[1], H[2], H[3]); ctx.globalAlpha = 1;
+                    ctx.strokeStyle = pal.accent; ctx.lineWidth = 1.5; ctx.strokeRect(H[0] + .5, H[1] + .5, H[2] - 1, H[3] - 1);
+                }
+            }
+
+            function say(p) {
+                if (!p) { readout.textContent = "hover or tap a lot to net out its buildable area"; return; }
+                var sub = [p.hitF ? "flood" : null, p.hitW ? "wetland" : null].filter(Boolean).join(" + ");
+                readout.textContent = "lot " + p.label + " · buildable " + p.buildable + "% · " + p.acres +
+                    " ac · " + (sub ? sub + " subtracted" : "unconstrained");
+            }
+            function toV(mx, my) { return { x: (mx - ox) / s, y: (my - oy) / s }; }
+            function hit(vx, vy) {
+                for (var i = 0; i < parcels.length; i++) {
+                    var p = parcels[i];
+                    if (vx >= p.x && vx <= p.x + p.w && vy >= p.y && vy <= p.y + p.h) return p;
+                }
+                return null;
+            }
+
+            canvas.addEventListener("mousemove", function (e) {
+                var r = canvas.getBoundingClientRect(), v = toV(e.clientX - r.left, e.clientY - r.top);
+                var h = hit(v.x, v.y);
+                if (h !== hov) { hov = h; canvas.style.cursor = h ? "pointer" : "default"; draw(); say(sel || hov); }
+            });
+            canvas.addEventListener("mouseleave", function () { if (hov) { hov = null; draw(); say(sel); } });
+            canvas.addEventListener("click", function (e) {
+                var r = canvas.getBoundingClientRect(), v = toV(e.clientX - r.left, e.clientY - r.top);
+                var h = hit(v.x, v.y);
+                sel = (h && h === sel) ? null : h;
+                draw(); say(sel || hov);
+            });
+
+            var inited = false;
+            function open() {
+                wrap.hidden = false; btn.setAttribute("aria-expanded", "true"); btn.textContent = "hide map";
+                if (!inited) {
+                    inited = true;
+                    if (window.ResizeObserver) new ResizeObserver(function () { resize(); draw(); }).observe(canvas);
+                    new MutationObserver(function () { refreshPalette(); draw(); })
+                        .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+                }
+                resize(); draw();
+            }
+            function close() {
+                wrap.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.textContent = "explore buildable area →";
+            }
+            btn.addEventListener("click", function () { if (wrap.hidden) open(); else close(); });
         })();
     </script>
 
