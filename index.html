@@ -1,636 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shawn Bakker | C++ Engineer</title>
-    <meta name="description" content="Low-latency C++ systems engineer building lock-free execution infrastructure with sub-microsecond order processing.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shawn Bakker — Software Engineer</title>
+    <meta name="description" content="Software engineer building correct, measured systems — from lock-free C++ order engines with microsecond latency to full-stack geospatial products — documented honestly." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c1211'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%232dd4bf' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
+
+    <!-- Paint the stored theme before first paint so a dark visitor never flashes white. -->
+    <script>
+      try {
+        var t = localStorage.getItem("shawnbakker:theme");
+        if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+      } catch (e) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
     <style>
+        /* ---------- tokens: dark is the default; [data-theme=light] overrides ---------- */
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f7fc;
-            --text-primary: #1a1a2e;
-            --text-secondary: #4a4a68;
-            --text-muted: #7c7c9a;
-            --accent: #6b21a8;
-            --accent-light: #7c3aed;
-            --border: #e5e5ef;
+            --bg:        #0c1211;
+            --surface:   #131b19;
+            --surface-2: #17211e;
+            --ink:       #e8efeb;
+            --ink-soft:  #a7b5af;
+            --muted:     #6f7d77;
+            --line:      #24312d;
+            --line-2:    #33423d;
+            --accent:    #2dd4bf;
+            --accent-2:  #7ff0e2;
+            --accent-ink:#04120f;
+            --shadow:    0 1px 0 rgba(255,255,255,.02), 0 12px 30px -18px rgba(0,0,0,.7);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root[data-theme="light"] {
+            --bg:        #f4f7f5;
+            --surface:   #ffffff;
+            --surface-2: #eef2f0;
+            --ink:       #121b18;
+            --ink-soft:  #3d4945;
+            --muted:     #6a7772;
+            --line:      #e1e7e4;
+            --line-2:    #cdd6d2;
+            --accent:    #0d9488;
+            --accent-2:  #0b7d73;
+            --accent-ink:#ffffff;
+            --shadow:    0 1px 2px rgba(16,40,34,.04), 0 14px 34px -22px rgba(16,40,34,.28);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
         body {
-            font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
+            font-family: "IBM Plex Sans", system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.65;
             font-size: 16px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        a {
-            color: var(--accent);
-            text-decoration: none;
-        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-        a:hover {
-            text-decoration: underline;
-        }
+        ::selection { background: var(--accent); color: var(--accent-ink); }
 
-        /* Navigation */
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+        .mono { font-family: "JetBrains Mono", monospace; }
+
+        .wrap { max-width: 940px; margin: 0 auto; padding: 0 32px; }
+
+        /* ---------- nav ---------- */
         nav {
-            padding: 14px 40px;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: var(--bg-primary);
-            z-index: 100;
+            position: sticky; top: 0; z-index: 50;
+            background: color-mix(in srgb, var(--bg) 86%, transparent);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--line);
         }
-
-        nav .nav-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .nav-inner {
+            max-width: 940px; margin: 0 auto; padding: 13px 32px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
-
-        nav .logo {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 15px;
-            letter-spacing: 0.5px;
+        .nav-logo {
+            font-family: "JetBrains Mono", monospace; font-weight: 700;
+            color: var(--ink); font-size: 14px; letter-spacing: .02em;
         }
-
-        nav .logo:hover {
-            text-decoration: none;
-            color: var(--accent);
+        .nav-logo:hover { text-decoration: none; color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 22px; }
+        .nav-links a {
+            font-family: "JetBrains Mono", monospace; font-size: 12.5px;
+            color: var(--ink-soft); letter-spacing: .02em;
         }
+        .nav-links a:hover { color: var(--accent); text-decoration: none; }
 
-        nav ul {
-            display: flex;
-            gap: 28px;
-            list-style: none;
+        /* the toggle wears the OPPOSITE theme's colors, so it previews what it switches to */
+        .theme-toggle {
+            font-family: "JetBrains Mono", monospace; font-size: 11.5px; letter-spacing: .04em;
+            color: var(--surface); background: var(--ink); border: 1px solid var(--ink);
+            border-radius: 999px; padding: 4px 11px; cursor: pointer; white-space: nowrap;
+            transition: opacity .15s ease;
         }
+        .theme-toggle:hover { opacity: .82; }
 
-        nav ul a {
-            color: var(--text-secondary);
-            font-size: 14px;
+        /* ---------- hero ---------- */
+        .hero { padding: 66px 0 20px; }
+        .hero-top { display: flex; align-items: center; gap: 18px; margin-bottom: 26px; }
+        .avatar {
+            width: 62px; height: 62px; border-radius: 50%; overflow: hidden;
+            border: 1px solid var(--line-2); flex-shrink: 0;
         }
-
-        nav ul a:hover {
-            color: var(--accent);
-            text-decoration: none;
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .eyebrow {
+            font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .12em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 6px;
         }
-
-        nav ul a.active {
-            color: var(--accent);
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.9rem); font-weight: 600; letter-spacing: -.02em;
+            line-height: 1.05; color: var(--ink);
         }
-
-        /* Main Layout */
-        .page-wrapper {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 40px;
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 56px;
+        .hero-tagline {
+            font-size: clamp(1.05rem, 2vw, 1.3rem); color: var(--ink-soft);
+            max-width: 44ch; margin-top: 18px; line-height: 1.5; text-wrap: balance;
         }
+        .hero-tagline b { color: var(--ink); font-weight: 600; }
 
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 90px;
-            height: fit-content;
+        /* metric strip — the "measured" thesis, front and center */
+        .metrics {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+            margin: 34px 0 30px; background: var(--line); border: 1px solid var(--line);
+            border-radius: 10px; overflow: hidden;
         }
-
-        .profile-image {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 18px;
-            border: 3px solid var(--border);
+        .metric { background: var(--surface); padding: 16px 18px; }
+        .metric-value {
+            font-family: "JetBrains Mono", monospace; font-weight: 700;
+            font-size: clamp(1.15rem, 2.4vw, 1.5rem); color: var(--ink);
+            font-variant-numeric: tabular-nums; letter-spacing: -.01em;
         }
+        .metric-value .u { color: var(--accent); }
+        .metric-label { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
 
-        .profile-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .hero-contact {
+            display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center;
+            font-family: "JetBrains Mono", monospace; font-size: 13px;
         }
+        .hero-contact a { color: var(--ink-soft); }
+        .hero-contact a:hover { color: var(--accent); }
+        .hero-contact .sep { color: var(--line-2); }
 
-        .sidebar h1 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 5px;
-            letter-spacing: 0.3px;
+        /* ---------- sections ---------- */
+        section { padding: 46px 0; border-top: 1px solid var(--line); }
+        .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 30px; }
+        .section-num {
+            font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent);
+            letter-spacing: .1em;
         }
+        .section-title { font-size: 1.05rem; font-weight: 600; letter-spacing: .01em; color: var(--ink); }
 
-        .sidebar .title {
-            color: var(--text-secondary);
-            font-size: 13px;
-            margin-bottom: 18px;
-            line-height: 1.5;
+        /* ---------- project cards ---------- */
+        .featured { display: flex; flex-direction: column; gap: 20px; }
+        .card {
+            background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+            padding: 26px 28px; box-shadow: var(--shadow);
+            transition: border-color .18s ease, transform .18s ease;
         }
+        .card:hover { border-color: var(--line-2); }
+        @media (hover: hover) { .card.card--feat:hover { transform: translateY(-2px); } }
 
-        .sidebar-section {
-            margin-bottom: 18px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid var(--border);
+        .card-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .card h3 { font-size: 1.3rem; font-weight: 600; letter-spacing: -.01em; }
+        .chip {
+            font-family: "JetBrains Mono", monospace; font-size: 10.5px; letter-spacing: .06em;
+            text-transform: uppercase; color: var(--accent);
+            border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+            background: color-mix(in srgb, var(--accent) 10%, transparent);
+            border-radius: 999px; padding: 3px 9px;
         }
-
-        .sidebar-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .card-lead { color: var(--ink); font-size: 1rem; margin-bottom: 12px; }
+        .tech {
+            font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: var(--muted);
+            margin-bottom: 14px; line-height: 1.6;
         }
-
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 9px;
+        .card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 16px; }
+        .card li {
+            position: relative; padding-left: 18px; color: var(--ink-soft);
+            font-size: 14.5px; line-height: 1.55;
         }
-
-        .sidebar-item:last-child {
-            margin-bottom: 0;
+        .card li::before {
+            content: "›"; position: absolute; left: 2px; top: 0; color: var(--accent);
+            font-family: "JetBrains Mono", monospace;
         }
+        .card li b { color: var(--ink); font-weight: 600; }
+        .card-links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
+        .card-links a::after { content: " ↗"; color: var(--muted); }
+        .card-links .nolink { color: var(--muted); }
 
-        .sidebar-item svg {
-            width: 14px;
-            height: 14px;
-            flex-shrink: 0;
-            color: var(--text-muted);
+        .more-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+        .card--sm { padding: 20px; }
+        .card--sm h3 { font-size: 1.05rem; }
+        .card--sm .tech { font-size: 10.5px; margin-bottom: 10px; }
+        .card--sm p { color: var(--ink-soft); font-size: 13.5px; line-height: 1.55; margin-bottom: 14px; }
+
+        /* ---------- experience ---------- */
+        .xp { display: flex; flex-direction: column; gap: 26px; }
+        .xp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 2px; }
+        .xp-role { font-size: 1.05rem; font-weight: 600; }
+        .xp-org { color: var(--accent); font-weight: 500; }
+        .xp-date {
+            font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: var(--muted);
+            margin-left: auto; white-space: nowrap;
         }
+        .xp ul { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+        .xp li { position: relative; padding-left: 16px; color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+        .xp li::before { content: "–"; position: absolute; left: 0; color: var(--muted); }
 
-        .sidebar-item a {
-            color: var(--text-secondary);
+        /* ---------- skills ---------- */
+        .skills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px 40px; }
+        .skill h4 {
+            font-family: "JetBrains Mono", monospace; font-size: 11.5px; letter-spacing: .06em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
         }
+        .skill ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .skill li { color: var(--ink-soft); font-size: 14px; line-height: 1.45; }
 
-        .sidebar-item a:hover {
-            color: var(--accent);
-        }
+        /* ---------- education ---------- */
+        .edu-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+        .edu-deg { font-size: 1.05rem; font-weight: 600; }
+        .edu-school { color: var(--accent); font-weight: 500; }
+        .edu-date { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: var(--muted); margin-left: auto; }
+        .edu ul { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .edu li { position: relative; padding-left: 16px; color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+        .edu li::before { content: "–"; position: absolute; left: 0; color: var(--muted); }
 
-        /* Main Content */
-        main {
-            min-width: 0;
-        }
-
-        section {
-            margin-bottom: 36px;
-        }
-
-        h2 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            color: var(--text-primary);
-            letter-spacing: 0.3px;
-        }
-
-        h3 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        p {
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid var(--border);
-            margin: 18px 0;
-        }
-
-        /* Experience */
-        .experience-item {
-            margin-bottom: 22px;
-        }
-
-        .experience-header {
-            margin-bottom: 4px;
-        }
-
-        .experience-header h3 {
-            display: inline;
-        }
-
-        .experience-company {
-            color: var(--accent);
-            font-size: 14px;
-        }
-
-        .experience-details {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .experience-description {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .experience-description ul {
-            margin-left: 16px;
-            margin-top: 5px;
-        }
-
-        .experience-description li {
-            margin-bottom: 4px;
-        }
-
-        /* Projects */
-        .project-item {
-            margin-bottom: 24px;
-        }
-
-        .project-header h3 {
-            margin-bottom: 4px;
-        }
-
-        .project-tech {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-            margin-bottom: 7px;
-        }
-
-        .project-description {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.7;
-            margin-bottom: 7px;
-        }
-
-        .project-links {
-            font-size: 12px;
-        }
-
-        .project-links a {
-            margin-right: 14px;
-        }
-
-        /* Skills */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .skill-category h4 {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 7px;
-        }
-
-        .skill-category ul {
-            list-style: none;
-        }
-
-        .skill-category li {
-            color: var(--text-secondary);
-            font-size: 12px;
-            padding: 2px 0;
-        }
-
-        /* Education */
-        .education-item h3 {
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        .education-school {
-            color: var(--accent);
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-
-        .education-details {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-
-        .education-description {
-            color: var(--text-secondary);
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        .education-description ul {
-            margin-left: 16px;
-            margin-top: 4px;
-        }
-
-        .education-description li {
-            margin-bottom: 3px;
-        }
-
-        /* Footer */
+        /* ---------- footer ---------- */
         footer {
-            padding: 22px 0;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-top: 18px;
+            border-top: 1px solid var(--line); padding: 30px 0 50px;
+            display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+            font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted);
+        }
+        footer a { color: var(--ink-soft); }
+
+        /* ---------- responsive ---------- */
+        @media (max-width: 720px) {
+            .wrap, .nav-inner { padding-left: 20px; padding-right: 20px; }
+            .metrics { grid-template-columns: 1fr; }
+            .more-grid { grid-template-columns: 1fr; }
+            .skills { grid-template-columns: 1fr; }
+            .xp-date, .edu-date { margin-left: 0; width: 100%; }
+            .hero { padding-top: 44px; }
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .page-wrapper {
-                grid-template-columns: 1fr;
-                padding: 28px 20px;
-                gap: 36px;
-            }
-
-            .sidebar {
-                position: static;
-                text-align: center;
-            }
-
-            .profile-image {
-                margin: 0 auto 18px;
-            }
-
-            .sidebar-item {
-                justify-content: center;
-            }
-
-            .skills-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            nav {
-                padding: 14px 20px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            nav ul {
-                gap: 18px;
-            }
-
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
+        /* subtle entrance, motion-safe */
+        @media (prefers-reduced-motion: no-preference) {
+            .reveal { opacity: 0; transform: translateY(8px); animation: rise .5s ease forwards; }
+            @keyframes rise { to { opacity: 1; transform: none; } }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
         <div class="nav-inner">
-            <a href="index.html" class="logo">Shawn Bakker</a>
-            <ul>
-                <li><a href="index.html" class="active">About</a></li>
-                <li><a href="demos/index.html">Demos</a></li>
-            </ul>
+            <a href="#top" class="nav-logo">shawn bakker</a>
+            <div class="nav-links">
+                <a href="#work">work</a>
+                <a href="#experience">experience</a>
+                <a href="#skills">skills</a>
+                <button type="button" class="theme-toggle" id="themeToggle" aria-label="switch to light theme">light</button>
+            </div>
         </div>
     </nav>
 
-    <div class="page-wrapper">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="profile-image">
-                <img src="assets/shawncropheadshot.jpg" alt="Profile picture of me"/>
-            </div>
-            <h1>Shawn Bakker</h1>
-            <div class="title">C++ Engineer<br>Systems and Software</div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Pacific Northwest, USA
-                </div>
-                <div class="sidebar-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    University of Oregon
+    <div class="wrap" id="top">
+        <!-- ---------- hero ---------- -->
+        <header class="hero reveal">
+            <div class="hero-top">
+                <div class="avatar"><img src="assets/shawncropheadshot.jpg" alt="Shawn Bakker" /></div>
+                <div>
+                    <div class="eyebrow">Software Engineer · Pacific Northwest</div>
+                    <h1>Shawn Bakker</h1>
                 </div>
             </div>
 
-            <div class="sidebar-section">
-                <div class="sidebar-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <a href="mailto:shawn@misclick.com">shawn@misclick.com</a>
+            <p class="hero-tagline">
+                I build correct, measured systems — from <b>lock-free C++ order engines</b>
+                with microsecond latency to <b>full-stack geospatial products</b> — and I
+                document them honestly, with numbers you can reproduce.
+            </p>
+
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value">1.0<span class="u"> µs</span></div>
+                    <div class="metric-label">p50 order-to-fill latency, 100K orders</div>
                 </div>
-                <div class="sidebar-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    <a href="https://github.com/ShawnBakker">GitHub</a>
+                <div class="metric">
+                    <div class="metric-value">118<span class="u"> M/s</span></div>
+                    <div class="metric-label">lock-free SPSC queue throughput</div>
                 </div>
-                <div class="sidebar-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                    <a href="https://www.linkedin.com/in/shawnbakkersb/">LinkedIn</a>
+                <div class="metric">
+                    <div class="metric-value">0<span class="u"> lost</span></div>
+                    <div class="metric-label">100 producers × 100 consumers, stress-tested</div>
                 </div>
             </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main>
-            <!-- About -->
-            <section id="about">
-                <h2>About</h2>
-                <p>
-                    I build latency-critical execution infrastructure in modern C++20. My work focuses on lock-free concurrency, cache-efficient data structures, and sub-microsecond order processing. I care about what happens between the instruction cache and the matching engine.
-                </p>
-                <p>
-                    My primary languages are C++ and Python. I have hands-on experience with systems programming, networking, and quantitative tools for market simulation and analysis.
-                </p>
-            </section>
+            <div class="hero-contact">
+                <a href="mailto:shawn@misclick.com">shawn@misclick.com</a>
+                <span class="sep">/</span>
+                <a href="https://github.com/ShawnBakker">GitHub</a>
+                <span class="sep">/</span>
+                <a href="https://www.linkedin.com/in/shawnbakkersb/">LinkedIn</a>
+            </div>
+        </header>
 
-            <!-- Experience -->
-            <section id="experience">
-                <h2>Experience</h2>
-                <hr>
+        <!-- ---------- selected work ---------- -->
+        <section id="work">
+            <div class="section-head">
+                <span class="section-num">01</span>
+                <h2 class="section-title">Selected work</h2>
+            </div>
 
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3>Network Technician</h3>, <span class="experience-company">Pupitmiser</span>
-                    </div>
-                    <div class="experience-details">Dec 2022 - Present</div>
-                    <div class="experience-description">
-                        <ul>
-                            <li>Debugged TCP/IP stack issues, DNS resolution failures, and VLAN misroutes across 15-20 production client environments. Resolved 80-90% of incidents remotely through systematic fault isolation.</li>
-                            <li>Wrote and deployed firewall rules and network access controls across production infrastructure; reduced misconfiguration-related incidents by 25%.</li>
-                            <li>Delivered root cause analysis to non-technical clients across 15+ accounts, translating VLAN and DNS failures into actionable remediation steps.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3>Software Engineering Intern</h3>, <span class="experience-company">T. Mann Financial</span>
-                    </div>
-                    <div class="experience-details">Summer 2023</div>
-                    <div class="experience-description">
-                        <ul>
-                            <li>Built Python data pipelines for behavioral analysis of financial platform usage across user cohorts, identifying drop-off patterns that informed product changes (35% satisfaction increase within 6 weeks).</li>
-                            <li>Developed JavaScript event tracking instrumentation across the platform, enabling data-driven campaign targeting that increased site engagement 300%.</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Featured Project -->
-            <section id="featured-project">
-                <h2>Featured Project</h2>
-                <hr>
-
-                <div class="project-item">
-                    <div class="project-header">
+            <div class="featured">
+                <!-- Featured 1 — order engine -->
+                <article class="card card--feat">
+                    <div class="card-top">
                         <h3>Low-Latency Order Execution Engine</h3>
+                        <span class="chip">low-latency · c++</span>
                     </div>
-                    <div class="project-tech">C++20, std::atomic, std::counting_semaphore, CMake</div>
-                    <div class="project-description">
-                        Lock-free SPSC queue built from scratch using acquire/release memory ordering with alignas(64) cache-line padding to prevent false sharing. Benchmarked at 118M ops/sec on a power-of-2 ring buffer. MPMC queue based on Vyukov's design with per-slot sequence numbers and CAS retry loops for ABA prevention. Stress-tested under extreme contention (100 producers, 100 consumers, 10K messages each, zero lost) to validate correctness under conditions modeled after market-open bursts.
+                    <p class="card-lead">
+                        A lock-free matching engine built from scratch to survive market-open bursts,
+                        with every memory-ordering choice justified in the code.
+                    </p>
+                    <div class="tech mono">C++20 · std::atomic · acquire/release ordering · Vyukov MPMC · CMake · ThreadSanitizer</div>
+                    <ul>
+                        <li>Lock-free <b>SPSC queue</b> with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing — benchmarked at <b>118M ops/sec</b>; MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
+                        <li>Price-time-priority matching with O(1) cancel and partial fills — <b>1.0 µs p50 / 1.9 µs p99</b> order-to-fill across 100K orders.</li>
+                        <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to <b>zero-cost no-ops</b> in Release; 11 tests incl. a 50-thread torture test, TSan-clean.</li>
+                    </ul>
+                    <div class="card-links mono">
+                        <span class="nolink">live platform — redeploy pending</span>
                     </div>
-                    <div class="project-description">
-                        Price-time priority matching engine with O(1) cancel via order index and partial fill support. Measured 1.0 microsecond p50, 1.9 microsecond p99 order-to-fill latency across 100K orders through the in-memory processing pipeline. Deadlock prevention enforced through global lock ordering (OrderBook before PositionBook) with a debug-mode runtime validator using thread_local tracking. Compiles to zero-cost no-ops in Release builds.
-                    </div>
-                    <div class="project-description">
-                        11 tests (8 unit, 3 stress including 50-thread deadlock torture) with benchmarks and ThreadSanitizer-clean builds. Every memory ordering choice documented with inline rationale.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://meridian-web-five.vercel.app/">Live Platform</a>
-                    </div>
-                </div>
-            </section>
+                </article>
 
-            <!-- Other Projects -->
-            <section id="projects">
-                <h2>Other Projects</h2>
-                <hr>
+                <!-- Featured 2 — ParcelScope -->
+                <article class="card card--feat">
+                    <div class="card-top">
+                        <h3>ParcelScope</h3>
+                        <span class="chip">full-stack · geospatial</span>
+                    </div>
+                    <p class="card-lead">
+                        Parcel-level site-feasibility for Woodburn, Oregon — real county data,
+                        computed live in the browser and re-checked by a deployed geospatial API.
+                    </p>
+                    <div class="tech mono">React · TypeScript · MapLibre GL · FastAPI · PostGIS · Martin tiles · Docker · Cerebras LLM</div>
+                    <ul>
+                        <li>Buildable-area engine <b>unions overlapping constraints before subtracting</b> so nothing double-counts — unit-tested, and the browser's planar answer (<b>51%</b>) is shown against the API's geodesic one (<b>50.66%</b>) instead of hidden.</li>
+                        <li>Layered screening on real data — zoning, SSURGO soils, FEMA flood, distance-to-sewer/hydrant utilities — plus multi-parcel <b>assemblage</b> with a cited yield range.</li>
+                        <li>LLM zoning extraction (Cerebras <code class="mono">gpt-oss-120b</code>) scored <b>1 of 6</b> exact-match against a hand-verified gold set — kept and diagnosed rather than inflated.</li>
+                    </ul>
+                    <div class="card-links mono">
+                        <a href="https://parcelscope-six.vercel.app">Live demo</a>
+                    </div>
+                </article>
+            </div>
 
-                <div class="project-item">
-                    <div class="project-header">
-                        <h3>Quant-Engine</h3>
-                    </div>
-                    <div class="project-tech">C++20, Catch2, Black-Scholes, PostgreSQL, Docker</div>
-                    <div class="project-description">
-                        Deterministic C++20 backtesting engine with RAII resource management and seeded RNG for reproducible runs. Strategies include SMA Crossover, Mean Reversion, and Momentum with clean separation between signal logic and execution. Implements Black-Scholes options pricing with full Greeks (Delta, Gamma, Theta, Vega, Rho) for derivatives analysis and strategy risk evaluation. Persists backtest results in PostgreSQL for cross-run comparison. 100% core test coverage via Catch2.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/ShawnBakker/quant-engine">GitHub</a>
-                        <a href="demos/index.html#quant-engine">Demo</a>
-                    </div>
-                </div>
+            <div class="more-grid">
+                <article class="card card--sm">
+                    <h3>Quant-Engine</h3>
+                    <div class="tech mono">C++20 · Catch2 · Black-Scholes · PostgreSQL · Docker</div>
+                    <p>
+                        Deterministic backtesting core: seeded RNG for reproducible runs, SMA/mean-reversion/momentum
+                        strategies, full options Greeks, results persisted to Postgres. 100% core coverage.
+                    </p>
+                    <div class="card-links mono"><a href="https://github.com/ShawnBakker/quant-engine">GitHub</a></div>
+                </article>
 
-                <div class="project-item">
-                    <div class="project-header">
-                        <h3>Exchange Simulator</h3>
-                    </div>
-                    <div class="project-tech">TypeScript, Seeded RNG, Price-Time Priority, Vitest</div>
-                    <div class="project-description">
-                        Real-time exchange simulator built to understand why bid-ask spreads exist and how market makers adapt to toxic order flow. Features a price-time priority matching engine, an adaptive market maker that detects informed flow and widens spreads, and configurable trader agents (informed vs. noise). Seeded RNG for deterministic, reproducible experiments. Visualizes the Glosten-Milgrom model of adverse selection.
-                    </div>
-                    <div class="project-links">
+                <article class="card card--sm">
+                    <h3>Exchange Simulator</h3>
+                    <div class="tech mono">TypeScript · Vitest · price-time priority</div>
+                    <p>
+                        Real-time simulator of why bid-ask spreads exist: an adaptive market maker that
+                        detects toxic flow and widens spreads, visualizing the Glosten-Milgrom model.
+                    </p>
+                    <div class="card-links mono">
+                        <a href="https://shawnbakker.github.io/exchange-simulator/">Live demo</a>
                         <a href="https://github.com/ShawnBakker/exchange-simulator">GitHub</a>
-                        <a href="https://shawnbakker.github.io/exchange-simulator/">Live Demo</a>
-                        <a href="demos/index.html">Interactive Demo</a>
                     </div>
+                </article>
+
+                <article class="card card--sm">
+                    <h3>Quant Toolkit</h3>
+                    <div class="tech mono">Python · FastAPI · pandas · numpy · scipy</div>
+                    <p>
+                        Quant-research library: event-driven backtesting, risk analysis (VaR/CVaR via historical,
+                        parametric, and Cornish-Fisher), and GARCH(1,1) volatility estimation.
+                    </p>
+                    <div class="card-links mono"><span class="nolink">repo link pending</span></div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ---------- experience ---------- -->
+        <section id="experience">
+            <div class="section-head">
+                <span class="section-num">02</span>
+                <h2 class="section-title">Experience</h2>
+            </div>
+
+            <div class="xp">
+                <div>
+                    <div class="xp-head">
+                        <span class="xp-role">Network Technician</span>
+                        <span class="xp-org">Pupitmiser</span>
+                        <span class="xp-date">Dec 2022 — Present</span>
+                    </div>
+                    <ul>
+                        <li>Debugged TCP/IP, DNS-resolution, and VLAN-misroute failures across 15–20 production client environments; resolved 80–90% of incidents remotely through systematic fault isolation.</li>
+                        <li>Wrote and deployed firewall rules and network access controls across production infrastructure, cutting misconfiguration-related incidents by 25%.</li>
+                        <li>Delivered root-cause analysis to non-technical clients across 15+ accounts, translating VLAN and DNS failures into actionable remediation steps.</li>
+                    </ul>
                 </div>
 
-                <div class="project-item">
-                    <div class="project-header">
-                        <h3>Quant Toolkit</h3>
+                <div>
+                    <div class="xp-head">
+                        <span class="xp-role">Software Engineering Intern</span>
+                        <span class="xp-org">T. Mann Financial</span>
+                        <span class="xp-date">Summer 2023</span>
                     </div>
-                    <div class="project-tech">Python, FastAPI, pandas, numpy, scipy, arch</div>
-                    <div class="project-description">
-                        Python library for quantitative finance research. Includes event-driven backtesting with SMA/momentum/RSI strategies, risk analysis (VaR/CVaR via historical, parametric, and Cornish-Fisher methods), and GARCH(1,1) volatility estimation. Data fetching from Yahoo Finance and Alpha Vantage.
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/ShawnBakker/quant-toolkit">GitHub</a>
-                    </div>
+                    <ul>
+                        <li>Built Python data pipelines for behavioral analysis of platform usage across user cohorts, surfacing drop-off patterns that drove a 35% satisfaction increase within 6 weeks.</li>
+                        <li>Developed JavaScript event-tracking instrumentation across the platform, enabling data-driven campaign targeting that lifted site engagement 300%.</li>
+                    </ul>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Education -->
-            <section id="education">
-                <h2>Education</h2>
-                <hr>
+        <!-- ---------- skills ---------- -->
+        <section id="skills">
+            <div class="section-head">
+                <span class="section-num">03</span>
+                <h2 class="section-title">Technical skills</h2>
+            </div>
 
-                <div class="education-item">
-                    <h3>B.S. Computer Science, Minor in Business Administration</h3>
-                    <div class="education-school">University of Oregon</div>
-                    <div class="education-details">Sep 2021 - Dec 2025</div>
-                    <div class="education-description">
-                        <ul>
-                            <li>Coursework: Systems Programming, Computer Architecture, Data Structures & Algorithms, Software Engineering, Database Systems</li>
-                            <li>Vice President, UO Cybersecurity Club (UOSEC). Led exploit analysis presentations and coordinated CTF competition participation.</li>
-                        </ul>
-                    </div>
+            <div class="skills">
+                <div class="skill">
+                    <h4>Systems &amp; Core</h4>
+                    <ul>
+                        <li>C++ (C++20/17/14, STL, RAII, templates, atomics)</li>
+                        <li>Lock-free concurrency — SPSC/MPMC, memory ordering</li>
+                        <li>Cache-efficient data structures</li>
+                        <li>Linux/POSIX systems programming</li>
+                        <li>Python, C, Bash, SQL</li>
+                    </ul>
                 </div>
-            </section>
-
-            <!-- Skills -->
-            <section id="skills">
-                <h2>Technical Skills</h2>
-                <hr>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h4>Core</h4>
-                        <ul>
-                            <li>C++ (C++20/17/14, STL, RAII, Templates, Atomics)</li>
-                            <li>Lock-free concurrency (SPSC/MPMC, memory ordering)</li>
-                            <li>Cache-efficient data structures</li>
-                            <li>Linux/POSIX systems programming</li>
-                            <li>Python, C, Bash, SQL</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h4>Performance, Build, and Infrastructure</h4>
-                        <ul>
-                            <li>Google Benchmark, perf</li>
-                            <li>ThreadSanitizer, AddressSanitizer</li>
-                            <li>GDB, Valgrind</li>
-                            <li>CMake, GCC/Clang</li>
-                            <li>CI/CD (GitHub Actions), Docker, Git</li>
-                            <li>PostgreSQL, TCP/UDP networking</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h4>Domain</h4>
-                        <ul>
-                            <li>Market microstructure</li>
-                            <li>Order book mechanics</li>
-                            <li>Matching engine design</li>
-                            <li>Black-Scholes, options Greeks</li>
-                            <li>Adverse selection modeling</li>
-                        </ul>
-                    </div>
+                <div class="skill">
+                    <h4>Performance &amp; Infrastructure</h4>
+                    <ul>
+                        <li>Google Benchmark, perf</li>
+                        <li>ThreadSanitizer, AddressSanitizer, GDB, Valgrind</li>
+                        <li>CMake, GCC/Clang</li>
+                        <li>Docker &amp; Compose, GitHub Actions CI/CD, Git</li>
+                        <li>PostgreSQL, TCP/UDP networking</li>
+                    </ul>
                 </div>
-            </section>
+                <div class="skill">
+                    <h4>Full-Stack &amp; Geospatial</h4>
+                    <ul>
+                        <li>TypeScript, React, Vite</li>
+                        <li>MapLibre GL, vector tiles (Martin), Turf.js</li>
+                        <li>FastAPI, PostGIS, GDAL/ogr2ogr</li>
+                        <li>LLM integration &amp; honest evaluation harnesses</li>
+                        <li>Vercel, Cloudflare Tunnel, Oracle Cloud</li>
+                    </ul>
+                </div>
+                <div class="skill">
+                    <h4>Domain</h4>
+                    <ul>
+                        <li>Market microstructure &amp; order-book mechanics</li>
+                        <li>Matching-engine design</li>
+                        <li>Black-Scholes, options Greeks</li>
+                        <li>Adverse-selection modeling</li>
+                        <li>Geospatial feasibility &amp; constraint math</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-            <footer>
-                2026 Shawn Bakker
-            </footer>
-        </main>
+        <!-- ---------- education ---------- -->
+        <section id="education" class="edu">
+            <div class="section-head">
+                <span class="section-num">04</span>
+                <h2 class="section-title">Education</h2>
+            </div>
+
+            <div class="edu-head">
+                <span class="edu-deg">B.S. Computer Science, Minor in Business Administration</span>
+                <span class="edu-school">University of Oregon</span>
+                <span class="edu-date">Sep 2021 — Dec 2025</span>
+            </div>
+            <ul>
+                <li>Coursework: Systems Programming, Computer Architecture, Data Structures &amp; Algorithms, Software Engineering, Database Systems.</li>
+                <li>Vice President, UO Cybersecurity Club (UOSEC) — led exploit-analysis presentations and coordinated CTF competition participation.</li>
+            </ul>
+        </section>
+
+        <footer>
+            <span>© 2026 Shawn Bakker</span>
+            <span>
+                <a href="mailto:shawn@misclick.com">shawn@misclick.com</a> ·
+                <a href="https://github.com/ShawnBakker">GitHub</a> ·
+                <a href="https://www.linkedin.com/in/shawnbakkersb/">LinkedIn</a>
+            </span>
+        </footer>
     </div>
+
+    <script>
+        // Theme store: dark default, explicit toggle, persisted. The button label
+        // names the target theme and wears its colors, so it previews the switch.
+        (function () {
+            var KEY = "shawnbakker:theme";
+            var root = document.documentElement;
+            var btn = document.getElementById("themeToggle");
+
+            function current() {
+                return root.getAttribute("data-theme") === "light" ? "light" : "dark";
+            }
+            function sync() {
+                var target = current() === "light" ? "dark" : "light";
+                btn.textContent = target;
+                btn.setAttribute("aria-label", "switch to " + target + " theme");
+            }
+            sync();
+
+            btn.addEventListener("click", function () {
+                var next = current() === "light" ? "dark" : "light";
+                if (next === "light") root.setAttribute("data-theme", "light");
+                else root.removeAttribute("data-theme");
+                try { localStorage.setItem(KEY, next); } catch (e) {}
+                sync();
+            });
+        })();
+    </script>
 </body>
 </html>
