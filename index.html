@@ -253,7 +253,7 @@
         .sw-build { background: var(--accent); }
         .sw-sub { background: rgba(186,72,50,.75); }
 
-        .more-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+        .more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; }
         .card--sm { padding: 20px; }
         .card--sm h3 { font-size: 1.05rem; }
         .card--sm .tech { font-size: 10.5px; margin-bottom: 10px; }
@@ -356,7 +356,7 @@
                     </div>
                 </div>
 
-                <figure class="hero-viz" aria-label="Deterministic histogram visualization of order-to-fill latency, modeled on the order engine's measured p50 near 1.0 microseconds and p99 near 1.9 microseconds.">
+                <figure class="hero-viz" aria-label="Deterministic synthetic histogram of order-to-fill latency, calibrated to the Order Engine's measured p50 near 1.0 microseconds and p99 near 1.9 microseconds.">
                     <div class="viz-head">
                         <span class="viz-title">order-to-fill latency</span>
                         <span class="viz-live"><span class="viz-dot"></span>modeled</span>
@@ -364,7 +364,7 @@
                     <div class="viz-readout mono" id="vizReadout">warming up…</div>
                     <canvas id="latencyCanvas" role="img" aria-label="Order-to-fill latency histogram"></canvas>
                     <figcaption class="viz-foot">
-                        Deterministic visualization modeled on the order engine's measured p50 ≈ 1.0 µs / p99 ≈ 1.9 µs — reproducible, not live telemetry.
+                        Deterministic synthetic distribution calibrated to the Order Engine's measured p50 ≈ 1.0 µs and p99 ≈ 1.9 µs — not raw benchmark samples or live telemetry.
                     </figcaption>
                 </figure>
             </div>
@@ -383,7 +383,7 @@
                     <div class="metric-label">incl. a 50-thread deadlock torture — TSan-clean</div>
                 </div>
             </div>
-            <p class="metrics-attr mono">Measured on my lock-free order execution engine — second project below.</p>
+            <p class="metrics-attr mono">Measured on my lock-free order execution engine.</p>
         </header>
 
         <!-- ---------- selected work ---------- -->
@@ -472,14 +472,6 @@
                     </div>
                 </article>
 
-                <article class="card card--sm">
-                    <h3>Quant Toolkit</h3>
-                    <div class="tech mono">Python · FastAPI · pandas · numpy · scipy</div>
-                    <p>
-                        Quant-research library: event-driven backtesting, risk analysis (VaR/CVaR via historical,
-                        parametric, and Cornish-Fisher), and GARCH(1,1) volatility estimation.
-                    </p>
-                </article>
             </div>
         </section>
 
@@ -698,7 +690,7 @@
                 ctx.font = '600 10px "JetBrains Mono", monospace';
                 var right = x > cssW - 64;
                 ctx.textAlign = right ? "right" : "left";
-                ctx.fillText(label + " " + v.toFixed(2), right ? x - 4 : x + 4, padTop + 8);
+                ctx.fillText(label + " " + v.toFixed(1), right ? x - 4 : x + 4, padTop + 8);
                 ctx.restore();
             }
 
@@ -733,8 +725,8 @@
                 marker(p50, "p50", pal.ink, plotW, plotH);
                 marker(p99, "p99", pal.accent2, plotW, plotH);
                 if ((frame % 5 === 0 || total >= TARGET) && readout) {
-                    readout.textContent = "p50 " + p50.toFixed(2) + " µs · p99 " +
-                        p99.toFixed(2) + " µs · " + total.toLocaleString() + " orders";
+                    readout.textContent = "p50 " + p50.toFixed(1) + " µs · p99 " +
+                        p99.toFixed(1) + " µs · " + total.toLocaleString() + " modeled samples";
                 }
             }
 
@@ -742,8 +734,8 @@
 
             if (reduced) {
                 addSamples(TARGET); snapMax(); draw();
-                if (readout) readout.textContent = "p50 " + percentile(0.5).toFixed(2) +
-                    " µs · p99 " + percentile(0.99).toFixed(2) + " µs · " + TARGET.toLocaleString() + " orders";
+                if (readout) readout.textContent = "p50 " + percentile(0.5).toFixed(1) +
+                    " µs · p99 " + percentile(0.99).toFixed(1) + " µs · " + TARGET.toLocaleString() + " modeled samples";
                 return;
             }
 
