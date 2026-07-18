@@ -143,6 +143,7 @@
             font-variant-numeric: tabular-nums; letter-spacing: -.01em;
         }
         .metric-label { font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+        .metrics-attr { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--muted); margin: 10px 0 0; letter-spacing: .02em; }
 
         .hero-contact {
             display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center;
@@ -341,9 +342,9 @@
                     </div>
 
                     <p class="hero-tagline">
-                        I build correct, measured systems — from lock-free C++ order engines
-                        with microsecond latency to full-stack geospatial products — and I
-                        document them honestly, with numbers you can reproduce.
+                        I build measured systems and geospatial products — from a lock-free
+                        C++ order engine at microsecond latency to parcelscope, a real-data
+                        site-feasibility tool — documented with numbers you can reproduce.
                     </p>
 
                     <div class="hero-contact">
@@ -355,15 +356,15 @@
                     </div>
                 </div>
 
-                <figure class="hero-viz" aria-label="Live histogram of simulated order-to-fill latency, converging on a p50 near 1.0 microseconds and a p99 near 1.9 microseconds.">
+                <figure class="hero-viz" aria-label="Deterministic histogram visualization of order-to-fill latency, modeled on the order engine's measured p50 near 1.0 microseconds and p99 near 1.9 microseconds.">
                     <div class="viz-head">
                         <span class="viz-title">order-to-fill latency</span>
-                        <span class="viz-live"><span class="viz-dot"></span>live</span>
+                        <span class="viz-live"><span class="viz-dot"></span>modeled</span>
                     </div>
                     <div class="viz-readout mono" id="vizReadout">warming up…</div>
                     <canvas id="latencyCanvas" role="img" aria-label="Order-to-fill latency histogram"></canvas>
                     <figcaption class="viz-foot">
-                        Illustrative — latencies sampled to the engine's measured p50 ≈ 1.0 µs / p99 ≈ 1.9 µs, not live telemetry.
+                        Deterministic visualization modeled on the order engine's measured p50 ≈ 1.0 µs / p99 ≈ 1.9 µs — reproducible, not live telemetry.
                     </figcaption>
                 </figure>
             </div>
@@ -382,6 +383,7 @@
                     <div class="metric-label">incl. a 50-thread deadlock torture — TSan-clean</div>
                 </div>
             </div>
+            <p class="metrics-attr mono">Measured on my lock-free order execution engine — second project below.</p>
         </header>
 
         <!-- ---------- selected work ---------- -->
@@ -392,28 +394,7 @@
             </div>
 
             <div class="featured">
-                <!-- Featured 1 — order engine -->
-                <article class="card card--feat">
-                    <div class="card-top">
-                        <h3>Low-Latency Order Execution Engine</h3>
-                        <span class="chip">low-latency · c++</span>
-                    </div>
-                    <p class="card-lead">
-                        A lock-free matching engine built from scratch to survive market-open bursts,
-                        with every memory-ordering choice justified in the code.
-                    </p>
-                    <div class="tech mono">C++20 · std::atomic · acquire/release ordering · Vyukov MPMC · CMake · ThreadSanitizer</div>
-                    <ul>
-                        <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing — benchmarked at 118M ops/sec; MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
-                        <li>Price-time-priority matching with O(1) cancel and partial fills — 1.0 µs p50 / 1.9 µs p99 order-to-fill across 100K orders.</li>
-                        <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release; 11 tests incl. a 50-thread torture test, TSan-clean.</li>
-                    </ul>
-                    <div class="card-links mono">
-                        <span class="nolink">live platform — redeploy pending</span>
-                    </div>
-                </article>
-
-                <!-- Featured 2 — parcelscope -->
+                <!-- Featured 1 — parcelscope (product-first: primary target is a product company) -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>parcelscope</h3>
@@ -427,7 +408,7 @@
                     <ul>
                         <li>Buildable-area engine unions overlapping constraints before subtracting so nothing double-counts — unit-tested, and the browser's planar answer (51%) is shown against the API's geodesic one (50.66%) instead of hidden.</li>
                         <li>Layered screening on real data — zoning, SSURGO soils, FEMA flood, distance-to-sewer/hydrant utilities — plus multi-parcel assemblage with a cited yield range.</li>
-                        <li>LLM zoning extraction (Cerebras <code class="mono">gpt-oss-120b</code>) scored 1 of 6 exact-match against a hand-verified gold set — kept and diagnosed rather than inflated.</li>
+                        <li>Built an evaluation harness that caught the LLM extraction approach before production: the first real Cerebras (<code class="mono">gpt-oss-120b</code>) run scored 1 of 6 against a hand-verified gold set — the model returns district-level conditional rules where the product needs parcel-resolved answers. I publish the eval conditions and failure cases, not an unsupported accuracy number.</li>
                     </ul>
                     <div class="card-links mono">
                         <a href="https://parcelscope-six.vercel.app">Live demo</a>
@@ -443,9 +424,27 @@
                                 <i class="sw sw-build"></i>buildable
                                 <i class="sw sw-sub"></i>subtracted
                             </span>
-                            <span class="pm-note">Illustrative sample — the live demo runs real Marion County parcels.</span>
+                            <span class="pm-note">Sample parcels, real geometric operations — the live demo runs real Marion County data.</span>
                         </div>
                     </div>
+                </article>
+
+                <!-- Featured 2 — order engine -->
+                <article class="card card--feat">
+                    <div class="card-top">
+                        <h3>Low-Latency Order Execution Engine</h3>
+                        <span class="chip">low-latency · c++</span>
+                    </div>
+                    <p class="card-lead">
+                        A lock-free matching engine built from scratch to survive market-open bursts,
+                        with every memory-ordering choice justified in the code.
+                    </p>
+                    <div class="tech mono">C++20 · std::atomic · acquire/release ordering · Vyukov MPMC · CMake · ThreadSanitizer</div>
+                    <ul>
+                        <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing — benchmarked at 118M ops/sec; MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
+                        <li>Price-time-priority matching with O(1) cancel and partial fills — 1.0 µs p50 / 1.9 µs p99 order-to-fill across 100K orders.</li>
+                        <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release; 11 tests incl. a 50-thread torture test, TSan-clean.</li>
+                    </ul>
                 </article>
             </div>
 
@@ -480,7 +479,6 @@
                         Quant-research library: event-driven backtesting, risk analysis (VaR/CVaR via historical,
                         parametric, and Cornish-Fisher), and GARCH(1,1) volatility estimation.
                     </p>
-                    <div class="card-links mono"><span class="nolink">repo link pending</span></div>
                 </article>
             </div>
         </section>
@@ -614,18 +612,28 @@
 
             var LO = 0.5, HI = 3.0, W = 0.0625, N = Math.round((HI - LO) / W);
             var counts = new Float64Array(N);
-            var total = 0, maxSmooth = 1, frame = 0;
+            var total = 0, maxSmooth = 1, frame = 0, TARGET = 100000; // the benchmark's real order count
+
+            // Deterministic PRNG (mulberry32, fixed seed): the histogram replays
+            // the SAME sequence on every load — reproducible, not random each visit.
+            var seed = 0x1a2b3c4d;
+            function rng() {
+                seed = seed + 0x6D2B79F5 | 0;
+                var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            }
 
             function randn() {
                 var u = 0, v = 0;
-                while (u === 0) u = Math.random();
-                while (v === 0) v = Math.random();
+                while (u === 0) u = rng();
+                while (v === 0) v = rng();
                 return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.283185307 * v);
             }
             function sample() {
                 // lognormal tuned to p50≈1.0, p99≈1.9, plus a rare tail outlier
                 var x = Math.exp(0.268 * randn());
-                if (Math.random() < 0.0035) x += 0.45 + Math.random() * 1.25;
+                if (rng() < 0.0035) x += 0.45 + rng() * 1.25;
                 return x;
             }
             function addSamples(n) {
@@ -724,27 +732,35 @@
                 var p50 = percentile(0.5), p99 = percentile(0.99);
                 marker(p50, "p50", pal.ink, plotW, plotH);
                 marker(p99, "p99", pal.accent2, plotW, plotH);
-                if (frame % 5 === 0 && readout) {
+                if ((frame % 5 === 0 || total >= TARGET) && readout) {
                     readout.textContent = "p50 " + p50.toFixed(2) + " µs · p99 " +
                         p99.toFixed(2) + " µs · " + total.toLocaleString() + " orders";
                 }
             }
 
+            function snapMax() { var m = 1; for (var i = 0; i < N; i++) if (counts[i] > m) m = counts[i]; maxSmooth = m; }
+
             if (reduced) {
-                addSamples(60000);
-                var m = 1; for (var k = 0; k < N; k++) if (counts[k] > m) m = counts[k];
-                maxSmooth = m; draw();
-                if (readout) readout.textContent = "p50 1.00 µs · p99 1.90 µs · steady state";
+                addSamples(TARGET); snapMax(); draw();
+                if (readout) readout.textContent = "p50 " + percentile(0.5).toFixed(2) +
+                    " µs · p99 " + percentile(0.99).toFixed(2) + " µs · " + TARGET.toLocaleString() + " orders";
                 return;
             }
 
             var running = false, inView = true, raf;
             function loop() {
                 if (!running) return;
-                addSamples(14 + (Math.random() * 22 | 0));
-                for (var i = 0; i < N; i++) counts[i] *= 0.99;
-                draw(); frame++;
-                raf = requestAnimationFrame(loop);
+                if (total < TARGET) {
+                    // Fill the seeded 100K-sample distribution, then settle. The
+                    // final state is identical on every load (reproducible), and
+                    // the count lands on the benchmark's real N.
+                    addSamples(Math.min(1000, TARGET - total));
+                    frame++; draw();
+                    raf = requestAnimationFrame(loop);
+                } else {
+                    snapMax(); draw();
+                    running = false;
+                }
             }
             function evaluate() {
                 var should = inView && !document.hidden;
@@ -926,6 +942,9 @@
                 wrap.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.textContent = "explore buildable area →";
             }
             btn.addEventListener("click", function () { if (wrap.hidden) open(); else close(); });
+            // Open by default on desktop (fastest way for a product reviewer to
+            // understand parcelscope); stays collapsed on narrow screens.
+            if (window.innerWidth > 820) open();
         })();
     </script>
 
