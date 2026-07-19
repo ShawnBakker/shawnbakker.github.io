@@ -1,0 +1,41 @@
+name: portfolio checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Static content guards
+        run: |
+          set -e
+          echo "CNAME is exactly shawnbakker.dev"
+          test "$(tr -d '[:space:]' < CNAME)" = "shawnbakker.dev"
+
+          echo "no shawnbakker.github.io in public HTML"
+          ! grep -rn "shawnbakker\.github\.io" index.html order-engine/index.html
+
+          echo "no retired figures or corrected claims regressed"
+          ! grep -rnE "118 ?M|1\.9[[:space:]]?µs|O\(1\) cancel|market-open" index.html order-engine/index.html
+
+          echo "referenced local assets exist"
+          for f in assets/shawncropheadshot.webp assets/shawncropheadshot.jpg assets/social-card.png order-engine/index.html; do
+            test -f "$f" || { echo "missing $f"; exit 1; }
+          done
+          echo "static guards passed"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright (chromium)
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npx playwright test
