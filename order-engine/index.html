@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Execution Engine · benchmark &amp; architecture · Shawn Bakker</title>
+    <meta name="description" content="How I built and measured a lock-free C++20 order execution engine. Every number is reproduced on a stated machine and commit." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316130d'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23e08a5f' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
+    <script>
+      try { if (localStorage.getItem("shawnbakker:theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #f4efe4; --surface: #fdfbf5; --surface-2: #ece5d6; --ink: #26221b;
+            --ink-soft: #524c40; --muted: #8b8271; --line: #e7dfd0; --line-2: #d6ccb9;
+            --accent: #b0562f; --accent-ink: #fdfbf5;
+        }
+        :root[data-theme="dark"] {
+            --bg: #16130d; --surface: #1e1a12; --surface-2: #241f17; --ink: #ece5d7;
+            --ink-soft: #b0a996; --muted: #79715f; --line: #2c2820; --line-2: #3b362b;
+            --accent: #e08a5f; --accent-ink: #1a1006;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "IBM Plex Sans", system-ui, sans-serif; background: var(--bg);
+            color: var(--ink); line-height: 1.65; font-size: 16px; -webkit-font-smoothing: antialiased;
+        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; text-underline-offset: 3px; }
+        ::selection { background: var(--accent); color: var(--accent-ink); }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+        .mono { font-family: "JetBrains Mono", monospace; }
+        .wrap { max-width: 780px; margin: 0 auto; padding: 0 28px; }
+
+        nav {
+            position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--line);
+            background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px);
+        }
+        .nav-inner { max-width: 780px; margin: 0 auto; padding: 12px 28px; display: flex; align-items: center; justify-content: space-between; }
+        .nav-back { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--ink-soft); }
+        .nav-back:hover { color: var(--accent); text-decoration: none; }
+        .theme-toggle {
+            font-family: "JetBrains Mono", monospace; font-size: 11.5px; letter-spacing: .04em;
+            color: var(--surface); background: var(--ink); border: 1px solid var(--ink);
+            border-radius: 999px; padding: 4px 11px; cursor: pointer;
+        }
+        .theme-toggle:hover { opacity: .82; }
+
+        header.head { padding: 52px 0 8px; }
+        .eyebrow { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+        h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+        .lede { color: var(--ink-soft); font-size: 1.05rem; margin-top: 16px; max-width: 62ch; }
+
+        section { padding: 30px 0; border-top: 1px solid var(--line); margin-top: 30px; }
+        section:first-of-type { border-top: none; margin-top: 12px; }
+        h2 { font-size: 1.2rem; font-weight: 600; margin-bottom: 14px; letter-spacing: -.01em; }
+        h3 { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin: 22px 0 8px; }
+        p { margin-bottom: 12px; color: var(--ink); }
+        p.soft { color: var(--ink-soft); }
+        ul.tight { list-style: none; display: flex; flex-direction: column; gap: 7px; margin: 4px 0 12px; }
+        ul.tight li { position: relative; padding-left: 18px; color: var(--ink-soft); font-size: 15px; line-height: 1.55; }
+        ul.tight li::before { content: "›"; position: absolute; left: 2px; color: var(--accent); font-family: "JetBrains Mono", monospace; }
+        strong { font-weight: 600; color: var(--ink); }
+
+        .env {
+            background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+            padding: 16px 18px; font-family: "JetBrains Mono", monospace; font-size: 12.5px;
+            color: var(--ink-soft); line-height: 1.9; margin: 6px 0 4px;
+        }
+        .env b { color: var(--ink); font-weight: 500; }
+
+        .table-wrap { overflow-x: auto; margin: 6px 0 8px; }
+        table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+        th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+        th { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+        td { color: var(--ink-soft); }
+        td:first-child { color: var(--ink); }
+        td.num, th.num { font-family: "JetBrains Mono", monospace; font-variant-numeric: tabular-nums; }
+
+        pre {
+            background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px;
+            padding: 14px 16px; overflow-x: auto; margin: 8px 0 12px;
+            font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.6; color: var(--ink);
+        }
+        code:not(pre code) { font-family: "JetBrains Mono", monospace; font-size: .9em; color: var(--ink); background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+        .note { border-left: 2px solid var(--accent); padding: 4px 0 4px 14px; margin: 10px 0; color: var(--ink-soft); font-size: 14.5px; }
+
+        footer { border-top: 1px solid var(--line); padding: 26px 0 46px; margin-top: 30px; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+        footer a { color: var(--ink-soft); }
+
+        @media (max-width: 640px) { .wrap, .nav-inner { padding-left: 18px; padding-right: 18px; } header.head { padding-top: 36px; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="/" class="nav-back">← shawn bakker</a>
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="switch theme">dark</button>
+        </div>
+    </nav>
+
+    <div class="wrap">
+        <header class="head">
+            <div class="eyebrow">Case study · low-latency · C++</div>
+            <h1>Order Execution Engine</h1>
+            <p class="lede">
+                A lock-free C++20 matching engine, the low-latency backbone of a trading platform.
+                This page is the methodology: I re-ran the committed benchmarks on one stated
+                machine and commit, so every number here is one you can reproduce. The repository
+                is private, so what follows is the design, the measurements, and the exact commands.
+            </p>
+        </header>
+
+        <section>
+            <h2>Environment</h2>
+            <p class="soft">Everything below was measured on 2026-07-19 by re-running the committed Release binaries at one commit. Numbers are specific to this machine and toolchain.</p>
+            <div class="env">
+                <b>Commit</b>&nbsp;&nbsp;1514743 (2026-07-14)<br />
+                <b>CPU</b>&nbsp;&nbsp;Intel i5-12600K, 10 cores / 16 threads, 3.7 GHz base<br />
+                <b>OS</b>&nbsp;&nbsp;Windows 11 Pro<br />
+                <b>Compiler</b>&nbsp;&nbsp;MSVC (Visual Studio 17 2022), Release, C++20<br />
+                <b>Flags</b>&nbsp;&nbsp;/GS /guard:cf security hardening. No -march=native.
+            </div>
+        </section>
+
+        <section>
+            <h2>Architecture</h2>
+            <p>Trading signals flow through a multi-stage pipeline, with the concurrency boundary drawn where it matters and each lock justified in the code:</p>
+            <ul class="tight">
+                <li><strong>Signal Evaluator</strong> filters by confidence and generates orders in parallel on a thread pool.</li>
+                <li>Orders cross a <strong>lock-free SPSC queue</strong> to the routing thread. It uses <code>std::atomic</code> acquire/release ordering (not sequential consistency, which is a full fence on x86) because the producer/consumer relationship is one-directional. Head and tail sit on separate cache lines (<code>alignas(64)</code>) so the two cores do not bounce a shared line.</li>
+                <li>A semaphore-based <strong>Rate Limiter</strong> models exchange message throttling.</li>
+                <li>The <strong>Order Book</strong> does price-time-priority matching with O(1) cancel via an order index, generating fills.</li>
+                <li>The <strong>Position Book</strong> updates from fills under a <code>shared_mutex</code> (concurrent reads, exclusive writes).</li>
+                <li>The <strong>MPMC queue</strong> (used under contention) uses Dmitry Vyukov's per-slot sequence-number design; monotonic sequence numbers make stale CAS attempts fail safely, which is the ABA guard.</li>
+                <li><strong>Deadlock prevention</strong> is by a total lock order (OrderBook = 1, PositionBook = 2), always acquired ascending, which breaks the circular-wait condition. A debug-mode <code>DeadlockDetector</code> validates it at runtime and compiles to zero-cost no-ops in Release (<code>#ifndef NDEBUG</code>).</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Performance</h2>
+            <p class="soft">Latency and throughput are two separate binaries, two separate experiments. I keep them apart.</p>
+
+            <h3>Order-to-fill latency</h3>
+            <p class="soft"><code>bench_latency</code>: 100,000 market buy orders against 1,000 resting sell limit orders (reseeded every 100), 4 engine threads. Each order is timed with <code>std::chrono::high_resolution_clock</code> from submit until its fill is drained by a tight spin. Percentiles are nearest-rank over recorded fills. About 99% of orders filled immediately (99,000 and 98,998 of 100,000 across two runs); percentiles are over those fills.</p>
+            <div class="table-wrap">
+            <table>
+                <thead><tr><th>Percentile</th><th class="num">Run 1</th><th class="num">Run 2</th></tr></thead>
+                <tbody>
+                    <tr><td>p50</td><td class="num">0.9 µs</td><td class="num">0.9 µs</td></tr>
+                    <tr><td>p90</td><td class="num">1.2 µs</td><td class="num">1.2 µs</td></tr>
+                    <tr><td>p95</td><td class="num">1.2 µs</td><td class="num">1.2 µs</td></tr>
+                    <tr><td>p99</td><td class="num">2.3 µs</td><td class="num">2.1 µs</td></tr>
+                    <tr><td>p99.9</td><td class="num">25.5 µs</td><td class="num">27.4 µs</td></tr>
+                    <tr><td>mean</td><td class="num">1.1 µs</td><td class="num">1.1 µs</td></tr>
+                    <tr><td>max</td><td class="num">1.9 ms</td><td class="num">1.6 ms</td></tr>
+                </tbody>
+            </table>
+            </div>
+            <p class="note">The millisecond max is the tail from the ~1% of orders that did not fill immediately and sat on the poll path. It is real, so I show it; p50 and p99 are over filled orders.</p>
+
+            <h3>Queue throughput</h3>
+            <p class="soft"><code>bench_queue_throughput</code>: 10,000,000 ops per configuration, 16-byte items, wall time by <code>high_resolution_clock</code>, one timed run per invocation. I ran the binary three times for variance.</p>
+            <div class="table-wrap">
+            <table>
+                <thead><tr><th>Config</th><th class="num">Run 1</th><th class="num">Run 2</th><th class="num">Run 3</th></tr></thead>
+                <tbody>
+                    <tr><td>SPSC 1P:1C</td><td class="num">104.7M</td><td class="num">93.1M</td><td class="num">102.7M</td></tr>
+                    <tr><td>MPMC 1P:1C</td><td class="num">79.4M</td><td class="num">77.6M</td><td class="num">79.7M</td></tr>
+                    <tr><td>MPMC 4P:4C</td><td class="num">13.0M</td><td class="num">12.9M</td><td class="num">12.9M</td></tr>
+                    <tr><td>MPMC 8P:8C</td><td class="num">10.9M</td><td class="num">10.5M</td><td class="num">10.5M</td></tr>
+                </tbody>
+            </table>
+            </div>
+            <p class="soft">SPSC throughput is ~93 to 105M ops/sec, median ~103M. MPMC throughput drops as producers and consumers contend on the shared ring, which is the expected shape.</p>
+        </section>
+
+        <section>
+            <h2>Correctness</h2>
+            <p class="soft">Separate from performance, and fully reproduced.</p>
+            <div class="table-wrap">
+            <table>
+                <thead><tr><th>Check</th><th>Result</th></tr></thead>
+                <tbody>
+                    <tr><td>ctest suite</td><td>11 / 11 passed (8 unit, 3 stress)</td></tr>
+                    <tr><td>Zero lost (MPMC)</td><td>100P × 100C × 10,000 = 1,000,000 items; asserts consumed == total → PASS (1,000,000 / 1,000,000)</td></tr>
+                    <tr><td>FIFO (SPSC)</td><td>1P/1C, 10,000,000 items, strict order check → PASS</td></tr>
+                    <tr><td>Deadlock ordering</td><td>50 threads, 50,000 mixed ops → 0 violations</td></tr>
+                    <tr><td>ThreadSanitizer</td><td>pending (see below)</td></tr>
+                </tbody>
+            </table>
+            </div>
+            <p class="note">The runtime deadlock detector is debug-only, so its violation-injection sub-test is skipped in the Release run. ThreadSanitizer is a GCC/Clang option and this build is MSVC, so I have not run it yet. I will publish a Clang/Linux TSan result with its command, compiler version, commit, and output when I have it, rather than claim it now.</p>
+        </section>
+
+        <section>
+            <h2>Reproduction</h2>
+            <p class="soft">From the engine package, at the stated commit:</p>
+            <pre>cmake .. -G "Visual Studio 17 2022" -A x64
+cmake --build . --config Release
+ctest -C Release --output-on-failure
+./Release/bench_queue_throughput
+./Release/bench_latency
+./Release/stress_queue
+./Release/stress_deadlock</pre>
+            <p class="soft">Expected throughput output (abridged):</p>
+            <pre>| Queue Type | Config | Ops/sec  | Wall Time |
+| SPSC       | 1P:1C  |  102.7M  |    97ms   |
+| MPMC       | 1P:1C  |   79.7M  |   125ms   |
+| MPMC       | 4P:4C  |   12.9M  |   775ms   |
+| MPMC       | 8P:8C  |   10.5M  |   950ms   |</pre>
+            <p class="soft">Expected stress output (abridged):</p>
+            <pre>[STRESS] MPMC Queue: 100P/100C, 1000000 items
+  Result: PASS (1000000/1000000 consumed)
+[STRESS] Lock ordering (50 threads, 50000 ops): PASS - 0 violations</pre>
+        </section>
+
+        <section>
+            <h2>Limitations</h2>
+            <ul class="tight">
+                <li>Single machine, in-memory only. No network or kernel-bypass NIC, so this is pipeline latency, not wire-to-wire.</li>
+                <li>Synthetic workload: uniform market orders against a dense resting book. Real flow is burstier and adversarial.</li>
+                <li>Built with security-hardening flags (/GS /guard:cf), not max-speed flags, and no -march=native. A -O3 Linux/Clang build would likely be faster.</li>
+                <li>The ~1% of orders that do not fill immediately inflate the p99.9 and max tail through the poll path.</li>
+                <li>All numbers are specific to the i5-12600K / Windows / MSVC environment above. Different hardware or toolchain will differ.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>A note on older numbers</h2>
+            <p class="soft">An earlier version of this site quoted 118M ops/sec, a 1.9 µs p99, and "ThreadSanitizer clean." Those probably came from a Linux/Clang build, but I could not recover the original output or environment, so I removed them rather than present numbers without a complete evidence chain. If I recover them or reproduce on Linux, I will publish both sets side by side as a cross-toolchain comparison, not as a rescue of the old headline.</p>
+        </section>
+
+        <footer>
+            <a href="/">← back to shawnbakker.dev</a>
+        </footer>
+    </div>
+
+    <script>
+        (function () {
+            var KEY = "shawnbakker:theme", root = document.documentElement, btn = document.getElementById("themeToggle");
+            function cur() { return root.getAttribute("data-theme") === "dark" ? "dark" : "light"; }
+            function sync() { var t = cur() === "light" ? "dark" : "light"; btn.textContent = t; btn.setAttribute("aria-label", "switch to " + t + " theme"); }
+            sync();
+            btn.addEventListener("click", function () {
+                var next = cur() === "light" ? "dark" : "light";
+                if (next === "dark") root.setAttribute("data-theme", "dark"); else root.removeAttribute("data-theme");
+                try { localStorage.setItem(KEY, next); } catch (e) {}
+                sync();
+            });
+        })();
+    </script>
+</body>
+</html>

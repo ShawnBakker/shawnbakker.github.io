@@ -446,6 +446,9 @@
                         <li>Price-time-priority matching with O(1) cancel and partial fills, at ~0.9 µs p50 / 2.1–2.3 µs p99 order-to-fill across 100K orders.</li>
                         <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release. 11 of 11 tests pass, including a 50-thread deadlock torture with zero violations and a 1,000,000-item MPMC stress with zero lost.</li>
                     </ul>
+                    <div class="card-links mono">
+                        <a href="/order-engine/">Benchmark &amp; architecture</a>
+                    </div>
                     <p class="card-note mono">Measured on Intel i5-12600K, Windows 11, MSVC 2022 Release, C++20, commit 1514743. SPSC throughput 93–105M ops/sec across three runs.</p>
                 </article>
             </div>
