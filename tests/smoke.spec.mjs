@@ -17,13 +17,38 @@ test('homepage: primary CTAs resolve', async ({ page }) => {
   await expect(page.locator('.featured a[href="/order-engine/"]')).toBeVisible();
 });
 
-test('homepage: theme toggle flips data-theme', async ({ page }) => {
+test('theme: first visit defaults to light', async ({ page }) => {
   await page.goto('/');
-  const html = page.locator('html');
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'dark');
+  const btn = page.locator('#themeToggle');
+  await expect(btn).toHaveText('dark');
+  await expect(btn).toHaveAttribute('aria-label', 'switch to dark theme');
+});
+
+test('theme: legacy dark preference is ignored', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('shawnbakker:theme', 'dark'));
+  await page.reload();
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('#themeToggle')).toHaveText('dark');
+});
+
+test('theme: v2 preference persists across pages and clears the legacy key', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('shawnbakker:theme', 'dark')); // legacy present
   await page.click('#themeToggle');
-  await expect(html).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => localStorage.getItem('shawnbakker:theme:v2'))).toBe('dark');
+  expect(await page.evaluate(() => localStorage.getItem('shawnbakker:theme'))).toBeNull(); // legacy cleaned up
+  // carries to the case study with no extra click
+  await page.goto('/order-engine/');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  // back to light, then reload: light persists
   await page.click('#themeToggle');
-  await expect(html).not.toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'dark');
+  await page.reload();
+  await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'dark');
+  expect(await page.evaluate(() => localStorage.getItem('shawnbakker:theme:v2'))).toBe('light');
 });
 
 test('homepage: parcel map is keyboard-selectable', async ({ page }) => {

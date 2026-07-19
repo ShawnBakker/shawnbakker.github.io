@@ -28,11 +28,12 @@
     </script>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23173529'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23f4eedd' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
 
-    <!-- Paint the stored theme before first paint so a dark visitor never flashes white. -->
+    <!-- Light is the default; only an explicit persisted "dark" (v2 key) opts in.
+         Applied before first paint so a dark visitor never flashes light. The
+         pre-redesign "shawnbakker:theme" key is intentionally ignored. -->
     <script>
       try {
-        var t = localStorage.getItem("shawnbakker:theme");
-        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        if (localStorage.getItem("shawnbakker:theme:v2") === "dark") document.documentElement.setAttribute("data-theme", "dark");
       } catch (e) {}
     </script>
 
@@ -41,8 +42,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <style>
-        /* ---------- tokens: dark is the default; [data-theme=light] overrides ---------- */
-        /* Eggshell light is the default; dark is opt-in via [data-theme=dark]. */
+        /* Light is the default; [data-theme="dark"] is an explicit persisted override. */
         :root {
             --bg:        #F4EEDD;
             --surface:   #FBF7EC;
@@ -1042,10 +1042,11 @@
     </script>
 
     <script>
-        // Theme store: light default (eggshell), explicit toggle, persisted. The
-        // button label names the target theme and wears its colors, previewing the switch.
+        // Theme store: light is the default; the toggle persists an explicit choice
+        // under a versioned key so a pre-redesign dark preference does not carry over.
+        // The button label names the target theme and wears its colors.
         (function () {
-            var KEY = "shawnbakker:theme";
+            var KEY = "shawnbakker:theme:v2";
             var root = document.documentElement;
             var btn = document.getElementById("themeToggle");
 
@@ -1063,7 +1064,10 @@
                 var next = current() === "light" ? "dark" : "light";
                 if (next === "dark") root.setAttribute("data-theme", "dark");
                 else root.removeAttribute("data-theme");
-                try { localStorage.setItem(KEY, next); } catch (e) {}
+                try {
+                    localStorage.setItem(KEY, next);
+                    localStorage.removeItem("shawnbakker:theme"); // clean up the legacy key on first explicit choice
+                } catch (e) {}
                 sync();
             });
         })();

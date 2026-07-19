@@ -14,7 +14,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23173529'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23f4eedd' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
     <script>
-      try { if (localStorage.getItem("shawnbakker:theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+      // Light is the default; only an explicit persisted "dark" (v2 key) opts in. Legacy key ignored.
+      try { if (localStorage.getItem("shawnbakker:theme:v2") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -260,14 +261,14 @@ ctest -C Release --output-on-failure
 
     <script>
         (function () {
-            var KEY = "shawnbakker:theme", root = document.documentElement, btn = document.getElementById("themeToggle");
+            var KEY = "shawnbakker:theme:v2", root = document.documentElement, btn = document.getElementById("themeToggle");
             function cur() { return root.getAttribute("data-theme") === "dark" ? "dark" : "light"; }
             function sync() { var t = cur() === "light" ? "dark" : "light"; btn.textContent = t; btn.setAttribute("aria-label", "switch to " + t + " theme"); }
             sync();
             btn.addEventListener("click", function () {
                 var next = cur() === "light" ? "dark" : "light";
                 if (next === "dark") root.setAttribute("data-theme", "dark"); else root.removeAttribute("data-theme");
-                try { localStorage.setItem(KEY, next); } catch (e) {}
+                try { localStorage.setItem(KEY, next); localStorage.removeItem("shawnbakker:theme"); } catch (e) {}
                 sync();
             });
         })();
