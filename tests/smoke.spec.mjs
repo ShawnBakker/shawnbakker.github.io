@@ -60,6 +60,17 @@ test('homepage: parcel map is keyboard-selectable', async ({ page }) => {
   await expect(page.locator('#mapReadout')).toContainText('buildable');
 });
 
+test('exchange-simulator live demo link resolves to a real anchor', async ({ page }) => {
+  // The homepage card must point at the demos anchor...
+  await page.goto('/');
+  await expect(page.locator('a[href="/demos/#exchange-simulator"]')).toHaveText('Live demo');
+  // ...the /demos/ page must load successfully...
+  const resp = await page.goto('/demos/#exchange-simulator');
+  expect(resp.ok()).toBeTruthy();
+  // ...and the anchor target must exist on that page.
+  await expect(page.locator('#exchange-simulator')).toBeVisible();
+});
+
 test('case study renders', async ({ page }) => {
   await page.goto('/order-engine/');
   await expect(page.locator('h1')).toContainText('Order Execution Engine');
