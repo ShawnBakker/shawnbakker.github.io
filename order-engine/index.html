@@ -190,11 +190,22 @@
                     <tr><td>Zero lost (MPMC)</td><td>100P × 100C × 10,000 = 1,000,000 items; asserts consumed == total → PASS (1,000,000 / 1,000,000)</td></tr>
                     <tr><td>FIFO (SPSC)</td><td>1P/1C, 10,000,000 items, strict order check → PASS</td></tr>
                     <tr><td>Deadlock ordering</td><td>50 threads, 50,000 mixed ops → 0 violations</td></tr>
-                    <tr><td>ThreadSanitizer</td><td>pending (see below)</td></tr>
+                    <tr><td>ThreadSanitizer</td><td>no data races reported (Clang 18, Ubuntu 24.04 / WSL2, commit 499b60e; details below)</td></tr>
                 </tbody>
             </table>
             </div>
-            <p class="note">The runtime deadlock detector is debug-only, so its violation-injection sub-test is skipped in the Release run. ThreadSanitizer is a GCC/Clang option and this build is MSVC, so I have not run it yet. I will publish a Clang/Linux TSan result with its command, compiler version, commit, and output when I have it, rather than claim it now.</p>
+            <p class="note">The runtime deadlock detector is debug-only, so its violation-injection sub-test is skipped in the Release run.</p>
+        </section>
+
+        <section>
+            <h2>Portability and race detection (Linux / Clang)</h2>
+            <p class="soft">Scoped to portability and correctness, not performance. WSL2 virtualization is fine for detecting races; I do not use it for latency or throughput claims.</p>
+            <ul class="tight">
+                <li>Commit 1514743 reproduced the Windows/MSVC results but did <strong>not compile on Clang 18</strong>. Three MSVC-permissive constructs: a missing <code>&lt;mutex&gt;</code> include, an in-class default argument relying on a nested struct's default member initializers, and <code>std::result_of</code> deprecation warnings from <code>std::bind</code>.</li>
+                <li>Fixed in commit 381d19a, after which the engine built and passed 11 of 11 under Clang 18 Release on Ubuntu 24.04.</li>
+                <li>A Clang ThreadSanitizer run then <strong>exposed a lost-wakeup deadlock</strong> in thread-pool shutdown. The shutdown condition was updated outside the condition variable's mutex, so a worker could miss the notification and sleep indefinitely. MSVC timing masked it; TSan's scheduling hit it reliably. I fixed the mutex discipline, added a shutdown regression test (1,000 construct/shutdown iterations, run under an external timeout), and reran the MSVC, Clang Release, and TSan suites.</li>
+            </ul>
+            <p class="note">Clang ThreadSanitizer reported no data races across the exercised unit and concurrency stress suites on Ubuntu 24.04 under WSL2, commit 499b60e: 11 of 11 tests, the 100P/100C MPMC and 10M-item SPSC stress, the 50-thread deadlock torture, and the shutdown regression run 20 times. ThreadSanitizer did not emit a deadlock report; the instrumented run changed scheduling enough to expose the hang.</p>
         </section>
 
         <section>
