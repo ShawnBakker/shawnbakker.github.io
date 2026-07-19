@@ -232,6 +232,7 @@
         .card-links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
         .card-links a::after { content: " ↗"; color: var(--muted); }
         .card-links .nolink { color: var(--muted); }
+        .card-note { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--muted); line-height: 1.5; margin-top: 14px; }
         .linkbtn {
             font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--accent);
             background: none; border: none; padding: 0; cursor: pointer; letter-spacing: 0;
@@ -356,7 +357,7 @@
                     </div>
                 </div>
 
-                <figure class="hero-viz" aria-label="Deterministic synthetic histogram of order-to-fill latency, calibrated to the Order Engine's measured p50 near 1.0 microseconds and p99 near 1.9 microseconds.">
+                <figure class="hero-viz" aria-label="Deterministic synthetic histogram of order-to-fill latency, calibrated to the Order Engine's measured p50 near 0.9 microseconds and p99 near 2.2 microseconds.">
                     <div class="viz-head">
                         <span class="viz-title">order-to-fill latency</span>
                         <span class="viz-live"><span class="viz-dot"></span>modeled</span>
@@ -364,26 +365,26 @@
                     <div class="viz-readout mono" id="vizReadout">warming up…</div>
                     <canvas id="latencyCanvas" role="img" aria-label="Order-to-fill latency histogram"></canvas>
                     <figcaption class="viz-foot">
-                        Deterministic synthetic distribution calibrated to the Order Engine's measured p50 ≈ 1.0 µs and p99 ≈ 1.9 µs. Not raw benchmark samples or live telemetry.
+                        Deterministic synthetic distribution calibrated to the Order Engine's measured p50 ≈ 0.9 µs and p99 ≈ 2.2 µs (i5-12600K, MSVC Release). Not raw benchmark samples or live telemetry.
                     </figcaption>
                 </figure>
             </div>
 
             <div class="metrics">
                 <div class="metric">
-                    <div class="metric-value">118 M/s</div>
-                    <div class="metric-label">lock-free SPSC queue throughput</div>
+                    <div class="metric-value">~103 M/s</div>
+                    <div class="metric-label">SPSC throughput, median of 3 runs (93–105M)</div>
                 </div>
                 <div class="metric">
                     <div class="metric-value">0 lost</div>
-                    <div class="metric-label">100 producers × 100 consumers, stress-tested</div>
+                    <div class="metric-label">1,000,000 of 1,000,000 MPMC items consumed</div>
                 </div>
                 <div class="metric">
-                    <div class="metric-value">11 tests</div>
-                    <div class="metric-label">incl. a 50-thread deadlock torture, TSan-clean</div>
+                    <div class="metric-value">11 / 11</div>
+                    <div class="metric-label">tests passing, incl. a 50-thread deadlock torture</div>
                 </div>
             </div>
-            <p class="metrics-attr mono">Measured on my lock-free order execution engine.</p>
+            <p class="metrics-attr mono">Measured on my lock-free order execution engine: Intel i5-12600K, Windows 11, MSVC 2022 Release, commit 1514743.</p>
         </header>
 
         <!-- ---------- selected work ---------- -->
@@ -441,10 +442,11 @@
                     </p>
                     <div class="tech mono">C++20 · std::atomic · acquire/release ordering · Vyukov MPMC · CMake · ThreadSanitizer</div>
                     <ul>
-                        <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing, benchmarked at 118M ops/sec. The MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
-                        <li>Price-time-priority matching with O(1) cancel and partial fills, at 1.0 µs p50 / 1.9 µs p99 order-to-fill across 100K orders.</li>
-                        <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release; 11 tests incl. a 50-thread torture test, TSan-clean.</li>
+                        <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing, benchmarked at a median ~103M ops/sec. The MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
+                        <li>Price-time-priority matching with O(1) cancel and partial fills, at ~0.9 µs p50 / 2.1–2.3 µs p99 order-to-fill across 100K orders.</li>
+                        <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release. 11 of 11 tests pass, including a 50-thread deadlock torture with zero violations and a 1,000,000-item MPMC stress with zero lost.</li>
                     </ul>
+                    <p class="card-note mono">Measured on Intel i5-12600K, Windows 11, MSVC 2022 Release, C++20, commit 1514743. SPSC throughput 93–105M ops/sec across three runs.</p>
                 </article>
             </div>
 
@@ -623,9 +625,10 @@
                 return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.283185307 * v);
             }
             function sample() {
-                // lognormal tuned to p50≈1.0, p99≈1.9, plus a rare tail outlier
-                var x = Math.exp(0.268 * randn());
-                if (rng() < 0.0035) x += 0.45 + rng() * 1.25;
+                // lognormal calibrated to the reproduced p50≈0.9, p99≈2.2
+                // (i5-12600K, MSVC Release), plus a rare tail outlier
+                var x = Math.exp(-0.105 + 0.375 * randn());
+                if (rng() < 0.0025) x += 0.5 + rng() * 1.4;
                 return x;
             }
             function addSamples(n) {
