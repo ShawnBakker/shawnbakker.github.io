@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shawn Bakker — Software Engineer</title>
-    <meta name="description" content="Software engineer building correct, measured systems — from lock-free C++ order engines with microsecond latency to full-stack geospatial products — documented honestly." />
+    <title>Shawn Bakker · Software Engineer</title>
+    <meta name="description" content="Software engineer building measured systems and geospatial products, from a lock-free C++ order engine to parcelscope, a real-data site-feasibility tool. Numbers you can reproduce." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316130d'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23e08a5f' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
 
     <!-- Paint the stored theme before first paint so a dark visitor never flashes white. -->
@@ -130,7 +130,7 @@
             max-width: 44ch; margin-top: 18px; line-height: 1.5; text-wrap: balance;
         }
 
-        /* metric strip — the "measured" thesis, front and center */
+        /* metric strip - the "measured" thesis, front and center */
         .metrics {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
             margin: 34px 0 30px; background: var(--line); border: 1px solid var(--line);
@@ -342,9 +342,9 @@
                     </div>
 
                     <p class="hero-tagline">
-                        I build measured systems and geospatial products — from a lock-free
+                        I build measured systems and geospatial products, from a lock-free
                         C++ order engine at microsecond latency to parcelscope, a real-data
-                        site-feasibility tool — documented with numbers you can reproduce.
+                        site-feasibility tool. Every number on this page is one you can reproduce.
                     </p>
 
                     <div class="hero-contact">
@@ -364,7 +364,7 @@
                     <div class="viz-readout mono" id="vizReadout">warming up…</div>
                     <canvas id="latencyCanvas" role="img" aria-label="Order-to-fill latency histogram"></canvas>
                     <figcaption class="viz-foot">
-                        Deterministic synthetic distribution calibrated to the Order Engine's measured p50 ≈ 1.0 µs and p99 ≈ 1.9 µs — not raw benchmark samples or live telemetry.
+                        Deterministic synthetic distribution calibrated to the Order Engine's measured p50 ≈ 1.0 µs and p99 ≈ 1.9 µs. Not raw benchmark samples or live telemetry.
                     </figcaption>
                 </figure>
             </div>
@@ -380,7 +380,7 @@
                 </div>
                 <div class="metric">
                     <div class="metric-value">11 tests</div>
-                    <div class="metric-label">incl. a 50-thread deadlock torture — TSan-clean</div>
+                    <div class="metric-label">incl. a 50-thread deadlock torture, TSan-clean</div>
                 </div>
             </div>
             <p class="metrics-attr mono">Measured on my lock-free order execution engine.</p>
@@ -394,21 +394,21 @@
             </div>
 
             <div class="featured">
-                <!-- Featured 1 — parcelscope (product-first: primary target is a product company) -->
+                <!-- Featured 1 - parcelscope (product-first: primary target is a product company) -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>parcelscope</h3>
                         <span class="chip">full-stack · geospatial</span>
                     </div>
                     <p class="card-lead">
-                        Parcel-level site-feasibility for Woodburn, Oregon — real county data,
-                        computed live in the browser and re-checked by a deployed geospatial API.
+                        Parcel-level site-feasibility for Woodburn, Oregon, on real county data.
+                        It computes live in the browser and gets re-checked by a deployed geospatial API.
                     </p>
                     <div class="tech mono">React · TypeScript · MapLibre GL · FastAPI · PostGIS · Martin tiles · Docker · Cerebras LLM</div>
                     <ul>
-                        <li>Buildable-area engine unions overlapping constraints before subtracting so nothing double-counts — unit-tested, and the browser's planar answer (51%) is shown against the API's geodesic one (50.66%) instead of hidden.</li>
-                        <li>Layered screening on real data — zoning, SSURGO soils, FEMA flood, distance-to-sewer/hydrant utilities — plus multi-parcel assemblage with a cited yield range.</li>
-                        <li>Built an evaluation harness that caught the LLM extraction approach before production: the first real Cerebras (<code class="mono">gpt-oss-120b</code>) run scored 1 of 6 against a hand-verified gold set — the model returns district-level conditional rules where the product needs parcel-resolved answers. I publish the eval conditions and failure cases, not an unsupported accuracy number.</li>
+                        <li>The buildable-area engine unions overlapping constraints before subtracting, so nothing double-counts. It's unit-tested, and I show the browser's planar answer (51%) against the API's geodesic one (50.66%) instead of hiding the gap.</li>
+                        <li>Layered screening on real data: zoning, SSURGO soils, FEMA flood, and distance-to-sewer/hydrant utilities, plus multi-parcel assemblage with a cited yield range.</li>
+                        <li>I built an evaluation harness that caught the LLM extraction approach before production. The first real Cerebras (<code class="mono">gpt-oss-120b</code>) run scored 1 of 6 against a hand-verified gold set: the model returns district-level conditional rules where the product needs parcel-resolved answers. I publish the eval conditions and failure cases, not an unsupported accuracy number.</li>
                     </ul>
                     <div class="card-links mono">
                         <a href="https://parcelscope-six.vercel.app">Live demo</a>
@@ -424,12 +424,12 @@
                                 <i class="sw sw-build"></i>buildable
                                 <i class="sw sw-sub"></i>subtracted
                             </span>
-                            <span class="pm-note">Sample parcels, real geometric operations — the live demo runs real Marion County data.</span>
+                            <span class="pm-note">Sample parcels, real geometric operations. The live demo runs real Marion County data.</span>
                         </div>
                     </div>
                 </article>
 
-                <!-- Featured 2 — order engine -->
+                <!-- Featured 2 - order engine -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>Low-Latency Order Execution Engine</h3>
@@ -441,8 +441,8 @@
                     </p>
                     <div class="tech mono">C++20 · std::atomic · acquire/release ordering · Vyukov MPMC · CMake · ThreadSanitizer</div>
                     <ul>
-                        <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing — benchmarked at 118M ops/sec; MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
-                        <li>Price-time-priority matching with O(1) cancel and partial fills — 1.0 µs p50 / 1.9 µs p99 order-to-fill across 100K orders.</li>
+                        <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing, benchmarked at 118M ops/sec. The MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
+                        <li>Price-time-priority matching with O(1) cancel and partial fills, at 1.0 µs p50 / 1.9 µs p99 order-to-fill across 100K orders.</li>
                         <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release; 11 tests incl. a 50-thread torture test, TSan-clean.</li>
                     </ul>
                 </article>
@@ -487,7 +487,7 @@
                     <div class="xp-head">
                         <span class="xp-role">Network Technician</span>
                         <span class="xp-org">Pupitmiser</span>
-                        <span class="xp-date">Dec 2022 — Present</span>
+                        <span class="xp-date">Dec 2022 to Present</span>
                     </div>
                     <ul>
                         <li>Debugged TCP/IP, DNS-resolution, and VLAN-misroute failures across 15–20 production client environments; resolved 80–90% of incidents remotely through systematic fault isolation.</li>
@@ -522,7 +522,7 @@
                     <h4>Systems &amp; Core</h4>
                     <ul>
                         <li>C++ (C++20/17/14, STL, RAII, templates, atomics)</li>
-                        <li>Lock-free concurrency — SPSC/MPMC, memory ordering</li>
+                        <li>Lock-free concurrency: SPSC/MPMC, memory ordering</li>
                         <li>Cache-efficient data structures</li>
                         <li>Linux/POSIX systems programming</li>
                         <li>Python, C, Bash, SQL</li>
@@ -544,7 +544,7 @@
                         <li>TypeScript, React, Vite</li>
                         <li>MapLibre GL, vector tiles (Martin), Turf.js</li>
                         <li>FastAPI, PostGIS, GDAL/ogr2ogr</li>
-                        <li>LLM integration &amp; honest evaluation harnesses</li>
+                        <li>LLM integration &amp; evaluation harnesses</li>
                         <li>Vercel, Cloudflare Tunnel, Oracle Cloud</li>
                     </ul>
                 </div>
@@ -571,11 +571,11 @@
             <div class="edu-head">
                 <span class="edu-deg">B.S. Computer Science, Minor in Business Administration</span>
                 <span class="edu-school">University of Oregon</span>
-                <span class="edu-date">Sep 2021 — Dec 2025</span>
+                <span class="edu-date">Sep 2021 to Dec 2025</span>
             </div>
             <ul>
                 <li>Coursework: Systems Programming, Computer Architecture, Data Structures &amp; Algorithms, Software Engineering, Database Systems.</li>
-                <li>Vice President, UO Cybersecurity Club (UOSEC) — led exploit-analysis presentations and coordinated CTF competition participation.</li>
+                <li>Vice President, UO Cybersecurity Club (UOSEC): I led exploit-analysis presentations and coordinated CTF competitions.</li>
             </ul>
         </section>
 
@@ -590,10 +590,10 @@
     </div>
 
     <script>
-        // Live latency histogram — the hero's on-brand centerpiece. Streams
+        // Live latency histogram - the hero's on-brand centerpiece. Streams
         // simulated order-to-fill samples tuned to the engine's measured
         // p50 ≈ 1.0 µs / p99 ≈ 1.9 µs and draws them on canvas with live
-        // percentile markers. Honestly badged as illustrative, not telemetry.
+        // percentile markers. Badged as illustrative, not telemetry.
         (function () {
             var canvas = document.getElementById("latencyCanvas");
             if (!canvas || !canvas.getContext) return;
@@ -607,7 +607,7 @@
             var total = 0, maxSmooth = 1, frame = 0, TARGET = 100000; // the benchmark's real order count
 
             // Deterministic PRNG (mulberry32, fixed seed): the histogram replays
-            // the SAME sequence on every load — reproducible, not random each visit.
+            // the SAME sequence on every load - reproducible, not random each visit.
             var seed = 0x1a2b3c4d;
             function rng() {
                 seed = seed + 0x6D2B79F5 | 0;
@@ -770,7 +770,7 @@
 
     <script>
         // Interactive sample parcel map (parcelscope card). Same self-contained
-        // canvas idea as the histogram — no map tiles, no network. Hover/click a
+        // canvas idea as the histogram - no map tiles, no network. Hover/click a
         // lot to net buildable = lot − (flood ∪ wetland), the real parcelscope
         // computation, on illustrative sample geometry.
         (function () {
@@ -782,7 +782,7 @@
             var ctx = canvas.getContext("2d");
 
             var VW = 166, VH = 56, PAD = 8;
-            // flood ribbon (diagonal band) + wetland blob — virtual coords.
+            // flood ribbon (diagonal band) + wetland blob - virtual coords.
             var flood = [[0,42],[50,34],[100,25],[166,13],[166,26],[100,40],[50,48],[0,54]];
             var wet = (function () {
                 var pts = [], cx = 128, cy = 36, rx = 15, ry = 11, n = 16;
