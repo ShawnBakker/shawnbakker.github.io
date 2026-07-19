@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Order Execution Engine · benchmark &amp; architecture · Shawn Bakker</title>
     <meta name="description" content="How I built and measured a lock-free C++20 order execution engine. Every number is reproduced on a stated machine and commit." />
+    <link rel="canonical" href="https://shawnbakker.dev/order-engine/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Order Execution Engine — benchmark &amp; architecture" />
+    <meta property="og:description" content="How I built and measured a lock-free C++20 order execution engine. Every number is reproduced on a stated machine and commit." />
+    <meta property="og:url" content="https://shawnbakker.dev/order-engine/" />
+    <meta property="og:image" content="https://shawnbakker.dev/assets/social-card.png" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316130d'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23e08a5f' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
     <script>
       try { if (localStorage.getItem("shawnbakker:theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
@@ -134,7 +141,7 @@
                 <li><strong>Signal Evaluator</strong> filters by confidence and generates orders in parallel on a thread pool.</li>
                 <li>Orders cross a <strong>lock-free SPSC queue</strong> to the routing thread. It uses <code>std::atomic</code> acquire/release ordering (not sequential consistency, which is a full fence on x86) because the producer/consumer relationship is one-directional. Head and tail sit on separate cache lines (<code>alignas(64)</code>) so the two cores do not bounce a shared line.</li>
                 <li>A semaphore-based <strong>Rate Limiter</strong> models exchange message throttling.</li>
-                <li>The <strong>Order Book</strong> does price-time-priority matching with O(1) cancel via an order index, generating fills.</li>
+                <li>The <strong>Order Book</strong> does price-time-priority matching, generating fills. Cancellation uses an index for expected O(1) price-level lookup, then a linear scan within that level's FIFO order storage.</li>
                 <li>The <strong>Position Book</strong> updates from fills under a <code>shared_mutex</code> (concurrent reads, exclusive writes).</li>
                 <li>The <strong>MPMC queue</strong> (used under contention) uses Dmitry Vyukov's per-slot sequence-number design; monotonic sequence numbers make stale CAS attempts fail safely, which is the ABA guard.</li>
                 <li><strong>Deadlock prevention</strong> is by a total lock order (OrderBook = 1, PositionBook = 2), always acquired ascending, which breaks the circular-wait condition. A debug-mode <code>DeadlockDetector</code> validates it at runtime and compiles to zero-cost no-ops in Release (<code>#ifndef NDEBUG</code>).</li>
@@ -243,7 +250,7 @@ ctest -C Release --output-on-failure
 
         <section>
             <h2>A note on older numbers</h2>
-            <p class="soft">An earlier version of this site quoted 118M ops/sec, a 1.9 µs p99, and "ThreadSanitizer clean." Those probably came from a Linux/Clang build, but I could not recover the original output or environment, so I removed them rather than present numbers without a complete evidence chain. If I recover them or reproduce on Linux, I will publish both sets side by side as a cross-toolchain comparison, not as a rescue of the old headline.</p>
+            <p class="soft">An earlier version of this site quoted a higher SPSC throughput, a tighter p99, and a bare "ThreadSanitizer clean" label. Those probably came from a Linux/Clang build, but I could not recover the original output or environment, so I removed them rather than present numbers without a complete evidence chain. If I reproduce them on Linux I will publish both sets side by side as a cross-toolchain comparison, not as a rescue of the old headline.</p>
         </section>
 
         <footer>
