@@ -11,7 +11,8 @@ test('homepage: product-minded hero and featured order', async ({ page }) => {
 
 test('homepage: primary CTAs resolve', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.hero-actions a', { hasText: 'View parcelscope' })).toHaveAttribute('href', '#work');
+  await expect(page.locator('.hero-actions a', { hasText: 'View live product' })).toHaveAttribute('href', /parcelscope-six\.vercel\.app/);
+  await expect(page.locator('.hero-actions a', { hasText: 'See selected work' })).toHaveAttribute('href', '#work');
   await expect(page.locator('.hero-actions a', { hasText: 'Email me' })).toHaveAttribute('href', /^mailto:/);
   await expect(page.locator('.featured a[href="/order-engine/"]')).toBeVisible();
 });
