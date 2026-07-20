@@ -1,0 +1,12 @@
+{
+  "name": "shawnbakker-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static portfolio for shawnbakker.dev with a Playwright smoke suite.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

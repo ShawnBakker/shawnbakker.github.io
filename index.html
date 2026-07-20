@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shawn Bakker · Software Engineer</title>
-    <meta name="description" content="Software engineer building measured systems and geospatial products, from a lock-free C++ order engine to parcelscope, a real-data site-feasibility tool. Numbers you can reproduce." />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316130d'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23e08a5f' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
+    <title>Shawn Bakker | Software Engineer</title>
+    <meta name="description" content="Product-minded software engineer building geospatial products, applied AI systems, and reliable infrastructure. End-to-end ownership with reproducible evidence." />
 
-    <!-- Paint the stored theme before first paint so a dark visitor never flashes white. -->
+    <link rel="canonical" href="https://shawnbakker.dev/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Shawn Bakker | Software Engineer" />
+    <meta property="og:description" content="Product-minded software engineer building geospatial products, applied AI systems, and reliable infrastructure." />
+    <meta property="og:url" content="https://shawnbakker.dev/" />
+    <meta property="og:image" content="https://shawnbakker.dev/assets/social-card.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Shawn Bakker",
+      "url": "https://shawnbakker.dev/",
+      "jobTitle": "Software Engineer",
+      "sameAs": [
+        "https://github.com/ShawnBakker",
+        "https://www.linkedin.com/in/shawnbakkersb/"
+      ]
+    }
+    </script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23173529'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='17' font-weight='700' fill='%23f4eedd' text-anchor='middle'%3Esb%3C/text%3E%3C/svg%3E" />
+
+    <!-- Light is the default; only an explicit persisted "dark" (v2 key) opts in.
+         Applied before first paint so a dark visitor never flashes light. The
+         pre-redesign "shawnbakker:theme" key is intentionally ignored. -->
     <script>
       try {
-        var t = localStorage.getItem("shawnbakker:theme");
-        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        if (localStorage.getItem("shawnbakker:theme:v2") === "dark") document.documentElement.setAttribute("data-theme", "dark");
       } catch (e) {}
     </script>
 
@@ -20,35 +42,34 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
     <style>
-        /* ---------- tokens: dark is the default; [data-theme=light] overrides ---------- */
-        /* Eggshell light is the default; dark is opt-in via [data-theme=dark]. */
+        /* Light is the default; [data-theme="dark"] is an explicit persisted override. */
         :root {
-            --bg:        #f4efe4;
-            --surface:   #fdfbf5;
-            --surface-2: #ece5d6;
-            --ink:       #26221b;
-            --ink-soft:  #524c40;
-            --muted:     #8b8271;
-            --line:      #e7dfd0;
-            --line-2:    #d6ccb9;
-            --accent:    #b0562f;
-            --accent-2:  #c56b41;
-            --accent-ink:#fdfbf5;
-            --shadow:    0 1px 2px rgba(60,40,20,.05), 0 14px 34px -22px rgba(60,40,20,.24);
+            --bg:        #F4EEDD;
+            --surface:   #FBF7EC;
+            --surface-2: #E6E7D5;
+            --ink:       #173529;
+            --ink-soft:  #3F594D;
+            --muted:     #5F7065;
+            --line:      #D7D8C5;
+            --line-2:    #BCC5B5;
+            --accent:    #24553E;
+            --accent-2:  #376F54;
+            --accent-ink:#FFF9EC;
+            --shadow:    0 1px 2px rgba(20,52,39,.05), 0 14px 34px -22px rgba(20,52,39,.25);
         }
 
         :root[data-theme="dark"] {
-            --bg:        #16130d;
-            --surface:   #1e1a12;
-            --surface-2: #241f17;
-            --ink:       #ece5d7;
-            --ink-soft:  #b0a996;
-            --muted:     #79715f;
-            --line:      #2c2820;
-            --line-2:    #3b362b;
-            --accent:    #e08a5f;
-            --accent-2:  #eea277;
-            --accent-ink:#1a1006;
+            --bg:        #10251B;
+            --surface:   #183126;
+            --surface-2: #213D30;
+            --ink:       #F4EEDD;
+            --ink-soft:  #CBD5C7;
+            --muted:     #91A397;
+            --line:      #2B4739;
+            --line-2:    #3D5C4C;
+            --accent:    #9BC4A8;
+            --accent-2:  #B6D7BE;
+            --accent-ink:#10251B;
             --shadow:    0 1px 0 rgba(255,255,255,.02), 0 12px 30px -18px rgba(0,0,0,.65);
         }
 
@@ -149,8 +170,8 @@
             display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center;
             font-family: "JetBrains Mono", monospace; font-size: 13px;
         }
-        .hero-contact a { color: var(--ink-soft); }
-        .hero-contact a:hover { color: var(--accent); }
+        .hero-contact a { color: var(--ink-soft); text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 2px; }
+        .hero-contact a:hover { color: var(--accent); text-decoration-color: var(--accent); }
         .hero-contact .sep { color: var(--line-2); }
 
         /* two-column hero: intro left, live latency histogram right */
@@ -254,7 +275,8 @@
         .sw-build { background: var(--accent); }
         .sw-sub { background: rgba(186,72,50,.75); }
 
-        .more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; }
+        .other-head { font-family: "JetBrains Mono", monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 34px 0 2px; }
+        .more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; }
         .card--sm { padding: 20px; }
         .card--sm h3 { font-size: 1.05rem; }
         .card--sm .tech { font-size: 10.5px; margin-bottom: 10px; }
@@ -297,7 +319,50 @@
             display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
             font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted);
         }
-        footer a { color: var(--ink-soft); }
+        footer a { color: var(--ink-soft); text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 2px; }
+        footer a:hover { text-decoration-color: var(--accent); }
+
+        /* ---------- skip link ---------- */
+        .skip-link {
+            position: absolute; left: -9999px; top: 0; z-index: 100;
+            background: var(--ink); color: var(--surface); padding: 8px 14px;
+            border-radius: 0 0 8px 0; font-family: "JetBrains Mono", monospace; font-size: 13px;
+        }
+        .skip-link:focus { left: 0; text-decoration: none; }
+
+        /* ---------- hero actions ---------- */
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 18px; }
+        .btn {
+            font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: .02em;
+            padding: 9px 17px; border-radius: 999px; border: 1px solid var(--line-2);
+            color: var(--ink); background: var(--surface);
+        }
+        .btn:hover { text-decoration: none; border-color: var(--accent); color: var(--accent); }
+        .btn-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+        .btn-primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: var(--accent-ink); }
+
+        /* ---------- project card blocks (problem / shipped / judgment) ---------- */
+        .card-block { margin-bottom: 11px; color: var(--ink-soft); font-size: 14.5px; line-height: 1.56; }
+        .card-label {
+            font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .08em;
+            text-transform: uppercase; color: var(--accent); margin-right: 8px;
+        }
+
+        /* ---------- how I work ---------- */
+        .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 26px; }
+        .principle h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; letter-spacing: -.005em; }
+        .principle p { color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+        .stack { font-size: 12.5px; color: var(--ink-soft); line-height: 1.85; border-top: 1px solid var(--line); padding-top: 16px; }
+        .stack-label { font-family: "JetBrains Mono", monospace; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; font-size: 10px; margin-right: 8px; }
+
+        /* ---------- accessible parcel list ---------- */
+        .parcel-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+        .parcel-list button {
+            font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--ink-soft);
+            background: var(--surface-2); border: 1px solid var(--line); border-radius: 5px;
+            padding: 3px 7px; cursor: pointer;
+        }
+        .parcel-list button:hover, .parcel-list button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 
         /* ---------- responsive ---------- */
         @media (max-width: 720px) {
@@ -305,6 +370,7 @@
             .metrics { grid-template-columns: 1fr; }
             .more-grid { grid-template-columns: 1fr; }
             .skills { grid-template-columns: 1fr; }
+            .principles { grid-template-columns: 1fr; gap: 18px; }
             .xp-date, .edu-date { margin-left: 0; width: 100%; }
             .hero { padding-top: 44px; }
         }
@@ -317,13 +383,14 @@
     </style>
 </head>
 <body>
+    <a href="#work" class="skip-link">Skip to content</a>
     <nav>
         <div class="nav-inner">
             <a href="#top" class="nav-logo">shawn bakker</a>
             <div class="nav-links">
                 <a href="#work">work</a>
                 <a href="#experience">experience</a>
-                <a href="#skills">skills</a>
+                <a href="#how-i-work">how i work</a>
                 <button type="button" class="theme-toggle" id="themeToggle" aria-label="switch to dark theme">dark</button>
             </div>
         </div>
@@ -332,59 +399,35 @@
     <div class="wrap" id="top">
         <!-- ---------- hero ---------- -->
         <header class="hero reveal">
-            <div class="hero-grid">
-                <div class="hero-intro">
-                    <div class="hero-top">
-                        <div class="avatar"><img src="assets/shawncropheadshot.jpg" alt="Shawn Bakker" /></div>
-                        <div>
-                            <div class="eyebrow">Software Engineer · Pacific Northwest</div>
-                            <h1>Shawn Bakker</h1>
-                        </div>
-                    </div>
-
-                    <p class="hero-tagline">
-                        I build measured systems and geospatial products, from a lock-free
-                        C++ order engine at microsecond latency to parcelscope, a real-data
-                        site-feasibility tool. Every number on this page is one you can reproduce.
-                    </p>
-
-                    <div class="hero-contact">
-                        <a href="mailto:shawn@misclick.com">shawn@misclick.com</a>
-                        <span class="sep">/</span>
-                        <a href="https://github.com/ShawnBakker">GitHub</a>
-                        <span class="sep">/</span>
-                        <a href="https://www.linkedin.com/in/shawnbakkersb/">LinkedIn</a>
-                    </div>
+            <div class="hero-top">
+                <div class="avatar">
+                    <picture>
+                        <source srcset="assets/shawncropheadshot.webp" type="image/webp" />
+                        <img src="assets/shawncropheadshot.jpg" alt="Shawn Bakker" width="124" height="124" loading="eager" decoding="async" />
+                    </picture>
                 </div>
-
-                <figure class="hero-viz" aria-label="Deterministic synthetic histogram of order-to-fill latency, calibrated to the Order Engine's measured p50 near 0.9 microseconds and p99 near 2.2 microseconds.">
-                    <div class="viz-head">
-                        <span class="viz-title">order-to-fill latency</span>
-                        <span class="viz-live"><span class="viz-dot"></span>modeled</span>
-                    </div>
-                    <div class="viz-readout mono" id="vizReadout">warming up…</div>
-                    <canvas id="latencyCanvas" role="img" aria-label="Order-to-fill latency histogram"></canvas>
-                    <figcaption class="viz-foot">
-                        Deterministic synthetic distribution calibrated to the Order Engine's measured p50 ≈ 0.9 µs and p99 ≈ 2.2 µs (i5-12600K, MSVC Release). Not raw benchmark samples or live telemetry.
-                    </figcaption>
-                </figure>
-            </div>
-
-            <div class="metrics">
-                <div class="metric">
-                    <div class="metric-value">~103 M/s</div>
-                    <div class="metric-label">SPSC throughput, median of 3 runs (93–105M)</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">0 lost</div>
-                    <div class="metric-label">1,000,000 of 1,000,000 MPMC items consumed</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-value">11 / 11</div>
-                    <div class="metric-label">tests passing, incl. a 50-thread deadlock torture</div>
+                <div>
+                    <div class="eyebrow">Product-minded Software Engineer · Pacific Northwest</div>
+                    <h1>Shawn Bakker</h1>
                 </div>
             </div>
-            <p class="metrics-attr mono">Measured on my lock-free order execution engine: Intel i5-12600K, Windows 11, MSVC 2022 Release, commit 1514743.</p>
+
+            <p class="hero-tagline">
+                I take ambiguous problems from data and architecture through deployment, testing,
+                and failure analysis, from parcel-level geospatial products to low-latency C++ infrastructure.
+            </p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="https://parcelscope-six.vercel.app">View live product</a>
+                <a class="btn" href="#work">See selected work</a>
+                <a class="btn" href="mailto:shawn@misclick.com">Email me</a>
+            </div>
+
+            <div class="hero-contact">
+                <a href="https://github.com/ShawnBakker">GitHub</a>
+                <span class="sep">/</span>
+                <a href="https://www.linkedin.com/in/shawnbakkersb/">LinkedIn</a>
+            </div>
         </header>
 
         <!-- ---------- selected work ---------- -->
@@ -395,29 +438,28 @@
             </div>
 
             <div class="featured">
-                <!-- Featured 1 - parcelscope (product-first: primary target is a product company) -->
+                <!-- Featured 1 - parcelscope (lead project) -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>parcelscope</h3>
-                        <span class="chip">full-stack · geospatial</span>
+                        <span class="chip">lead project · full-stack · geospatial</span>
                     </div>
                     <p class="card-lead">
-                        Parcel-level site-feasibility for Woodburn, Oregon, on real county data.
-                        It computes live in the browser and gets re-checked by a deployed geospatial API.
+                        Parcel-level site-feasibility for Woodburn, Oregon, on real Marion County data.
+                        Owned end to end: data, architecture, client, API, deployment, and tests.
                     </p>
-                    <div class="tech mono">React · TypeScript · MapLibre GL · FastAPI · PostGIS · Martin tiles · Docker · Cerebras LLM</div>
-                    <ul>
-                        <li>The buildable-area engine unions overlapping constraints before subtracting, so nothing double-counts. It's unit-tested, and I show the browser's planar answer (51%) against the API's geodesic one (50.66%) instead of hiding the gap.</li>
-                        <li>Layered screening on real data: zoning, SSURGO soils, FEMA flood, and distance-to-sewer/hydrant utilities, plus multi-parcel assemblage with a cited yield range.</li>
-                        <li>I built an evaluation harness that caught the LLM extraction approach before production. The first real Cerebras (<code class="mono">gpt-oss-120b</code>) run scored 1 of 6 against a hand-verified gold set: the model returns district-level conditional rules where the product needs parcel-resolved answers. I publish the eval conditions and failure cases, not an unsupported accuracy number.</li>
-                    </ul>
+                    <div class="tech mono">React · TypeScript · MapLibre GL · FastAPI · PostGIS · Martin tiles · GDAL ingestion · Docker · Cerebras LLM</div>
+                    <div class="card-block"><span class="card-label">Problem</span>Parcel feasibility means combining fragmented zoning, hazard, utility, and geometry data into one buildable-area answer.</div>
+                    <div class="card-block"><span class="card-label">What shipped</span>The React/MapLibre client, the PostGIS feasibility API, a real-data ingestion pipeline, the deployment stack (Vercel plus an Oracle Cloud VM behind a Cloudflare tunnel), and validation tests.</div>
+                    <div class="card-block"><span class="card-label">Engineering judgment</span>I union overlapping constraints before subtracting so nothing double-counts, and I show the browser's planar answer (51%) against the API's geodesic one (50.66%) instead of hiding the gap. An evaluation harness caught an unreliable LLM extraction approach before production: the first real Cerebras run scored 1 of 6 against a hand-verified gold set, which I treat as useful failure detection, not an AI accuracy metric.</div>
                     <div class="card-links mono">
                         <a href="https://parcelscope-six.vercel.app">Live demo</a>
                         <button type="button" class="linkbtn" id="mapToggle" aria-expanded="false" aria-controls="mapWrap">explore buildable area →</button>
                     </div>
                     <div class="parcelmap" id="mapWrap" hidden>
-                        <div class="pm-readout mono" id="mapReadout">hover or tap a lot to net out its buildable area</div>
+                        <div class="pm-readout mono" id="mapReadout" aria-live="polite">hover, tap, or pick a lot below to net out its buildable area</div>
                         <canvas id="parcelCanvas" role="img" aria-label="Interactive sample parcel map: buildable area after subtracting flood and wetland constraints"></canvas>
+                        <div class="parcel-list" id="parcelList" role="group" aria-label="Select a sample parcel"></div>
                         <div class="pm-foot">
                             <span class="pm-legend">
                                 <i class="sw sw-flood"></i>flood
@@ -430,22 +472,72 @@
                     </div>
                 </article>
 
-                <!-- Featured 2 - order engine -->
+                <!-- Featured 2 - Roguemouse -->
+                <article class="card card--feat">
+                    <div class="card-top">
+                        <h3>Roguemouse</h3>
+                        <span class="chip">applied AI · governance</span>
+                    </div>
+                    <p class="card-lead">
+                        A multi-agent AI operations and governance system built for Milan AI Week 2026.
+                        Public and MIT-licensed.
+                    </p>
+                    <div class="tech mono">Next.js · React · TypeScript · Zod · Vitest · GitHub Actions</div>
+                    <ul>
+                        <li>Three reasoning roles, a Risk Officer, an Ops Engineer, and a Synthesizer, that produce a structured proposal or an explicit refusal, never free-form output taken on faith.</li>
+                        <li>Every decision writes a SHA-256 hash-chained audit record to content-addressed, S3-compatible object storage; the chain is verifiable client-side.</li>
+                        <li>Explicit degraded-input handling and a 327-test baseline in CI.</li>
+                    </ul>
+                    <div class="card-links mono">
+                        <a href="https://github.com/ShawnBakker/roguemouse">View source</a>
+                    </div>
+                    <p class="card-note mono">Built for Milan AI Week 2026; the hosted deployment was retired after judging.</p>
+                </article>
+
+                <!-- Featured 3 - order engine (systems depth) -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>Low-Latency Order Execution Engine</h3>
-                        <span class="chip">low-latency · c++</span>
+                        <span class="chip">systems depth · c++</span>
                     </div>
                     <p class="card-lead">
-                        A lock-free matching engine built from scratch to survive market-open bursts,
-                        with every memory-ordering choice justified in the code.
+                        A lock-free matching engine, designed and benchmarked for bursty order flow,
+                        with every memory-ordering choice justified in the code and every number reproducible.
                     </p>
                     <div class="tech mono">C++20 · std::atomic · acquire/release ordering · Vyukov MPMC · CMake · ThreadSanitizer</div>
                     <ul>
                         <li>Lock-free SPSC queue with <code class="mono">alignas(64)</code> cache-line padding to kill false sharing, benchmarked at a median ~103M ops/sec. The MPMC variant uses per-slot sequence numbers with CAS retry for ABA safety.</li>
-                        <li>Price-time-priority matching with O(1) cancel and partial fills, at ~0.9 µs p50 / 2.1–2.3 µs p99 order-to-fill across 100K orders.</li>
-                        <li>Deadlock prevention by global lock ordering with a debug-mode runtime validator that compiles to zero-cost no-ops in Release. 11 of 11 tests pass, including a 50-thread deadlock torture with zero violations and a 1,000,000-item MPMC stress with zero lost.</li>
+                        <li>Price-time-priority matching with partial fills and indexed price-level lookup for cancellation over FIFO order storage per level, at ~0.9 µs p50 / 2.1–2.3 µs p99 order-to-fill across 100K orders.</li>
+                        <li>A Clang ThreadSanitizer run exposed a lost-wakeup deadlock in shutdown (the stop flag was set outside the condition variable's mutex); I fixed the mutex discipline and added a regression test. 11 of 11 tests pass, incl. a 50-thread deadlock torture and a 1,000,000-item MPMC stress with zero lost.</li>
                     </ul>
+
+                    <figure class="hero-viz" aria-label="Deterministic synthetic histogram of order-to-fill latency, calibrated to the engine's measured p50 near 0.9 microseconds and p99 near 2.2 microseconds.">
+                        <div class="viz-head">
+                            <span class="viz-title">order-to-fill latency</span>
+                            <span class="viz-live"><span class="viz-dot"></span>modeled</span>
+                        </div>
+                        <div class="viz-readout mono" id="vizReadout" aria-live="polite">warming up…</div>
+                        <canvas id="latencyCanvas" role="img" aria-label="Order-to-fill latency histogram"></canvas>
+                        <figcaption class="viz-foot">
+                            Deterministic synthetic distribution calibrated to the engine's measured p50 ≈ 0.9 µs and p99 ≈ 2.2 µs (i5-12600K, MSVC Release). Not raw benchmark samples or live telemetry.
+                        </figcaption>
+                    </figure>
+
+                    <div class="metrics">
+                        <div class="metric">
+                            <div class="metric-value">~103 M/s</div>
+                            <div class="metric-label">SPSC throughput, median of 3 runs (93–105M)</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">0 lost</div>
+                            <div class="metric-label">1,000,000 of 1,000,000 MPMC items consumed</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">11 / 11</div>
+                            <div class="metric-label">tests passing, incl. a 50-thread deadlock torture</div>
+                        </div>
+                    </div>
+
                     <div class="card-links mono">
                         <a href="/order-engine/">Benchmark &amp; architecture</a>
                     </div>
@@ -453,6 +545,7 @@
                 </article>
             </div>
 
+            <h3 class="other-head">Other work</h3>
             <div class="more-grid">
                 <article class="card card--sm">
                     <h3>Quant-Engine</h3>
@@ -472,7 +565,7 @@
                         detects toxic flow and widens spreads, visualizing the Glosten-Milgrom model.
                     </p>
                     <div class="card-links mono">
-                        <a href="https://shawnbakker.github.io/exchange-simulator/">Live demo</a>
+                        <a href="/demos/#exchange-simulator">Live demo</a>
                         <a href="https://github.com/ShawnBakker/exchange-simulator">GitHub</a>
                     </div>
                 </article>
@@ -495,8 +588,8 @@
                         <span class="xp-date">Dec 2022 to Present</span>
                     </div>
                     <ul>
-                        <li>Debugged TCP/IP, DNS-resolution, and VLAN-misroute failures across 15–20 production client environments; resolved 80–90% of incidents remotely through systematic fault isolation.</li>
-                        <li>Wrote and deployed firewall rules and network access controls across production infrastructure, cutting misconfiguration-related incidents by 25%.</li>
+                        <li>Diagnosed TCP/IP, DNS, and VLAN faults across 15–20 production client environments; resolved 80–90% of incidents remotely through protocol-layer isolation.</li>
+                        <li>Wrote stateful firewall rules and network-access-control policies on production Linux.</li>
                         <li>Delivered root-cause analysis to non-technical clients across 15+ accounts, translating VLAN and DNS failures into actionable remediation steps.</li>
                     </ul>
                 </div>
@@ -508,61 +601,37 @@
                         <span class="xp-date">Summer 2023</span>
                     </div>
                     <ul>
-                        <li>Built Python data pipelines for behavioral analysis of platform usage across user cohorts, surfacing drop-off patterns that drove a 35% satisfaction increase within 6 weeks.</li>
-                        <li>Developed JavaScript event-tracking instrumentation across the platform, enabling data-driven campaign targeting that lifted site engagement 300%.</li>
+                        <li>Built Python data pipelines that segmented platform usage by cohort; the resulting drop-off analysis informed subsequent product changes.</li>
+                        <li>Implemented JavaScript event tracking that enabled campaign-level engagement analysis and data-driven targeting.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- ---------- skills ---------- -->
-        <section id="skills">
+        <!-- ---------- how I work ---------- -->
+        <section id="how-i-work">
             <div class="section-head">
                 <span class="section-num">03</span>
-                <h2 class="section-title">Technical skills</h2>
+                <h2 class="section-title">How I work</h2>
             </div>
 
-            <div class="skills">
-                <div class="skill">
-                    <h4>Systems &amp; Core</h4>
-                    <ul>
-                        <li>C++ (C++20/17/14, STL, RAII, templates, atomics)</li>
-                        <li>Lock-free concurrency: SPSC/MPMC, memory ordering</li>
-                        <li>Cache-efficient data structures</li>
-                        <li>Linux/POSIX systems programming</li>
-                        <li>Python, C, Bash, SQL</li>
-                    </ul>
+            <div class="principles">
+                <div class="principle">
+                    <h3>Own the whole problem</h3>
+                    <p>I move from unclear requirements through implementation, deployment, instrumentation, and documentation.</p>
                 </div>
-                <div class="skill">
-                    <h4>Performance &amp; Infrastructure</h4>
-                    <ul>
-                        <li>Google Benchmark, perf</li>
-                        <li>ThreadSanitizer, AddressSanitizer, GDB, Valgrind</li>
-                        <li>CMake, GCC/Clang</li>
-                        <li>Docker &amp; Compose, GitHub Actions CI/CD, Git</li>
-                        <li>PostgreSQL, TCP/UDP networking</li>
-                    </ul>
+                <div class="principle">
+                    <h3>Make tradeoffs visible</h3>
+                    <p>I publish failure cases, limitations, benchmark environments, and the evidence behind technical claims.</p>
                 </div>
-                <div class="skill">
-                    <h4>Full-Stack &amp; Geospatial</h4>
-                    <ul>
-                        <li>TypeScript, React, Vite</li>
-                        <li>MapLibre GL, vector tiles (Martin), Turf.js</li>
-                        <li>FastAPI, PostGIS, GDAL/ogr2ogr</li>
-                        <li>LLM integration &amp; evaluation harnesses</li>
-                        <li>Vercel, Cloudflare Tunnel, Oracle Cloud</li>
-                    </ul>
+                <div class="principle">
+                    <h3>Use AI with verification</h3>
+                    <p>I build evaluation harnesses, structured outputs, refusal paths, and deterministic checks instead of treating model output as truth.</p>
                 </div>
-                <div class="skill">
-                    <h4>Domain</h4>
-                    <ul>
-                        <li>Market microstructure &amp; order-book mechanics</li>
-                        <li>Matching-engine design</li>
-                        <li>Black-Scholes, options Greeks</li>
-                        <li>Adverse-selection modeling</li>
-                        <li>Geospatial feasibility &amp; constraint math</li>
-                    </ul>
-                </div>
+            </div>
+
+            <div class="stack">
+                <span class="stack-label">Stack</span>TypeScript · React · Next.js · Python · C++20 · FastAPI · PostGIS · MapLibre GL · Docker · GitHub Actions · Vercel · Cloudflare · applied LLMs with evaluation harnesses
             </div>
         </section>
 
@@ -595,9 +664,9 @@
     </div>
 
     <script>
-        // Live latency histogram - the hero's on-brand centerpiece. Streams
-        // simulated order-to-fill samples tuned to the engine's measured
-        // p50 ≈ 1.0 µs / p99 ≈ 1.9 µs and draws them on canvas with live
+        // Latency histogram (Order Engine card). Streams a deterministic, seeded
+        // set of synthetic order-to-fill samples calibrated to the engine's
+        // measured p50 ≈ 0.9 µs / p99 ≈ 2.2 µs and draws them on canvas with live
         // percentile markers. Badged as illustrative, not telemetry.
         (function () {
             var canvas = document.getElementById("latencyCanvas");
@@ -918,12 +987,38 @@
                 if (h !== hov) { hov = h; canvas.style.cursor = h ? "pointer" : "default"; draw(); say(sel || hov); }
             });
             canvas.addEventListener("mouseleave", function () { if (hov) { hov = null; draw(); say(sel); } });
+            function select(p) {
+                sel = (p && p === sel) ? null : p;
+                draw(); say(sel || hov); syncList();
+            }
             canvas.addEventListener("click", function (e) {
                 var r = canvas.getBoundingClientRect(), v = toV(e.clientX - r.left, e.clientY - r.top);
-                var h = hit(v.x, v.y);
-                sel = (h && h === sel) ? null : h;
-                draw(); say(sel || hov);
+                select(hit(v.x, v.y));
             });
+
+            // Accessible parcel list: keyboard-focusable buttons that mirror the
+            // canvas, so the map is usable without a pointer and its readout is
+            // announced through the aria-live region.
+            var listEl = document.getElementById("parcelList"), listBtns = [];
+            if (listEl) {
+                parcels.forEach(function (p) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.textContent = "lot " + p.label;
+                    b.setAttribute("aria-pressed", "false");
+                    var sub = [p.hitF ? "flood" : null, p.hitW ? "wetland" : null].filter(Boolean).join(" and ");
+                    b.setAttribute("aria-label", "lot " + p.label + ", buildable " + p.buildable + " percent" +
+                        (sub ? ", touched by " + sub : ", unconstrained"));
+                    b.addEventListener("click", function () { select(p); });
+                    listEl.appendChild(b);
+                    listBtns.push({ p: p, el: b });
+                });
+            }
+            function syncList() {
+                for (var i = 0; i < listBtns.length; i++) {
+                    listBtns[i].el.setAttribute("aria-pressed", listBtns[i].p === sel ? "true" : "false");
+                }
+            }
 
             var inited = false;
             function open() {
@@ -947,10 +1042,11 @@
     </script>
 
     <script>
-        // Theme store: light default (eggshell), explicit toggle, persisted. The
-        // button label names the target theme and wears its colors, previewing the switch.
+        // Theme store: light is the default; the toggle persists an explicit choice
+        // under a versioned key so a pre-redesign dark preference does not carry over.
+        // The button label names the target theme and wears its colors.
         (function () {
-            var KEY = "shawnbakker:theme";
+            var KEY = "shawnbakker:theme:v2";
             var root = document.documentElement;
             var btn = document.getElementById("themeToggle");
 
@@ -968,7 +1064,10 @@
                 var next = current() === "light" ? "dark" : "light";
                 if (next === "dark") root.setAttribute("data-theme", "dark");
                 else root.removeAttribute("data-theme");
-                try { localStorage.setItem(KEY, next); } catch (e) {}
+                try {
+                    localStorage.setItem(KEY, next);
+                    localStorage.removeItem("shawnbakker:theme"); // clean up the legacy key on first explicit choice
+                } catch (e) {}
                 sync();
             });
         })();
