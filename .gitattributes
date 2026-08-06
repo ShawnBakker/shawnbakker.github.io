@@ -1,0 +1,7 @@
+# Scoped deliberately: only the files whose bytes are interpreted as regex.
+# The guard in .github/workflows/portfolio-checks.yml reads these as literal
+# patterns, so a CRLF checkout on Windows would put a CR inside every pattern.
+# It happens to survive that today only because the comment-stripping grep
+# normalizes it away — pin the line endings rather than depend on that.
+.github/retired-claims.txt         text eol=lf
+.github/retired-claims.canary.txt  text eol=lf
