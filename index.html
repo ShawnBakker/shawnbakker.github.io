@@ -472,7 +472,24 @@
                     </div>
                 </article>
 
-                <!-- Featured 2 - Roguemouse -->
+                <!-- Featured 2 - Waycraft -->
+                <article class="card card--feat">
+                    <div class="card-top">
+                        <h3>Waycraft</h3>
+                        <span class="chip">AI-assisted engineering · full-stack · evidence-grounded</span>
+                    </div>
+                    <p class="card-lead">
+                        A self-hostable career workspace that only writes résumé claims it can trace back to
+                        verified evidence — built and governed with an AI-assisted engineering workflow of its own.
+                    </p>
+                    <div class="tech mono">Next.js · TypeScript · FastAPI · PostgreSQL · Redis · Celery · MinIO · Docker</div>
+                    <div class="card-block"><span class="card-label">Problem</span>Job search tools make it easy to generate résumé claims that sound right and don't hold up under a technical interview. I wanted a system that would refuse to do that by construction, not by good intentions.</div>
+                    <div class="card-block"><span class="card-label">What shipped</span>A self-hosted Next.js and FastAPI application that pulls public job postings from Greenhouse and Lever, holds a versioned record of verified career evidence, and only generates résumé material that traces back to that evidence, with human review and DOCX export as the last, explicit step. Built with Claude Code inside a governed workflow — bounded work packages, isolated worktrees, independent review — rather than as an unsupervised generator.</div>
+                    <div class="card-block"><span class="card-label">Engineering judgment</span>Retrieved job postings and model output are treated as untrusted data, not instructions: nothing an LLM produces can grant itself tool, network, credential, or send authority, and no generated claim reaches an export without human review. The governed workflow caught real defects, not hypothetical ones. An independent fresh-context review found that the tests meant to prove no unintended content reached an exported document were asserting over compressed bytes, so they would have passed either way, and it proved that by breaking the check and watching them stay green. Separately, a test I had written off as a flake turned out to be a real Windows race in the work-package lease tool: a killed process keeps its byte-range lock for another 1 to 3 ms of kernel rundown, so the lease refused a holder that was already dead. Both fixes are pinned by mutation tests rather than a weakened assertion.</div>
+                    <p class="card-note mono">Private repository — this covers the architecture and governance approach directly; happy to walk through the code live.</p>
+                </article>
+
+                <!-- Featured 3 - Roguemouse -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>Roguemouse</h3>
@@ -494,7 +511,7 @@
                     <p class="card-note mono">Built for Milan AI Week 2026; the hosted deployment was retired after judging.</p>
                 </article>
 
-                <!-- Featured 3 - order engine (systems depth) -->
+                <!-- Featured 4 - order engine (systems depth) -->
                 <article class="card card--feat">
                     <div class="card-top">
                         <h3>Low-Latency Order Execution Engine</h3>
@@ -631,7 +648,7 @@
             </div>
 
             <div class="stack">
-                <span class="stack-label">Stack</span>TypeScript · React · Next.js · Python · C++20 · FastAPI · PostGIS · MapLibre GL · Docker · GitHub Actions · Vercel · Cloudflare · applied LLMs with evaluation harnesses
+                <span class="stack-label">Stack</span>TypeScript · React · Next.js · Python · C++20 · FastAPI · PostGIS · MapLibre GL · Redis · Celery · MinIO · Docker · GitHub Actions · Vercel · Cloudflare · applied LLMs with evaluation harnesses
             </div>
         </section>
 
