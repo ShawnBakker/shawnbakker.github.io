@@ -16,11 +16,39 @@ jobs:
           echo "CNAME is exactly shawnbakker.dev"
           test "$(tr -d '[:space:]' < CNAME)" = "shawnbakker.dev"
 
+          # NB: `! grep ...` cannot fail this step — bash disables `set -e` for a
+          # command whose return value is inverted with `!`, so a match would be
+          # printed and the step would still exit 0. Use an explicit `exit 1`.
           echo "no shawnbakker.github.io in public HTML"
-          ! grep -rn "shawnbakker\.github\.io" index.html order-engine/index.html
+          if grep -rn "shawnbakker\.github\.io" index.html order-engine/index.html; then
+            echo "FAIL: shawnbakker.github.io appears in published HTML (above)"; exit 1
+          fi
 
           echo "no retired figures or corrected claims regressed"
-          ! grep -rnE "118 ?M|1\.9[[:space:]]?µs|O\(1\) cancel|market-open" index.html order-engine/index.html
+          PATTERNS="$(mktemp)"
+          CANARY="$(mktemp)"
+          grep -vE '^[[:space:]]*(#|$)' .github/retired-claims.txt        > "$PATTERNS"
+          grep -vE '^[[:space:]]*(#|$)' .github/retired-claims.canary.txt > "$CANARY"
+
+          # An empty pattern list matches nothing, so the guard below would pass
+          # without checking anything. Refuse to run in that state.
+          test -s "$PATTERNS" || { echo "no patterns in .github/retired-claims.txt"; exit 1; }
+          test -s "$CANARY"   || { echo "no examples in .github/retired-claims.canary.txt"; exit 1; }
+          echo "  $(wc -l < "$PATTERNS") patterns, $(wc -l < "$CANARY") canary examples"
+
+          # Prove the guard is live in both directions: every retired claim is
+          # still caught, and every pattern still catches something.
+          UNCAUGHT="$(grep -vEf "$PATTERNS" "$CANARY" || true)"
+          test -z "$UNCAUGHT" || { echo "no longer caught by any pattern:"; echo "$UNCAUGHT"; exit 1; }
+          while IFS= read -r p; do
+            grep -qE "$p" "$CANARY" || { echo "pattern matches no canary example: $p"; exit 1; }
+          done < "$PATTERNS"
+
+          if grep -rnEf "$PATTERNS" index.html order-engine/index.html; then
+            echo "FAIL: a retired claim is back (above). It was corrected once —"
+            echo "see .github/retired-claims.txt for what replaced it and why."
+            exit 1
+          fi
 
           echo "referenced local assets exist"
           for f in assets/shawncropheadshot.webp assets/shawncropheadshot.jpg assets/social-card.png order-engine/index.html; do

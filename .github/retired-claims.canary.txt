@@ -1,0 +1,15 @@
+# Verbatim examples of the retired claims in retired-claims.txt, as they were
+# actually published before correction.
+#
+# CI asserts both directions: every line here is still caught by some pattern,
+# and every pattern still catches at least one line here. That is what keeps the
+# guard from silently degrading into one that runs, matches nothing, and passes.
+#
+# Never edit a line here to make CI green. If a line stops being caught, the
+# pattern is broken — fix the pattern.
+
+benchmarked at 118M ops/sec
+<div class="metric-value">118 M/s</div>
+at 1.0 µs p50 / 1.9 µs p99 order-to-fill across 100K orders
+Price-time-priority matching with O(1) cancel and partial fills
+A lock-free matching engine built from scratch to survive market-open bursts
