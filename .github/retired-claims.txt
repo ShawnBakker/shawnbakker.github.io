@@ -1,0 +1,39 @@
+# Retired figures and corrected claims — the authority for the CI guard
+# "no retired figures or corrected claims regressed".
+#
+# Every non-comment, non-blank line is an extended regular expression (ERE).
+# If one matches published content, CI fails: the claim was corrected once and
+# must not come back.
+#
+# Read by .github/workflows/portfolio-checks.yml, which checks index.html and
+# order-engine/index.html. This file is the list; the workflow is only one
+# consumer of it. Anything else that publishes these claims — a resume, a
+# profile, a cover letter — should be checked against this list by hand, since
+# CI cannot reach documents that live outside the repo.
+#
+# Each pattern must be matched by at least one example in
+# retired-claims.canary.txt, which proves the pattern still catches the thing it
+# was written for. A pattern that matches nothing is a guard that passes for the
+# wrong reason.
+#
+# To retire a new claim: correct the content, add the pattern here with what
+# replaced it and why, and add the original wording to the canary.
+
+# SPSC throughput was published as "118M ops/sec" and "118 M/s".
+# Corrected in 5388e03 to a median ~103M ops/sec (93-105M across 3 runs), when
+# the benchmarks were reproduced on Windows/MSVC.
+118 ?M
+
+# Order-to-fill p99 was published as 1.9 us, alongside a 1.0 us p50.
+# Corrected in 5388e03 to 2.1-2.3 us p99 and ~0.9 us p50, same reproduction.
+1\.9[[:space:]]?µs
+
+# "O(1) cancel" asserted a complexity bound the implementation does not provide.
+# Removed in 17a7c10, replaced with what the code actually does: indexed
+# price-level lookup for cancellation over FIFO order storage per level.
+O\(1\) cancel
+
+# "built from scratch to survive market-open bursts" named a workload the engine
+# was never benchmarked against. Removed in 17a7c10, replaced with "designed and
+# benchmarked for bursty order flow".
+market-open
