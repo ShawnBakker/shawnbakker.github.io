@@ -6,7 +6,7 @@ test('homepage: product-minded hero and featured order', async ({ page }) => {
   await expect(page.locator('.hero h1')).toHaveText('Shawn Bakker');
   await expect(page.locator('.eyebrow').first()).toContainText('Product-minded');
   const cards = await page.locator('.featured .card h3').allTextContents();
-  expect(cards).toEqual(['parcelscope', 'Roguemouse', 'Low-Latency Order Execution Engine']);
+  expect(cards).toEqual(['parcelscope', 'Waycraft', 'Roguemouse', 'Low-Latency Order Execution Engine']);
 });
 
 test('homepage: primary CTAs resolve', async ({ page }) => {
